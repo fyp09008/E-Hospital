@@ -11,7 +11,12 @@ public class InsignificantMain {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Client c = new Client();
-		c.connectServer();
+		if (c.connect()) {
+			c.authenicate();
+			c.disconnect();
+		}
+		
+		
 	}
 
 }
