@@ -6,29 +6,30 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.PrivateKey;
-
-import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 import message.RequestMessage;
-
 import cipher.RSASoftware;
+import message.*;
 
 import com.ibm.jc.JCard;
 
-import message.*;
+
 
 public class Client {
-	
+	//temp
 	private String name = "qwer";
 	private String password = "1234";
-	private Socket s;
 	private int port = 8899;
 	private String server = "localhost";
+	private RSASoftware rsa;
+	//perm
+	private Socket s;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	private RSASoftware rsa;
-	JCard card;
+	
+	private JCard card;
+	private SecretKeySpec skeySpec;
 	
 	public Client() {
 		rsa = new RSASoftware();
@@ -52,8 +53,8 @@ public class Client {
 			return false;
 		}
 	}
-			
-	public String decrypt(byte[] ciphertext) {
+	
+	public byte[] decrypt(byte[] ciphertext) {
 		
 		//TODO use JavaCard
 		FileReader fr;
@@ -65,8 +66,7 @@ public class Client {
 			rsa.setPrivateKey(prvKeyExp, mod);
 			
 			byte plaintext[] = rsa.decrypt(ciphertext, ciphertext.length);
-			System.out.println(plaintext.length);
-			return new String(plaintext);
+			return plaintext;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,8 +76,7 @@ public class Client {
 			e.printStackTrace();
 			return null;
 		}
-		
-		
+			
 	}
 	
 	
@@ -97,7 +96,8 @@ public class Client {
 		    	System.out.println("Success!");
 		    	reMsg = (ResponseMessage)in.readObject();
 		    	
-		    	System.out.println(decrypt(reMsg.sessionKey));
+		    	byte[] sKey = decrypt(reMsg.sessionKey);
+		    	skeySpec = new SecretKeySpec(sKey, "AES");
 		    } else {
 		    	System.out.println("Fail!");
 		    }
