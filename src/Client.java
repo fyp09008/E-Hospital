@@ -6,6 +6,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.spec.SecretKeySpec;
 
 import message.RequestMessage;
@@ -80,11 +83,19 @@ public class Client {
 	}
 	
 	
-	public void authenicate() {
+	public boolean authenicate() {
 		RequestMessage reqMsg = new RequestMessage();
 		reqMsg.username = this.name;
 		//TODO send Hashed Password
-	    reqMsg.password = this.password;
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("md5");
+			reqMsg.password = md.digest(this.password.getBytes());
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	    
 	    try {
 			out.writeObject(reqMsg);
@@ -98,15 +109,19 @@ public class Client {
 		    	
 		    	byte[] sKey = decrypt(reMsg.sessionKey);
 		    	skeySpec = new SecretKeySpec(sKey, "AES");
+		    	return true;
 		    } else {
 		    	System.out.println("Fail!");
+		    	return false;
 		    }
 	    } catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
 	}
 	
