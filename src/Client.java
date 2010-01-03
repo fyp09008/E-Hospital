@@ -248,17 +248,14 @@ public class Client {
 			    	
 			    	byte[] sKey = decryptRSA(reMsg.sessionKey);
 			    	skeySpec = new SecretKeySpec(sKey, "AES");
-			    	disconnect();
 			    	return true;
 			    } else {
 			    	System.out.println("Fail!");
-			    	disconnect();
 			    	return false;
 			    }
 		    } catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				disconnect();
 				return false;
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -280,5 +277,7 @@ public class Client {
 			}
 		    
 	}
+	
+	
 	
 }
