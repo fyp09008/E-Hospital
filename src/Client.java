@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -154,7 +155,7 @@ public class Client {
 	
 	public ResultSet sendQuery(String type, String[] table, String[] field, String whereClause) {
 		//TODO make it more generic
-		//TODO seperate into class
+		//TODO separate into class
 		
 		
 		type = type.toLowerCase();
@@ -204,7 +205,15 @@ public class Client {
 			qmsg.username = this.name;
 			try {
 				out.writeObject(qmsg);
+				ResponseQueryMessage reqmsg = (ResponseQueryMessage)in.readObject();
+				byte[] rawResultSet = decryptAES(reqmsg.ResultSet);
+				ResultSet rs = (ResultSet)new ObjectInputStream(new 
+						ByteArrayInputStream(rawResultSet)).readObject();
+				return rs;
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -214,7 +223,7 @@ public class Client {
 	
 	public boolean authenicate() {
 		if (connect()) {
-			//TODO seperate into class
+			//TODO separate into class
 			RequestMessage reqMsg = new RequestMessage();
 			reqMsg.username = this.name;
 			MessageDigest md;
