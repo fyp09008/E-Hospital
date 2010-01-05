@@ -2,7 +2,7 @@ package message;
 
 import java.io.Serializable;
 
-public class QueryMessage implements Serializable{
+public class QueryRequestMessage implements Serializable{
 	/**
 	 * 
 	 */

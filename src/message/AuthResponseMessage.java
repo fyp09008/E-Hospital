@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.crypto.Cipher;
 
-public class ResponseMessage implements Serializable{
+public class AuthResponseMessage implements Serializable{
 
 	/**
 	 * 
