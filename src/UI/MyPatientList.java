@@ -25,12 +25,12 @@ import java.sql.ResultSet;
 
 public class MyPatientList extends Panels {
 	
-	private JScrollPane jScrollPane = null;
+	private JScrollPane[] jScrollPane = null;
 	private JTabbedPane tabPanel = null;
 	private JPanel goPanel = null;
 	private JPanel upPanel = null;
 	private JPanel showPanel = null;
-	private JButton editBtn = null;
+	//private JButton editBtn = null;
 	private JPanel jPanel = null;
 	private JTable[] tables = null;
 	private static int TABLENUM = 7;
@@ -68,20 +68,28 @@ public class MyPatientList extends Panels {
 			tabPanel.setPreferredSize(new Dimension(3, 400));
 			tabPanel.setFont(new Font("Dialog", Font.BOLD, 22));
 			//initTables();
-			tabPanel.addTab("A-D", getJScrollPane());
-			tabPanel.addTab("E-H", tables[1]);
-			tabPanel.addTab("I-L", null);
-			tabPanel.addTab("M-P", null);
-			tabPanel.addTab("Q-T", null);
-			tabPanel.addTab("U-X", null);
-			tabPanel.addTab("Y-etc", null);
+			jScrollPane = getJScrollPane();
+			tabPanel.addTab("A-D", jScrollPane[0]);
+			tabPanel.addTab("E-H", jScrollPane[1]);
+			tabPanel.addTab("I-L", jScrollPane[2]);
+			tabPanel.addTab("M-P", jScrollPane[3]);
+			tabPanel.addTab("Q-T", jScrollPane[4]);
+			tabPanel.addTab("U-X", jScrollPane[5]);
+			tabPanel.addTab("Y-etc", jScrollPane[6]);
 		}
 		return tabPanel;
 	}
-	private JScrollPane getJScrollPane() {
+	private JScrollPane[] getJScrollPane() {
 		if (jScrollPane == null) {
-			jScrollPane = new JScrollPane();
-			jScrollPane.setViewportView(tables[0]);
+			jScrollPane = new JScrollPane[TABLENUM];
+			for ( int j = 0; j < TABLENUM; j++)
+				if ( tables[j] == null) System.out.println("!!!");
+			
+			for ( int i = 0 ;i < TABLENUM; i++){
+				jScrollPane[i] = new JScrollPane();
+				jScrollPane[i].setViewportView(tables[i]);
+				System.out.println(i + "is done");
+			}
 		}
 		return jScrollPane;
 	}
@@ -107,24 +115,13 @@ public class MyPatientList extends Panels {
 			return null;
 		}
 	}
-	private JButton getEditButton(){
-		ImageIcon icon = createImageIcon("edit-icon.png",
-        "a pretty but meaningless splat");
-		editBtn = new JButton("EDIT",icon);
-		editBtn.setPreferredSize(new Dimension(59, 80));
-		editBtn.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				new EditInfoFrame(); // TODO Auto-generated Event stub actionPerformed()
-			}
-		});
-		return editBtn;
-	}
+
 	private JPanel getShowPanel() {
 		if (showPanel == null) {
 			showPanel = new JPanel();
 			showPanel.setPreferredSize(new Dimension(500, 10));
 			showPanel.setLayout(new BorderLayout());
-			showPanel = new ShowInfoPanel(this.mf);
+			showInfo = new ShowInfoPanel(this.mf);
 			showPanel.add(showInfo,BorderLayout.CENTER);
 		}
 		return showPanel;
@@ -136,6 +133,7 @@ public class MyPatientList extends Panels {
 		return goPanel;
 	}
 	private void initTables(){
+		System.out.println("firstline of initTable()");
 		/*
 		 * 0 = A-D
 		 * 1 = E-H
@@ -149,53 +147,37 @@ public class MyPatientList extends Panels {
 		String[] field = {"pid","name"};
 		String[] table = {"Patient_personal"};
 		String[] where = new String[TABLENUM];
+		System.out.println("before where");
 		//where clauses
-		where[0] = "upper(name) LIKE 'A%' OR upper(name) LIKE 'B%' OR " +
-				"upper(name) LIKE 'C%' OR upper(name) LIKE 'D%' ORDER BY name";
-		where[1] = "upper(name) LIKE 'E%' OR upper(name) LIKE 'F%' OR " +
-		"upper(name) LIKE 'G%' OR upper(name) LIKE 'H%' ORDER BY name";
-		where[2] = "upper(name) LIKE 'I%' OR upper(name) LIKE 'J%' OR " +
-		"upper(name) LIKE 'K%' OR upper(name) LIKE 'L%' ORDER BY name";
-		where[3] = "upper(name) LIKE 'M%' OR upper(name) LIKE 'N%' OR " +
-		"upper(name) LIKE 'O%' OR upper(name) LIKE 'P%' ORDER BY name";
-		where[4] = "upper(name) LIKE 'Q%' OR upper(name) LIKE 'R%' OR " +
-		"upper(name) LIKE 'S%' OR upper(name) LIKE 'T%' ORDER BY name";
-		where[5] = "upper(name) LIKE 'U%' OR upper(name) LIKE 'V%' OR " +
-		"upper(name) LIKE 'W%' OR upper(name) LIKE 'X%' ORDER BY name";
-		where[5] = "upper(name) LIKE 'Y%' OR upper(name) LIKE 'Z%' OR " +
-		"upper(name) LIKE 'W%' OR upper(name) LIKE 'X%' ORDER BY name";
+		where[0] = "name rlike '^[abcd]' ORDER BY name";
+		where[1] = "name rlike '^[efgh]' ORDER BY name";
+		where[2] = "name rlike '^[ijkl]' ORDER BY name";
+		where[3] = "name rlike '^[mnop]' ORDER BY name";
+		where[4] = "name rlike '^[qrst]' ORDER BY name";
+		where[5] = "name rlike '^[uvwx]' ORDER BY name";
+		where[6] = "name rlike '^[^abcdefghijklmnopqrstuvwx]' ORDER BY name";
 		
-		char[] letter = {'B','C','D','E','F','G','H','I','J','K',
-				'L','M','N','O','P','Q','R','S','T','U','V','W','X'};
-		where[6] = "upper(name) NOT LIKE 'A%'";
-		for ( int i = 0; i < letter.length; i++){
-			where[6] = where[6] + " AND upper(name) NOT LIKE '"+letter[i]+"%'";
-		}
-		where[6] = where[6] + " ORDER BY name";
 		//end of making where clauses
 		
 		String[] column = {"ID","Name"};
+		listSelectionModel = new ListSelectionModel[TABLENUM];
+		System.out.println("before send query");
 		for ( int i = 0; i < TABLENUM; i++){
-			tables[i] = new JTable(mf.sendQuery("select", table, field, where[i])
-					,column);
+			String temp[][] = mf.sendQuery("SELECT", table, field, where[i],null);
+			//if ( temp != null)
+			tables[i] = new JTable(temp,column);
+			//else{
+				//String[][] temp2 = {{"temp","temp"}};
+				//tables[i] = new JTable(temp2,column);
+			//}
+			System.out.println("after sql");
 			tables[i].setRowSelectionAllowed(true);
-			listSelectionModel[i] = tables[0].getSelectionModel();
-			listSelectionModel[i].addListSelectionListener(new SharedListSelectionHandler(tables[0]));
+			listSelectionModel[i] = tables[i].getSelectionModel();
+			listSelectionModel[i].addListSelectionListener(new SharedListSelectionHandler(tables[i]));
 	        tables[i].setSelectionModel(listSelectionModel[i]);
 		}
+
 		
-		//require SQL result
-		//tables[0] = new JTable(temp,col);
-		//tables[0].setRowSelectionAllowed(true);
-		//listSelectionModel = tables[0].getSelectionModel();
-        //listSelectionModel.addListSelectionListener(new SharedListSelectionHandler(tables[0]));
-        //tables[0].setSelectionModel(listSelectionModel);
-		//tables[1] = new JTable(temp1,col);
-		//tables[1].setRowSelectionAllowed(true);
-		//listSelectionModel = tables[1].getSelectionModel();
-        //listSelectionModel.addListSelectionListener(new SharedListSelectionHandler(tables[1]));
-        //tables[1].setSelectionModel(listSelectionModel);
-		//tables[0].
 	}
 	/**
 	 * This method initializes jPanel	
@@ -215,7 +197,7 @@ public class MyPatientList extends Panels {
                 for (int i = minIndex; i <= maxIndex; i++) {
                     if (lsm.isSelectedIndex(i)) {
                     	showInfo.setPID((String)table.getValueAt(i, 0));
-                    	showInfo.getInfo();
+                    	showInfo.fetchInfo();
                     }
                 }
 	        }

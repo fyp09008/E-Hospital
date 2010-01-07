@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,8 +28,9 @@ import javax.swing.JScrollBar;
  *
  */
 
-public class EditInfoFrame extends JFrame {
-	private int id = -1;
+public class EditInfoFrame extends JDialog {
+	 private MainFrame mf = null;
+	private String id = "-1";
 	private JLabel idLab = null;
 	private JTextField idFld = null;
 	private JLabel nameLab = null;
@@ -56,6 +58,11 @@ public class EditInfoFrame extends JFrame {
 	private JButton doneBtn = null;
 	private ShowInfoPanel parentPanel = null;
 	private JButton cancelBtn = null;
+	private JLabel remarkLab = null;
+	private JTextArea remark  = null;
+	private JScrollPane scroll = null;
+	private String[][] result = null;
+	private ShowInfoPanel sip = null;
 
 	/**
 	 * 
@@ -68,9 +75,14 @@ public class EditInfoFrame extends JFrame {
 	 *  
 	 * @param x 
 	 */
-	public EditInfoFrame(int x){
-		super();
+	public EditInfoFrame(MainFrame parent, boolean modal,String[][] result,
+			String x, ShowInfoPanel sip){
+		super(parent,modal);
+		this.mf = parent;
+		this.result = result;
+		this.sip = sip;
 		id = x;
+		this.fit();
 		initialize();
 	}
 	/**
@@ -78,46 +90,66 @@ public class EditInfoFrame extends JFrame {
 	 * 
 	 * @param x 
 	 */
-	public EditInfoFrame(ShowInfoPanel jp,int x){
-		super();
-		id = x;
-		parentPanel = jp;
-		initialize();
+	public void fit(){
+		//System.out.println("***");
+		this.getIdFld().setText(id);
+		this.getNameFld().setText(result[0][0]);
+		if ( result[0][1].equals("M"))
+			this.getGenderBox().setSelectedIndex(0);
+		else this.getGenderBox().setSelectedIndex(1);
+		this.getAddrFld().setText(result[0][2]);
+		this.getContactFld().setText(result[0][3]);
+		this.getDobFld().setText(result[0][4]);
+		this.getPicFld().setText(result[0][5]);
+		//this.getLastFld().setText(result[0][6]);
+		this.getRemark().setText(result[0][6]);
 	}
+
+
+
 	/**
 	 * This method initializes this
 	 * 
 	 */
 	private void initialize() {
+
 		this.setSize(new Dimension(300, 500));
 		this.setTitle(id + "'s Personal Information");
-		this.setVisible(true);
-		JPanel main = (JPanel) this.getContentPane();
-		BorderLayout bl = new BorderLayout();
-		bl.setVgap(20);
-		main.setLayout(bl);
+
+		this.setLayout(new BorderLayout());
 		//add
-        main.add(getUpPanel(),BorderLayout.CENTER);
-        main.add(getBtnPanel(),BorderLayout.SOUTH);
+      	this.add(getUpPanel(),BorderLayout.CENTER);
+      	this.add(getBtnPanel(),BorderLayout.SOUTH);
+      	this.setVisible(true);
+        
 	}
 	/**
 	 * @return 
 	 * 
 	 */
 	private JPanel getRePanel(){
+		System.out.println("In getRePanel");
 		if (rePanel == null){
 			rePanel = new JPanel();
 			rePanel.setLayout(new GridLayout(1,2));
 			rePanel.setPreferredSize(new Dimension(600,100));
-			JLabel temp2 = new JLabel("Remark");
-			rePanel.add(temp2);
-			temp2.setHorizontalAlignment(SwingConstants.CENTER);
-			JTextArea temp = new JTextArea();
-			temp.setLineWrap(true);
-			JScrollPane temp3 = new JScrollPane(temp);
-			rePanel.add(temp3);
+			remarkLab = new JLabel("Remark");
+			rePanel.add(remarkLab);
+			remarkLab.setHorizontalAlignment(SwingConstants.CENTER);
+
+			scroll = new JScrollPane(remark);
+			rePanel.add(scroll);
+			rePanel.setVisible(true);
 		}
 		return rePanel;
+	}
+	private JTextArea getRemark(){
+		if ( remark == null){
+			remark = new JTextArea();
+			remark.setLineWrap(true);
+		}
+		return remark;
+		
 	}
 	/**
 	 * @return
@@ -137,7 +169,7 @@ public class EditInfoFrame extends JFrame {
 	 */
 	private JButton getDoneBtn(){
 		if (doneBtn == null){
-			doneBtn = new JButton("Done");
+			doneBtn = new JButton("Save");
 			doneBtn.addActionListener(new DoneAction(this));
 			//neBtn.setLayout(new GridLayout(1,2));	
 		}
@@ -170,6 +202,7 @@ public class EditInfoFrame extends JFrame {
 			btnPanel.setLayout(new GridLayout(1,2));
 			btnPanel.add(getDoneBtn());
 			btnPanel.add(getCancelBtn());
+			btnPanel.setVisible(true);
 		}
 		return btnPanel;
 	}
@@ -233,8 +266,6 @@ public class EditInfoFrame extends JFrame {
 	        fieldPanel.add(getDobFld(),getDobFld().getName());
 	        fieldPanel.add(picLab,picLab.getName());
 	        fieldPanel.add(getPicFld(),getPicFld().getName());
-	        fieldPanel.add(lastLab,lastLab.getName());
-	        fieldPanel.add(getLastPanel(),getLastPanel().getName());
 	       // fieldPanel.add(reLab,reLab.getClass());
 	        //fieldPanel.add(getRePane(),getRePane().getName());
 		}
@@ -316,8 +347,8 @@ public class EditInfoFrame extends JFrame {
 		return genderBox;
 	}
 	class CancelAction implements ActionListener  {
-		private JFrame frame = null;
-		public CancelAction(JFrame f){
+		private JDialog frame = null;
+		public CancelAction(JDialog f){
 			super();
 			frame = f;
 		}
@@ -326,16 +357,42 @@ public class EditInfoFrame extends JFrame {
 		}
 	};
 	class DoneAction implements ActionListener  {
-		private JFrame frame = null;
-		public DoneAction(JFrame f){
+		private EditInfoFrame frame = null;
+		public DoneAction(EditInfoFrame f){
 			super();
 			frame = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			int ans = JOptionPane.showConfirmDialog(null, "Sure?");
 			if ( ans == 0){
-				parentPanel.hasEditted();
-				frame.dispose();
+				//parentPanel.hasEditted();
+				//frame.dispose();
+				result[0][0] = frame.getNameFld().getText();
+				
+				if ( frame.getGenderBox().getSelectedIndex() == 0)
+					result[0][1] = "M";
+				else 
+					result[0][1] = "F";
+				
+				result[0][2] = frame.getAddrFld().getText();
+				result[0][3] = frame.getContactFld().getText();
+				result[0][4] = frame.getDobFld().getText();
+				result[0][5] = frame.getPicFld().getText();
+				//result[0][6] = "NOW()";
+				result[0][6] = frame.getRemark().getText();
+				String[] tables = {"Patient_personal"};
+				String[] fields = {"name","gender","address","contact_no","birthday",
+					"pic","description"};
+				
+				String[][] result2 = frame.mf.sendQuery("UPDATE", tables, fields, "pid = " + frame.id, result[0]);
+				if ( result2[0][0].equals("true")){
+					JOptionPane.showMessageDialog(null, "Record modified!");
+					JOptionPane.showMessageDialog(null, "Refresh now");
+					frame.mf.changePanel(0);
+					JOptionPane.showMessageDialog(null, "refresh finish");
+					frame.dispose();
+				}else JOptionPane.showMessageDialog(null, "Fail!");
+				
 			}
 			// TODO Auto-generated Event stub actionPerformed()
 		}

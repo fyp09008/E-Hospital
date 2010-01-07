@@ -70,6 +70,7 @@ public class LoginPanel extends Panels  {
 		this.add(getPwPanel(), gridBagConstraints9);
 		this.add(welcomeLab, gridBagConstraints);
 		this.add(getLoginBtn(), gridBagConstraints10);
+		this.disableAll();
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class LoginPanel extends Panels  {
 			nameFd = new JTextField();
 			nameFd.setPreferredSize(new Dimension(100, 20));
 			nameFd.setFont(new Font("Dialog", Font.ITALIC, 14));
-			nameFd.setEditable(false);
+			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
 			nameFd.setText("---------- Insert your card ----------");
 		}
@@ -139,7 +140,7 @@ public class LoginPanel extends Panels  {
 		if (pwFd == null) {
 			pwFd = new JPasswordField();
 			pwFd.setPreferredSize(new Dimension(100, 20));
-			pwFd.setEnabled(false);
+			pwFd.setEnabled(true);
 		}
 		return pwFd;
 	}
@@ -153,24 +154,27 @@ public class LoginPanel extends Panels  {
 		if (loginBtn == null) {
 			loginBtn = new JButton();
 			loginBtn.setText("Login");
-			loginBtn.setEnabled(false);
+			loginBtn.setEnabled(true);
 			loginBtn.addActionListener(new LoginAction(this));		
 		}
 		return loginBtn;
 	}
 	private boolean login(String name, String password){
 		mf.setName(name);
-		mf.setPassword(name);
-		boolean logged = mf.authenicate();
+		mf.setPassword(password);
+		boolean logged = mf.authenicate(name,password);
 		return logged;
 	}
-	public void enableFields(){
+	public void enableAll(){
 		pwFd.setEnabled(true);
 		nameFd.setEnabled(true);
+		loginBtn.setEnabled(true);
 	}
-	public void disableFields(){
+	public void disableAll(){
+		System.out.println("disable all");
 		pwFd.setEnabled(false);
 		nameFd.setEnabled(false);
+		loginBtn.setEnabled(false);
 	}
 	class LoginAction implements ActionListener{
 		LoginPanel p = null;
@@ -179,13 +183,15 @@ public class LoginPanel extends Panels  {
 		}
 		public void actionPerformed(ActionEvent e) {
 			String id = nameFd.getText();
-			String pw = pwFd.getText();
+			String pw = new String(pwFd.getPassword());
+			System.out.println(pw);
 			if (id.equals("") || pw.equals("")){
 				JOptionPane jop = new JOptionPane();
 				JOptionPane.showMessageDialog(jop, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
 			}
 			else{
 				if (p.login(id,pw)){
+					
 					mf.checkPrivilege();
 					mf.changePanel(-1);
 				}
