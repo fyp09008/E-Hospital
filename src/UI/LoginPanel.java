@@ -194,55 +194,21 @@ public class LoginPanel extends Panels  {
 			String id = nameFd.getText();
 			String pw = new String(pwFd.getPassword());
 			System.out.println(pw);
-			if (id.equals("") || pw.equals("")){
-				JOptionPane jop = new JOptionPane();
-				JOptionPane.showMessageDialog(jop, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
-			}
-			else{
+			//if (id.equals("") || pw.equals("")){
+				//JOptionPane jop = new JOptionPane();
+				//JOptionPane.showMessageDialog(jop, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
+				//JOptionPane jop = new JOptionPane();
+			//	mf.addPopUP(jop);
+				
+				//jop.showMessageDialog(null, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
+			//}
+			//else{
 				if (p.login(id,pw)){
-					
 					mf.checkPrivilege();
 					mf.changePanel(-1);
 				}
 				else {}
-			}
+			//}
 		}
 	}
-	class KeyAction implements KeyListener{
-		LoginPanel p = null;
-		public KeyAction(LoginPanel p){
-			this.p=p;
-		}
-		public void keyPressed(KeyEvent e) {
-			// TODO Auto-generated method stub
-		     int key = e.getKeyCode();
-		     if (key == KeyEvent.VK_ENTER) {
-					String id = nameFd.getText();
-					String pw = new String(pwFd.getPassword());
-					System.out.println(pw);
-					if (id.equals("") || pw.equals("")){
-						JOptionPane jop = new JOptionPane();
-						JOptionPane.showMessageDialog(jop, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
-					}
-					else{
-						if (p.login(id,pw)){
-							mf.checkPrivilege();
-							mf.changePanel(-1);
-						}
-						else {}
-					}
-		     }
-		}
-
-		public void keyReleased(KeyEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void keyTyped(KeyEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-}  //  @jve:decl-index=0:visual-constraint="24,5"
+}

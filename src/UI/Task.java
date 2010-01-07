@@ -43,7 +43,7 @@ public class Task extends TimerTask{
 	public void run() {
 		Date now = new Date(); 
 		//byte [] a = {0x00, 0x02};
-		System.out.println("Generating report:"+now.getHours()+":"+now.getMinutes()+":"+ now.getSeconds());
+		//System.out.println("Generating report:"+now.getHours()+":"+now.getMinutes()+":"+ now.getSeconds());
         boolean haveCard = true;
         JavaCardManager jcm = null;
         
@@ -53,7 +53,7 @@ public class Task extends TimerTask{
 		jcm = new JavaCardManager(JavaCardManager.JCM_PCSC, "ACS ACR38U 0", "285921800099");
 	    }
 		catch(Exception e) {
-      			System.err.println("Erorr!");
+      			//System.err.println("Erorr!");
       			//cardOn(false);
       			haveCard = false;
 	            switch (mode)
@@ -80,7 +80,7 @@ public class Task extends TimerTask{
 		//third changed from 0x01 to 0x00
 			byte[] cardresponse = c.send(0, 0x13, 0x00, 0x00, 0x00, h.length, h, 0, 0x00);
 			if(JavaCardHelper.checkStatusWord(cardresponse)){
-	            System.err.println("OK!");
+	            //System.err.println("OK!");
 	            switch (mode)
 	            {
 	            	case PRE_AUTH:
@@ -94,7 +94,7 @@ public class Task extends TimerTask{
 	            }
 			}
 	         else {
-	        	System.err.println("Erorr!");
+	        	//System.err.println("Erorr!");
 	            switch (mode)
 	            {
 	            	case PRE_AUTH:

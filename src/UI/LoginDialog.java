@@ -102,6 +102,7 @@ public class LoginDialog extends JDialog {
 				
 			}
 			ld.dispose();
+			ld.parent.resumePopUp();
 		}
 		
 	}

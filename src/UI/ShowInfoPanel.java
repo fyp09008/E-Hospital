@@ -229,9 +229,14 @@ public class ShowInfoPanel extends Panels {
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if ( info.getInfo().getText().equals("")){
-				JOptionPane.showMessageDialog(null, "Record not selected");
+				JOptionPane o = new JOptionPane();
+				this.info.mf.addPopUP(o);
+				o.showMessageDialog(null, "Record not selected");
 			}	
-			 new EditInfoFrame(info.mf,true,result,pid,info);
+			else{
+				EditInfoFrame eif = new EditInfoFrame(info.mf,true,result,pid,info);
+			}
+			 //info.mf.addPopUP(eif);
 		}
 	};
 

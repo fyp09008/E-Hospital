@@ -2,11 +2,15 @@ package UI;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JButton;
@@ -22,6 +26,9 @@ import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
 import javax.swing.JScrollBar;
+import javax.swing.WindowConstants;
+
+import UI.MainFrame.CloseAction;
 
 /**
  * @author cctang
@@ -113,7 +120,8 @@ public class EditInfoFrame extends JDialog {
 	 * 
 	 */
 	private void initialize() {
-
+		this.mf.addPopUP(this);
+		this.addWindowListener(new CloseAction(this.mf));
 		this.setSize(new Dimension(300, 500));
 		this.setTitle(id + "'s Personal Information");
 
@@ -122,6 +130,7 @@ public class EditInfoFrame extends JDialog {
       	this.add(getUpPanel(),BorderLayout.CENTER);
       	this.add(getBtnPanel(),BorderLayout.SOUTH);
       	this.setVisible(true);
+      	
         
 	}
 	/**
@@ -129,7 +138,7 @@ public class EditInfoFrame extends JDialog {
 	 * 
 	 */
 	private JPanel getRePanel(){
-		System.out.println("In getRePanel");
+		//System.out.println("In getRePanel");
 		if (rePanel == null){
 			rePanel = new JPanel();
 			rePanel.setLayout(new GridLayout(1,2));
@@ -348,12 +357,13 @@ public class EditInfoFrame extends JDialog {
 		return genderBox;
 	}
 	class CancelAction implements ActionListener  {
-		private JDialog frame = null;
-		public CancelAction(JDialog f){
+		private EditInfoFrame frame = null;
+		public CancelAction(EditInfoFrame f){
 			super();
 			frame = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			 frame.mf.popup = new ArrayList<Component>();
 			 frame.dispose();// TODO Auto-generated Event stub actionPerformed()
 		}
 	};
@@ -364,7 +374,9 @@ public class EditInfoFrame extends JDialog {
 			frame = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			int ans = JOptionPane.showConfirmDialog(null, "Sure?");
+			JOptionPane o = new JOptionPane();
+			this.frame.mf.addPopUP(o);
+			int ans = o.showConfirmDialog(null, "Sure?");
 			if ( ans == 0){
 				//parentPanel.hasEditted();
 				//frame.dispose();
@@ -387,17 +399,61 @@ public class EditInfoFrame extends JDialog {
 				
 				String[][] result2 = frame.mf.sendQuery("UPDATE", tables, fields, "pid = " + frame.id, result[0]);
 				if ( result2[0][0].equals("true")){
-					JOptionPane.showMessageDialog(null, "Record modified!");
-					JOptionPane.showMessageDialog(null, "Refresh now");
+					JOptionPane m = new JOptionPane();
+					this.frame.mf.addPopUP(o);
+					m.showMessageDialog(null, "Record modified!");
+					m.showMessageDialog(null, "Refresh now");
 					frame.mf.changePanel(0);
-					JOptionPane.showMessageDialog(null, "refresh finish");
+					
+					m.showMessageDialog(null, "refresh finish");
+					frame.mf.popup = new ArrayList<Component>();
 					frame.dispose();
-				}else JOptionPane.showMessageDialog(null, "Fail!");
+				}else {
+					JOptionPane m = new JOptionPane();
+					this.frame.mf.addPopUP(o);
+					frame.mf.popup = new ArrayList<Component>();
+					m.showMessageDialog(null, "Fail!");
+				}
 				
 			}
 			// TODO Auto-generated Event stub actionPerformed()
 		}
 	};
+	
+	class CloseAction implements WindowListener{
+		
+		MainFrame mf = null;
+		public CloseAction(MainFrame mf){
+			//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			this.mf = mf;	
+		}
+		public void windowClosing(WindowEvent we){
+			mf.popup = new ArrayList<Component>();
 
+	      }
+		public void windowActivated(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowClosed(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+		}
+		public void windowDeactivated(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowDeiconified(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowIconified(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowOpened(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

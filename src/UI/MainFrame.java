@@ -13,6 +13,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.GridBagLayout;
@@ -25,6 +26,7 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.Vector;
@@ -40,6 +42,7 @@ import java.awt.event.WindowListener;
 import java.awt.ComponentOrientation;
 
 public class MainFrame extends JFrame {
+	public ArrayList<Component> popup = null;
 	private static final long serialVersionUID = 1L;
 	private Client client = null;
 	private JPanel jContentPane = null;
@@ -186,7 +189,9 @@ public class MainFrame extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 			if ( no == buttons.size()-1){ //last button = logout
-	    		 int ans = JOptionPane.showConfirmDialog(null, "Logout?");
+				JOptionPane o = new JOptionPane();
+				mf.addPopUP(o);
+	    		 int ans = o.showConfirmDialog(null, "Logout?");
 	    		 if ( ans == 0 ){
 	    			 mf.doLogout();
 	    			 //System.exit(0);
@@ -199,14 +204,19 @@ public class MainFrame extends JFrame {
 	public void doLogout(){
 		
 		if (this.logout()){
-			JOptionPane.showMessageDialog(null,"Logout+ed");
+			JOptionPane o = new JOptionPane();
+			this.addPopUP(o);
+			o.showMessageDialog(null,"Logout+ed");
 			client.getT().cancel();
 			client.setT(new Timer());
 			client.getT().schedule(new Task(client.getT(), this, Task.PRE_AUTH), new Date(), Task.PERIOD);
 			logoutPanel(true);
 		}
-		else
-			JOptionPane.showMessageDialog(null,"un logout");
+		else{
+			JOptionPane o = new JOptionPane();
+			this.addPopUP(o);
+			o.showMessageDialog(null,"un logout");
+		}
 	}
 /*	class BackActions implements ActionListener{
 		int no;
@@ -305,6 +315,8 @@ public class MainFrame extends JFrame {
 	public void disableAllBtns(){
 		for ( int i = 0 ; i < buttons.size(); i++)
 			buttons.get(i).setEnabled(false);
+		System.out.println("read to lock popup");
+		this.killPopUp();
 	}
 
 	/**
@@ -322,7 +334,9 @@ public class MainFrame extends JFrame {
 		public void windowClosing(WindowEvent we){
 			mf.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 	    	 if ( client.isConnected()){
-	    		 int ans = JOptionPane.showConfirmDialog(null, "Logout and exit?");
+	 			JOptionPane o = new JOptionPane();
+				this.mf.addPopUP(o);
+	    		 int ans = o.showConfirmDialog(null, "Logout and exit?");
 	    		 if ( ans == 0 ){
 	    			 mf.doLogout();
 	    			 System.exit(0);
@@ -357,7 +371,9 @@ public class MainFrame extends JFrame {
 	}
 	private void initialize() {
 		this.addWindowListener(new CloseAction(this));
+		this.popup = new ArrayList<Component>();
 		//init buttons
+		this.
 		initButtons();
 		//init UI
 		this.setSize(1024,750);
@@ -369,7 +385,35 @@ public class MainFrame extends JFrame {
 		//init as logout status
 		logoutPanel(false);
 	}
-
+	public void addPopUP(Component o){
+		//System.out.println("add component: " + o.toString());
+		this.popup.add(o);
+	}
+	
+	public void killPopUp(){
+		for ( int i = 0 ; i < popup.size(); i++){
+			if( popup.get(i) != null){
+				System.out.println("lock");
+				popup.get(i).setVisible(false);
+				if ( popup.get(i).getClass().getName().equals("javax.swing.JOptionPane")){
+					((JOptionPane)popup.get(i)).getRootFrame().setVisible(false);
+				}
+			}
+		}
+	}
+	public void resumePopUp(){
+		for ( int i = 0 ; i < popup.size(); i++){
+			if( popup.get(i) != null){
+				System.out.println("resume");
+				popup.get(i).setVisible(true);
+				if ( popup.get(i).getClass().getName().equals("javax.swing.JOptionPane")){
+					((JOptionPane)popup.get(i)).getRootFrame().setVisible(true);
+				}
+			}
+		}
+		//popup = new ArrayList<Component>();
+	}
+	
 	/**
 	 * This method initializes jContentPane
 	 * 
