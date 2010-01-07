@@ -53,8 +53,8 @@ public class Client {
 	private String id = null;
 	private String name = "null";
 	private String password = "null";
-	private int port = 8899;
-	private String server = "hw310-30";
+	private int port = 9090;
+	private String server = "localhost";
 	private RSASoftware rsa = null;
 	private boolean isConnected = false;
 	private RSAHardware rsaHard = null;
