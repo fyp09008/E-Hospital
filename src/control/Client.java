@@ -123,6 +123,7 @@ public class Client {
 		this.in = null;
 		this.card = null;
 		this.skeySpec = null;
+		this.mf.logoutPanel(true);
 		System.out.println("Reseted all");
 	}
 	public boolean isConnected(){
@@ -497,7 +498,8 @@ public class Client {
 	}
 
 	public boolean authenicate() {
-		this.connect();
+		if ( ! isConnected)
+			this.connect();
 		if (isConnected) {
 			//TODO separate into class
 			System.out.println("name:"+name);
@@ -510,7 +512,7 @@ public class Client {
 				System.out.println("before inin jc");
 				t.cancel();
 				if (rsaHard.initJavaCard("285921800099") == -1){
-					JOptionPane.showMessageDialog(null, "Fail");
+					JOptionPane.showMessageDialog(null, "init card Fail");
 					disconnect();
 					isConnected = false;
 					return false;
@@ -636,18 +638,19 @@ public class Client {
 	public void re_login()
 	{	
 		new LoginDialog(mf,true,this);
-		/*mf.restorePanel();
-		t.cancel();
-		t = new Timer();
-		t.schedule(new Task(t, mf, Task.AFTER_AUTH), new Date(), 1000);*/
 	}
-
+	public void reload(){
+		t.cancel();
+		mf.restorePanel();
+		t = new Timer();
+		t.schedule(new Task(t, mf, Task.AFTER_AUTH), new Date(), Task.PERIOD);
+	}
 	
 	public void card_unplug()
 	{
 		t.cancel();
 		t = new Timer();
-		t.schedule(new Task(t, mf, Task.WAIT_REAUTH), new Date(), 1000);
+		t.schedule(new Task(t, mf, Task.WAIT_REAUTH), new Date(),Task.PERIOD);
 	}
 
 	
