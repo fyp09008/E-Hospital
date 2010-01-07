@@ -191,7 +191,6 @@ public class LoginPanel extends Panels  {
 			}
 			else{
 				if (p.login(id,pw)){
-					
 					mf.checkPrivilege();
 					mf.changePanel(-1);
 				}

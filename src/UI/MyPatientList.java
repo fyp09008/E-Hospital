@@ -79,6 +79,7 @@ public class MyPatientList extends Panels {
 		}
 		return tabPanel;
 	}
+	
 	private JScrollPane[] getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane[TABLENUM];
@@ -115,7 +116,7 @@ public class MyPatientList extends Panels {
 			return null;
 		}
 	}
-
+	
 	private JPanel getShowPanel() {
 		if (showPanel == null) {
 			showPanel = new JPanel();
