@@ -515,6 +515,8 @@ public class Client {
 					JOptionPane.showMessageDialog(null, "init card Fail");
 					disconnect();
 					isConnected = false;
+			    	t = new Timer();
+			    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 					return false;
 				}
 				System.out.println("after inin jc");
@@ -525,6 +527,8 @@ public class Client {
 					JOptionPane.showMessageDialog(null, "Fail");
 					disconnect();
 					isConnected = false;
+			    	t = new Timer();
+			    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 					return false;
 				}
 			} catch (NoSuchAlgorithmException e1) {
@@ -555,7 +559,7 @@ public class Client {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-					//System.out.println("jk:"+rs2[0][0]);
+					
 			    	this.setPrivilege(rs2[0]);
 			    	this.setID(rs2[0][0]);
 			    	for ( int i = 0;i < this.privileges.length; i++)
@@ -580,6 +584,8 @@ public class Client {
 			    	this.password=null;
 			    	disconnect();
 			    	isConnected = false;
+			    	t = new Timer();
+			    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 			    	return false;
 			    }
 		    } catch (IOException e) {
@@ -588,6 +594,8 @@ public class Client {
 				disconnect();
 				this.password=null;
 				isConnected = false;
+		    	t = new Timer();
+		    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 				return false;
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -595,18 +603,24 @@ public class Client {
 				this.password=null;
 				disconnect();
 				isConnected = false;
+		    	t = new Timer();
+		    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 				return false;
 			} catch (Exception e){
 				e.printStackTrace();
 				disconnect();
 				this.password=null;
 				isConnected = false;
+		    	t = new Timer();
+		    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 				return false;
 			}
 		}
 		this.password=null;
 		disconnect();
 		isConnected = false;
+    	t = new Timer();
+    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 		return false;
 	}
 	

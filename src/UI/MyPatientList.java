@@ -54,7 +54,7 @@ public class MyPatientList extends Panels {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setSize(1024, 690);		
         this.add(getUpPanel(), null);
-        this.add(getGoPanel(),null);
+        //this.add(getGoPanel(),null);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class MyPatientList extends Panels {
 	private JPanel getShowPanel() {
 		if (showPanel == null) {
 			showPanel = new JPanel();
-			showPanel.setPreferredSize(new Dimension(500, 10));
+			showPanel.setPreferredSize(new Dimension(750, 10));
 			showPanel.setLayout(new BorderLayout());
 			showInfo = new ShowInfoPanel(this.mf);
 			showPanel.add(showInfo,BorderLayout.CENTER);
@@ -150,13 +150,15 @@ public class MyPatientList extends Panels {
 		String[] where = new String[TABLENUM];
 		System.out.println("before where");
 		//where clauses
-		where[0] = "name rlike '^[abcd]' ORDER BY name";
-		where[1] = "name rlike '^[efgh]' ORDER BY name";
-		where[2] = "name rlike '^[ijkl]' ORDER BY name";
-		where[3] = "name rlike '^[mnop]' ORDER BY name";
-		where[4] = "name rlike '^[qrst]' ORDER BY name";
-		where[5] = "name rlike '^[uvwx]' ORDER BY name";
-		where[6] = "name rlike '^[^abcdefghijklmnopqrstuvwx]' ORDER BY name";
+		String allWhere = "(pid in ( SELECT pid FROM treatment where pic = " + mf.getClient().getID()
+					+ ") or pid in ( SELECT pid from patient_personal where pic = " + mf.getClient().getID() + " )) ";
+		where[0] = allWhere + " AND " + "name rlike '^[abcd]' ORDER BY name";
+		where[1] = allWhere + " AND " + "name rlike '^[efgh]' ORDER BY name";
+		where[2] = allWhere + " AND " + "name rlike '^[ijkl]' ORDER BY name";
+		where[3] = allWhere + " AND " + "name rlike '^[mnop]' ORDER BY name";
+		where[4] = allWhere + " AND " + "name rlike '^[qrst]' ORDER BY name";
+		where[5] = allWhere + " AND " + "name rlike '^[uvwx]' ORDER BY name";
+		where[6] = allWhere + " AND " + "name rlike '^[^abcdefghijklmnopqrstuvwx]' ORDER BY name";
 		
 		//end of making where clauses
 		

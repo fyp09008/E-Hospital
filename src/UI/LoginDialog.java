@@ -1,5 +1,6 @@
 package UI;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -10,8 +11,11 @@ import java.util.Timer;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
 
 import control.Client;
 
@@ -21,8 +25,19 @@ public class LoginDialog extends JDialog {
 	private Client client = null;
 	private JButton loginBtn = null;
 	private MainFrame parent = null;
+	private JPanel btnPanel = null;
+	private JPanel fldPanel = null;
 
-
+	public JPanel getFldPanel() {
+		if ( fldPanel == null){
+			fldPanel = new JPanel(new GridLayout(1,2));
+			JLabel label = new JLabel("Password");
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			fldPanel.add(new JLabel("Password"));
+			fldPanel.add(getPwFld());
+		}
+		return fldPanel;
+	}
 	public LoginDialog(MainFrame parent, boolean modal,Client c){
 		
 		super(parent,modal);
@@ -38,14 +53,25 @@ public class LoginDialog extends JDialog {
 		return loginBtn;
 	}
 
+	public JPanel getBtnPanel() {
+		if ( btnPanel == null){
+			btnPanel = new JPanel();
+			btnPanel.add(getLoginBtn());
+		}
+		return btnPanel;
+	}
 	public void initialize(){
-		this.setSize(new Dimension(300,300));
-		this.setLayout(new GridLayout(2,2));
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.setLocationRelativeTo(parent);
+		this.setTitle("re-authentication");
+		this.setSize(new Dimension(300,100));
+		this.setLayout(new BorderLayout());
 		//this.add(new JLabel("Name"));
 		//this.add(getNameFld());
-		this.add(new JLabel("Password"));
-		this.add(getPwFld());
-		this.add(getLoginBtn());
+		//this.add(new JLabel("Password"));
+		//this.add(getPwFld());
+		this.add(getFldPanel(),BorderLayout.CENTER);
+		this.add(getBtnPanel(),BorderLayout.SOUTH);
 		this.setVisible(true);
 		
 	}
@@ -54,6 +80,7 @@ public class LoginDialog extends JDialog {
 			pwFld = new JPasswordField();
 		return pwFld;
 	}
+	
 	class ButtonAction implements ActionListener {
 		LoginDialog ld = null;
 		public ButtonAction(LoginDialog ld){

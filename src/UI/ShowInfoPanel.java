@@ -16,7 +16,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
-
+import javax.swing.JOptionPane;
 public class ShowInfoPanel extends Panels {
 
 	private JScrollPane jScrollPane = null;
@@ -42,7 +42,7 @@ public class ShowInfoPanel extends Panels {
 		this.getInfo().setEditable(false);
 		String br = "\n";
 		this.getInfo().setText("");
-		this.getInfo().append("********** Read-only **********"+br);
+		this.getInfo().append("********** Read-only **********"+br+br);
 		//deal with patient personal info
 		String[] tables = {"Patient_personal"};
 		String[] fields = {"name","gender","address","contact_no",
@@ -50,7 +50,7 @@ public class ShowInfoPanel extends Panels {
 		result = mf.sendQuery("SELECT", tables, 
 				fields, "pid = '"+pid+"'",null);
 		if ( result != null){
-			this.getInfo().append("********** Personal **********"+br);
+			this.getInfo().append("********** Personal **********"+br+br);
 			this.getInfo().append("Name: "+result[0][0]+br);
 			this.getInfo().append("Gender: " + result[0][1]+br);
 			this.getInfo().append("Address: " + result[0][2]+br);
@@ -59,20 +59,40 @@ public class ShowInfoPanel extends Panels {
 			this.getInfo().append("Person In Charge: " + result[0][5]+br);
 			this.getInfo().append("Remarks: " + br + result[0][6]+br);			
 		}
-		
 		//deal with allergy
 		String[] allergyTable = {"allergy","`dia-allergy_rec`"};
 		String[] allergyFields = {"name"};
 		String[][] allergyResult = mf.sendQuery("SELECT", allergyTable, 
 				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id"
 				+ " AND `dia-allergy_rec`.`pat_id` = "+pid, null);
-		if ( allergyResult != null){
-			this.getInfo().append("********** Allergies **********"+br);
+		System.out.println(allergyResult.length);
+		if ( ! (allergyResult.length == 0)){
+			this.getInfo().append(br+"********** Allergies **********"+br+br);
 			for ( int i = 0; i < allergyResult.length; i++){
 				this.getInfo().append(allergyResult[i][0]+br);
 			}
 		}
-		this.getInfo().append("*******************************"+br);
+		
+		
+		String[] treatmentTable = {"treatment"};
+		String[] treatmentFields = {"pic","date_of_issue","description"};
+		String[][] treatmentResult = mf.sendQuery("SELECT", treatmentTable, 
+				treatmentFields, "pid = "+pid, null);
+		if ( ! (treatmentResult.length == 0)){
+			this.getInfo().append(br+"********** Treatments **********"+br+br);
+			for ( int i = 0;  i < treatmentResult.length; i++){
+				this.getInfo().append("PIC: ");
+				this.getInfo().append(treatmentResult[i][0]+br);
+				this.getInfo().append("Date of Issue: ");
+				this.getInfo().append(treatmentResult[i][1]+br);
+				this.getInfo().append("Description: ");
+				this.getInfo().append(treatmentResult[i][2]+br);
+				this.getInfo().append(br+"+++++++++++++++++++++++++++++++"+br);
+			}
+			
+		}
+		
+		this.getInfo().append(br+"*******************************"+br);
 	}
 	public void checkPrivilege(){
 		String[] pri = mf.getPrivileges();
@@ -95,7 +115,7 @@ public class ShowInfoPanel extends Panels {
         this.setSize(new Dimension(1024, 590));
         //this.add(getInfo(), BorderLayout.CENTER);
         this.add(getJScrollPane(), BorderLayout.CENTER);
-        getInfo().setText("Click to retrieve information");
+        getInfo().setText("");
         this.add(getBtnPanel(),BorderLayout.SOUTH);
 	}
 	private JPanel getBtnPanel(){
@@ -208,6 +228,9 @@ public class ShowInfoPanel extends Panels {
 			info = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
+			if ( info.getInfo().getText().equals("")){
+				JOptionPane.showMessageDialog(null, "Record not selected");
+			}	
 			 new EditInfoFrame(info.mf,true,result,pid,info);
 		}
 	};
