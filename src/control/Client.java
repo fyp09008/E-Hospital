@@ -641,9 +641,7 @@ public class Client {
 		t = new Timer();
 		t.schedule(new Task(t, mf, Task.AFTER_AUTH), new Date(), 1000);*/
 	}
-	public void reAuthenicate(){
-		
-	}
+
 	
 	public void card_unplug()
 	{
