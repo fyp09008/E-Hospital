@@ -39,7 +39,16 @@ import com.ibm.jc.JCard;
 
 
 
+
 public class Client {
+	private static byte[] fingerprint = {(byte)0x16,(byte)0x27,(byte)0xac,(byte)0xa5,
+			(byte)0x76,(byte)0x28,(byte)0x2d,(byte)0x36,
+			(byte)0x63,(byte)0x1b,(byte)0x56,(byte)0x4d,(byte)0xeb,(byte)0xdf,(byte) 0xa6 , (byte)0x48 };
+	
+	private final String pub = "10001";
+	private final String mod = "a89877a7e5150456b696d40a9a35ac5ce72cf331ed6463bb05a658a98962739a244d770e78f70e0dd1c07404e2e77aaf9dba6ff3ee21a38a5555c1cbd28a2f7fed603b25a9cf8a6ff1a330503c882b300d855a9c315aa7eec4fca5ee3e7ca351b7e086309de90d2ad4183a606352b052b0c990856df7b3a106f76a48ea004a19";
+
+	
 	private static final byte[] key = {-19, -11, 122, 111, -37, -13, 16, -47, -65, 78, -126, -128, -88, 54, 101, 86};
 	private static final SecretKeySpec ProgramKey = new SecretKeySpec(key, "AES");
 	
@@ -53,7 +62,7 @@ public class Client {
 	private String id = null;
 	private String name = "null";
 	private String password = "null";
-	private int port = 9090;
+	private int port = 8899;
 	private String server = "localhost";
 	private RSASoftware rsa = null;
 	private boolean isConnected = false;
@@ -502,6 +511,24 @@ public class Client {
 			this.connect();
 		if (isConnected) {
 			//TODO separate into class
+			
+			ServerAuthRequestMessage sarm = new ServerAuthRequestMessage();
+			try {
+				out.writeObject((Object) encryptPAES(objToBytes(sarm)));
+				ServerAuthResponseMessage response = (ServerAuthResponseMessage)BytesToObj(decryptPAES((byte[])in.readObject()));
+				RSASoftware rsaServer = new RSASoftware();
+				rsaServer.setPublicKey(this.pub, mod);
+				byte[] fpReceived = response.getEncryptedFingerprint();
+				fpReceived = rsaServer.unsign(fpReceived, fpReceived.length);
+				if (!cmpByteArray(fpReceived,fingerprint)) {
+					return false;
+				}
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+				return false;
+			}
+			
 			System.out.println("name:"+name);
 			System.out.println("password:"+password);
 			AuthRequestMessage reqMsg = new AuthRequestMessage();
@@ -624,6 +651,18 @@ public class Client {
 		return false;
 	}
 	
+	private boolean cmpByteArray(byte[] b1, byte[] b2) {
+		if(b1.length != b2.length) {
+			return false;
+		}
+		for(int i = 0; i < b1.length; i++) {
+			if(b1[i] != b2[i]) {
+				return false;
+			}
+		}
+		return false;
+	}
+
 	public void disconnect() {
 		    try {
 				out.close();
