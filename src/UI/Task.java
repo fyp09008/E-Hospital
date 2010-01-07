@@ -18,6 +18,7 @@ public class Task extends TimerTask{
 	private Timer t;
 	private MainFrame mf;
 	private int mode;
+	public static final int PERIOD = 1000;
 	
 	public Task(Timer t, MainFrame mf, int mode) {
 		super();
@@ -44,11 +45,12 @@ public class Task extends TimerTask{
 		//byte [] a = {0x00, 0x02};
 		System.out.println("Generating report:"+now.getHours()+":"+now.getMinutes()+":"+ now.getSeconds());
         boolean haveCard = true;
+        JavaCardManager jcm = null;
         
       //  terminal.PCSCJCTerminal.send(0,a,0,0);
         
 		try{
-		JavaCardManager jcm = new JavaCardManager(JavaCardManager.JCM_PCSC, "ACS ACR38U 0", "285921800099");
+		jcm = new JavaCardManager(JavaCardManager.JCM_PCSC, "ACS ACR38U 0", "285921800099");
 	    }
 		catch(Exception e) {
       			System.err.println("Erorr!");
@@ -69,7 +71,7 @@ public class Task extends TimerTask{
       	
       	
       	if (haveCard == true){
-	      	JavaCardManager jcm = new JavaCardManager(JavaCardManager.JCM_PCSC, "ACS ACR38U 0", "285921800099");
+	      	//JavaCardManager jcm = new JavaCardManager(JavaCardManager.JCM_PCSC, "ACS ACR38U 0", "285921800099");
 		    
 	      	JCard c = jcm.getCard(); 
 	      	
@@ -87,7 +89,7 @@ public class Task extends TimerTask{
 	            	case AFTER_AUTH:
 	            		break;
 	            	case WAIT_REAUTH:
-	            		mf.getClient().re_auth();
+	            		mf.getClient().re_login();
 	            		break;
 	            }
 			}

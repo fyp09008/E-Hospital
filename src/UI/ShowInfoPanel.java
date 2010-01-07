@@ -76,10 +76,12 @@ public class ShowInfoPanel extends Panels {
 	}
 	public void checkPrivilege(){
 		String[] pri = mf.getPrivileges();
+		//write
 		if ( pri[1].equals("true")){
 			editBtn.setEnabled(true);
 			allgeryBtn.setEnabled(true);
 		}
+		//read
 		if ( pri[2].equals("true")){
 			treatmentBtn.setEnabled(true);
 		}

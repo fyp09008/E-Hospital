@@ -11,7 +11,6 @@ import java.math.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-
 public class Register {
 	private static String setPublicKeyURL = "http://localhost/plugin/setPublicKey.php";
 	

@@ -25,6 +25,8 @@ import java.awt.GridLayout;
 import javax.swing.JLabel;
 
 import java.sql.ResultSet;
+import java.util.Date;
+import java.util.Timer;
 import java.util.Vector;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -83,7 +85,8 @@ public class MainFrame extends JFrame {
 	 */
 	
 	public void restorePanel(){
-		
+			this.enableAllBtns();
+			this.checkPrivilege();
 		//if (!( prePanel.getComponent(0) instanceof LoginPanel))
 		//{
 			prePanel.revalidate();
@@ -112,8 +115,14 @@ public class MainFrame extends JFrame {
 			prePanel = (Panels)mainPanel.clone();
 			mainPanel = new Panels();
 			switch(no){
-			case -1: {mainPanel.add(new WelcomePanel(this)); break;}
-			case -2: {mainPanel.add(new Panels()); client.card_unplug(); break;}
+			case -1: {mainPanel.add(new WelcomePanel(this)); break;} //welcome page
+			//lock screen
+			case -2: {
+				this.disableAllBtns();
+				mainPanel.add(new Panels()); 
+				client.card_unplug(); 
+				break;
+			}
 			case 0: { mainPanel.add(new MyPatientList(this)); break;}
 			//case 1: { mainPanel.add(new ShowInfoPanel()); break;}
 			}
@@ -135,6 +144,9 @@ public class MainFrame extends JFrame {
 		client.setPassword(pw);
 	}
 	public void checkPrivilege(){
+		if ( client.getPrivileges() == null)
+			return;
+		
 		String[] pri = client.getPrivileges();
 		/* 0 = READ, 1 = WRITE, 2 = ADD*/
 		if ( pri[0].equals("true")){
@@ -188,7 +200,10 @@ public class MainFrame extends JFrame {
 		
 		if (this.logout()){
 			JOptionPane.showMessageDialog(null,"Logout+ed");
-			logoutPanel();
+			client.getT().cancel();
+			client.setT(new Timer());
+			client.getT().schedule(new Task(client.getT(), this, Task.PRE_AUTH), new Date(), Task.PERIOD);
+			logoutPanel(true);
 		}
 		else
 			JOptionPane.showMessageDialog(null,"un logout");
@@ -214,7 +229,7 @@ public class MainFrame extends JFrame {
 	 * This method change the panel to LoginPanel
 	 * and delete prePanel
 	 */
-	public void logoutPanel(){
+	public void logoutPanel(boolean open){
 		prePanel = null;
 		//disable all buttons before authentication
 		disableAllBtns();
@@ -223,6 +238,8 @@ public class MainFrame extends JFrame {
 		mainPanel.setLayout(new GridLayout());
 		mainPanel.setPreferredSize(new Dimension(1024, 590));
 		loginPanel = new LoginPanel(this);
+		if (open)
+			loginPanel.enableAll();
 		mainPanel.add(loginPanel);
 		jContentPane.add(mainPanel,BorderLayout.CENTER);
 		jContentPane.invalidate();
@@ -280,6 +297,10 @@ public class MainFrame extends JFrame {
 	
 	public void enableButton(int i){
 		buttons.get(i).setEnabled(true);
+	}
+	public void enableAllBtns(){
+		for ( int i = 0 ; i < buttons.size(); i++)
+			buttons.get(i).setEnabled(false);
 	}
 	public void disableAllBtns(){
 		for ( int i = 0 ; i < buttons.size(); i++)
@@ -346,7 +367,7 @@ public class MainFrame extends JFrame {
 		this.setVisible(true);
 		
 		//init as logout status
-		logoutPanel();
+		logoutPanel(false);
 	}
 
 	/**

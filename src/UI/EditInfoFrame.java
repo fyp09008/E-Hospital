@@ -29,7 +29,8 @@ import javax.swing.JScrollBar;
  */
 
 public class EditInfoFrame extends JDialog {
-	 private MainFrame mf = null;
+	
+	private MainFrame mf = null;
 	private String id = "-1";
 	private JLabel idLab = null;
 	private JTextField idFld = null;

@@ -28,6 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
 
 import message.*;
+import UI.LoginDialog;
 import UI.MainFrame;
 import UI.Task;
 import cipher.RSAHardware;
@@ -53,7 +54,7 @@ public class Client {
 	private String name = "null";
 	private String password = "null";
 	private int port = 8899;
-	private String server = "172.16.4.53";
+	private String server = "hw310-30";
 	private RSASoftware rsa = null;
 	private boolean isConnected = false;
 	private RSAHardware rsaHard = null;
@@ -568,7 +569,7 @@ public class Client {
 			    	//disconnect();
 			    	this.password=null;
 			    	t = new Timer();
-			    	t.schedule(new Task(t, mf, Task.AFTER_AUTH), new Date(), 2000);
+			    	t.schedule(new Task(t, mf, Task.AFTER_AUTH), new Date(), Task.PERIOD);
 			    	return true;
 			    } else {
 			    	System.out.println(reMsg.isAuth);
@@ -632,13 +633,15 @@ public class Client {
 		this.mf = mf;
 	}
 	
-	public void re_auth()
-	{
-		mf.restorePanel();
+	public void re_login()
+	{	
+		new LoginDialog(mf,true,this);
+		/*mf.restorePanel();
 		t.cancel();
 		t = new Timer();
-		t.schedule(new Task(t, mf, Task.AFTER_AUTH), new Date(), 1000);
+		t.schedule(new Task(t, mf, Task.AFTER_AUTH), new Date(), 1000);*/
 	}
+
 	
 	public void card_unplug()
 	{
