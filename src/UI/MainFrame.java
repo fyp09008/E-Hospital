@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JComboBox;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -31,6 +32,9 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.ComponentOrientation;
 
 public class MainFrame extends JFrame {
@@ -45,9 +49,10 @@ public class MainFrame extends JFrame {
 	//private Module control = null;
 	private Vector<JButton> buttons = null;  //  @jve:decl-index=0:
 	//store previuos panel
-	private Panels prePanel = null;
+	private Panels prePanel;
+	public LoginPanel loginPanel = null;
 	//store current panel
-	private JPanel currentPanel = null;
+	//private JPanel currentPanel = null;
 	
 	/**
 	 * This is the constructor
@@ -65,7 +70,7 @@ public class MainFrame extends JFrame {
 	public String[] getStringPrivileges(){
 		return client.getStringPrivileges();
 	}
-	public int[] getPrivileges(){
+	public String[] getPrivileges(){
 		return client.getPrivileges();
 	}
 	public String getName(){
@@ -76,17 +81,22 @@ public class MainFrame extends JFrame {
 	 * used when card is re-plugin and re-authentication
 	 * success
 	 */
+	
 	public void restorePanel(){
-		prePanel.revalidate();
-		prePanel.getComponent(0).validate();
-		mainPanel = new Panels();
-		mainPanel.setLayout(new GridLayout());
-		mainPanel.setPreferredSize(new Dimension(1024, 590));
-		mainPanel.add(prePanel.getComponent(0));
-		jContentPane.remove(1);
-		jContentPane.add(mainPanel,BorderLayout.CENTER);
-		jContentPane.invalidate();
-		jContentPane.validate();
+		
+		//if (!( prePanel.getComponent(0) instanceof LoginPanel))
+		//{
+			prePanel.revalidate();
+			prePanel.getComponent(0).validate();
+			mainPanel = new Panels();
+			mainPanel.setLayout(new GridLayout());
+			mainPanel.setPreferredSize(new Dimension(1024, 590));
+			mainPanel.add(prePanel.getComponent(0));
+			jContentPane.remove(1);
+			jContentPane.add(mainPanel,BorderLayout.CENTER);
+			jContentPane.invalidate();
+			jContentPane.validate();
+		//}
 	}
 	 /**
 	  * This method changes current panel and store
@@ -98,12 +108,14 @@ public class MainFrame extends JFrame {
 	 * 2 - add patient, X
 	 */
 	public void changePanel(int no){
+		System.out.println("Changepanel");
 			prePanel = (Panels)mainPanel.clone();
 			mainPanel = new Panels();
 			switch(no){
 			case -1: {mainPanel.add(new WelcomePanel(this)); break;}
+			case -2: {mainPanel.add(new Panels()); client.card_unplug(); break;}
 			case 0: { mainPanel.add(new MyPatientList(this)); break;}
-			case 1: { mainPanel.add(new ShowInfoPanel()); break;}
+			//case 1: { mainPanel.add(new ShowInfoPanel()); break;}
 			}
 			jContentPane.remove(1);
 			mainPanel.setLayout(new GridLayout());
@@ -116,28 +128,32 @@ public class MainFrame extends JFrame {
 		client.setName(name);
 	}
 	public String[][] sendQuery(String type, String[] table, String[] field, 
-			String whereClause) {
-		return client.sendQuery(type, table, field, whereClause);
+			String whereClause, String[] values) {
+		return client.sendQuery(type, table, field, whereClause,values);
 	}
 	public void setPassword(String pw){
 		client.setPassword(pw);
 	}
 	public void checkPrivilege(){
-		int[] pri = client.getPrivileges();
+		String[] pri = client.getPrivileges();
 		/* 0 = READ, 1 = WRITE, 2 = ADD*/
-		if ( pri[0] == 1){
+		if ( pri[0].equals("true")){
 			enableButton(0);
 			enableButton(1);
 		}
-		if ( pri[1] == 1){
+		if ( pri[1].equals("true")){
 			enableButton(2);
 		}
-		
+		enableButton(buttons.size()-1);
 	}
-	public boolean authenicate(){
+	public boolean authenicate(String name, String password){
+		client.setName(name);
+		client.setPassword(password);
 		return client.authenicate();
 	}
-
+	public String getID(){
+		return client.getID();
+	}
 	 /**
 	 * This method add ActionListeners to the buttons
 	 */
@@ -157,8 +173,25 @@ public class MainFrame extends JFrame {
 			no = x;
 		}
 		public void actionPerformed(ActionEvent e) {
-			mf.changePanel(no);
+			if ( no == buttons.size()-1){ //last button = logout
+	    		 int ans = JOptionPane.showConfirmDialog(null, "Logout?");
+	    		 if ( ans == 0 ){
+	    			 mf.doLogout();
+	    			 //System.exit(0);
+	    		 }
+			}
+			else
+				mf.changePanel(no);
 		}
+	}
+	public void doLogout(){
+		
+		if (this.logout()){
+			JOptionPane.showMessageDialog(null,"Logout+ed");
+			logoutPanel();
+		}
+		else
+			JOptionPane.showMessageDialog(null,"un logout");
 	}
 /*	class BackActions implements ActionListener{
 		int no;
@@ -174,18 +207,23 @@ public class MainFrame extends JFrame {
 		}
 	}
 	*/
-
+	public boolean logout(){
+		return client.logout();
+	}
 	 /**
 	 * This method change the panel to LoginPanel
 	 * and delete prePanel
 	 */
-	public void logout(){
+	public void logoutPanel(){
 		prePanel = null;
+		//disable all buttons before authentication
+		disableAllBtns();
 		mainPanel = new Panels();
 		jContentPane.remove(1);
 		mainPanel.setLayout(new GridLayout());
 		mainPanel.setPreferredSize(new Dimension(1024, 590));
-		mainPanel.add(new LoginPanel(this));
+		loginPanel = new LoginPanel(this);
+		mainPanel.add(loginPanel);
 		jContentPane.add(mainPanel,BorderLayout.CENTER);
 		jContentPane.invalidate();
 		jContentPane.validate();
@@ -232,13 +270,12 @@ public class MainFrame extends JFrame {
 		buttons.add(new JButton("X"));
 		
 		icon = createImageIcon("logout.png",
-        "add patient");
-		buttons.add(new JButton("icon"));
+        "logout");
+		buttons.add(new JButton(icon));
 		
 		//init buttons' actions
 		initButtonAction();
-		//disable all buttons before authentication
-		disableAllBtns();
+
 	}
 	
 	public void enableButton(int i){
@@ -254,17 +291,62 @@ public class MainFrame extends JFrame {
 	 * 
 	 * @return void
 	 */
+	class CloseAction implements WindowListener{
+		
+		MainFrame mf = null;
+		public CloseAction(MainFrame mf){
+			//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			this.mf = mf;	
+		}
+		public void windowClosing(WindowEvent we){
+			mf.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+	    	 if ( client.isConnected()){
+	    		 int ans = JOptionPane.showConfirmDialog(null, "Logout and exit?");
+	    		 if ( ans == 0 ){
+	    			 mf.doLogout();
+	    			 System.exit(0);
+	    		 }
+	    	 }
+	    	 else
+	    		 System.exit(0);
+	      }
+		public void windowActivated(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowClosed(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+		}
+		public void windowDeactivated(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowDeiconified(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowIconified(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void windowOpened(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
 	private void initialize() {
+		this.addWindowListener(new CloseAction(this));
+		//init buttons
+		initButtons();
 		//init UI
 		this.setSize(1024,750);
 		this.setJMenuBar(getJJMenuBar());
 		this.setContentPane(getJContentPane());
 		this.setTitle("Secure Medicial System - fyp09008");
 		this.setVisible(true);
-		//init buttons
-		initButtons();
+		
 		//init as logout status
-		logout();
+		logoutPanel();
 	}
 
 	/**
@@ -341,6 +423,12 @@ public class MainFrame extends JFrame {
 			//mainPanel.add(getJButton5(), null);
 		}
 		return mainPanel;
+	}
+	public Client getClient() {
+		return client;
+	}
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
 }  //  @jve:decl-index=0:visual-constraint="16,7"

@@ -77,6 +77,21 @@ public class RSAHardware {
 		return 0;
 	}
 	
+	public int initJavaCard(String aid) {
+		JavaCardManager jcm = null;
+
+		try {
+			// PCSC Card Reader
+			jcm = new JavaCardManager(JavaCardManager.JCM_PCSC, "ACS ACR38U 0", aid);
+		} catch (JCException ex) {
+			return -1;
+		}
+
+		card01 = jcm.getCard();
+		
+		return 0;
+	}
+	
 	public String getGeneratedPrivateKeyExp() {
 		return privateKeyExp;
 	}
@@ -122,6 +137,27 @@ public class RSAHardware {
 	}
 	
 	public byte[] decrypt(byte[] ciphertext, int length) {
+		try {
+			byte[] plaintext = sendCmd(0x13, 0x05, 0x00, 0x00, length, ciphertext, 128);
+			
+			return plaintext;
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+	
+	
+	public byte[] sign(byte[] plaintext, int length) {
+		try {
+			byte[] ciphertext = sendCmd(0x13, 0x04, 0x00, 0x00, length, plaintext, 128);
+			
+			return ciphertext;
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+	
+	public byte[] unsign(byte[] ciphertext, int length) {
 		try {
 			byte[] plaintext = sendCmd(0x13, 0x05, 0x00, 0x00, length, ciphertext, 128);
 			

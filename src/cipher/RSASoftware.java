@@ -68,6 +68,7 @@ public class RSASoftware {
 				
 			return ciphertext;
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -87,6 +88,43 @@ public class RSASoftware {
 				
 			return result;
 		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	public byte[] sign(byte[] plaintext, int length) {
+		try {
+			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			cipher.init(Cipher.ENCRYPT_MODE, privateKey);
+			
+			byte[] ciphertext = new byte[128];
+			
+			cipher.doFinal(plaintext, 0, length, ciphertext);
+				
+			return ciphertext;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
+	public byte[] unsign(byte[] ciphertext, int length) {
+		try {
+			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+			cipher.init(Cipher.DECRYPT_MODE, publicKey);
+			
+			byte[] plaintext = new byte[128];
+			
+			int len = cipher.doFinal(ciphertext, 0, length, plaintext);
+			
+			byte[] result = new byte[len];
+			for (int i = 0; i < len; ++i)
+				result[i] = plaintext[i];
+				
+			return result;
+		} catch (Exception ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -98,6 +136,7 @@ public class RSASoftware {
 			KeyPair myPair = kpg.generateKeyPair();
 			
 			privateKey = (RSAPrivateKey) myPair.getPrivate();
+			//testing
 			publicKey = (RSAPublicKey) myPair.getPublic();
 		} catch (NoSuchAlgorithmException ex) {
 			return false;

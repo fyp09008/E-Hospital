@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="com.ibm.bluez.jcop.eclipse.containers.cardconfig/com.ibm.bluez.jcop.eclipse.cardconfigs.njcop"/>
 	<classpathentry kind="lib" path="/Javacard/lib/offcard.jar"/>
 	<classpathentry kind="lib" path="/Javacard/lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="/Javacard/lib/jpcsc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

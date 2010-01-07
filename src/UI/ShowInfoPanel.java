@@ -7,10 +7,12 @@ import java.awt.LayoutManager;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -18,12 +20,13 @@ import java.awt.event.ActionListener;
 public class ShowInfoPanel extends Panels {
 
 	private JScrollPane jScrollPane = null;
-	private JTextPane info = null;
+	private JTextArea info = null;
 	private String pid = null;
 	private JPanel btnPanel = null;
 	private JButton editBtn = null;
 	private JButton allgeryBtn = null;
 	private JButton treatmentBtn = null;
+	private String[][] result = null; 
 	private MainFrame mf = null;
 	/**
 	 * This method initializes 
@@ -35,11 +38,51 @@ public class ShowInfoPanel extends Panels {
 		initialize();
 		this.checkPrivilege();
 	}
-	public void getInfo(){
+	public void fetchInfo(){
+		this.getInfo().setEditable(false);
+		String br = "\n";
+		this.getInfo().setText("");
+		this.getInfo().append("********** Read-only **********"+br);
+		//deal with patient personal info
+		String[] tables = {"Patient_personal"};
+		String[] fields = {"name","gender","address","contact_no",
+				"birthday","pic","description"};
+		result = mf.sendQuery("SELECT", tables, 
+				fields, "pid = '"+pid+"'",null);
+		if ( result != null){
+			this.getInfo().append("********** Personal **********"+br);
+			this.getInfo().append("Name: "+result[0][0]+br);
+			this.getInfo().append("Gender: " + result[0][1]+br);
+			this.getInfo().append("Address: " + result[0][2]+br);
+			this.getInfo().append("Contact No.: " + result[0][3]+br);
+			this.getInfo().append("Date Of Birth: " + result[0][4]+br);
+			this.getInfo().append("Person In Charge: " + result[0][5]+br);
+			this.getInfo().append("Remarks: " + br + result[0][6]+br);			
+		}
 		
+		//deal with allergy
+		String[] allergyTable = {"allergy","`dia-allergy_rec`"};
+		String[] allergyFields = {"name"};
+		String[][] allergyResult = mf.sendQuery("SELECT", allergyTable, 
+				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id"
+				+ " AND `dia-allergy_rec`.`pat_id` = "+pid, null);
+		if ( allergyResult != null){
+			this.getInfo().append("********** Allergies **********"+br);
+			for ( int i = 0; i < allergyResult.length; i++){
+				this.getInfo().append(allergyResult[i][0]+br);
+			}
+		}
+		this.getInfo().append("*******************************"+br);
 	}
 	public void checkPrivilege(){
-		//int[] pri = 
+		String[] pri = mf.getPrivileges();
+		if ( pri[1].equals("true")){
+			editBtn.setEnabled(true);
+			allgeryBtn.setEnabled(true);
+		}
+		if ( pri[2].equals("true")){
+			treatmentBtn.setEnabled(true);
+		}
 	}
 	/**
 	 * This method initializes this
@@ -74,6 +117,7 @@ public class ShowInfoPanel extends Panels {
 	    editBtn.setHorizontalTextPosition(AbstractButton.CENTER);
 		editBtn.setPreferredSize(new Dimension(59, 80));
 		editBtn.addActionListener(new EditAction(this));
+		editBtn.setEnabled(false);
 		return editBtn;
 	}
 	private JButton getAllgeryButton(){
@@ -88,12 +132,13 @@ public class ShowInfoPanel extends Panels {
 				//new EditInfoFrame(); // TODO Auto-generated Event stub actionPerformed()
 			}
 		});
+		allgeryBtn.setEnabled(false);
 		return allgeryBtn;
 	}
 	private JButton getTreatmentButton(){
 		//ImageIcon icon = createImageIcon("edit-icon.png",
         //"a pretty but meaningless splat");
-		treatmentBtn = new JButton("Add Teatment");
+		treatmentBtn = new JButton("Add Treatment");
 		treatmentBtn.setVerticalTextPosition(AbstractButton.BOTTOM);
 		treatmentBtn.setHorizontalTextPosition(AbstractButton.CENTER);
 		treatmentBtn.setPreferredSize(new Dimension(59, 80));
@@ -102,6 +147,7 @@ public class ShowInfoPanel extends Panels {
 				//new EditInfoFrame(); // TODO Auto-generated Event stub actionPerformed()
 			}
 		});
+		treatmentBtn.setEnabled(false);
 		return treatmentBtn;
 	}
 	protected ImageIcon createImageIcon(String path,
@@ -127,14 +173,16 @@ public class ShowInfoPanel extends Panels {
 		return jScrollPane;
 	}
 	public void setInfo(String s){
-		getInfo().setText(s);
+		getInfo().append(s);
 	}
-	public void setInfo(String[] s, char de){
-		for(int i =0; i < s.length; i++)
-			getInfo().setText(s[i] + de);
+	public void setInfo(String s, char de){
+		//for(int i =0; i < s.length; i++)
+		getInfo().append(s);
+		//getInfo().setText("\n");
 	}
 	public void setPID(String s){
 		this.pid = s;
+		System.out.println("IN GETID: "+s);
 	}
 
 	/**
@@ -142,9 +190,9 @@ public class ShowInfoPanel extends Panels {
 	 * 	
 	 * @return javax.swing.JTextPane	
 	 */
-	private JTextPane getInfo() {
+	private JTextArea getInfo() {
 		if (info == null) {
-			info = new JTextPane();
+			info = new JTextArea();
 			info.setText("***********************************\n" 
 					+ "Click to see info"
 					+ "\n***********************************\n");
@@ -158,7 +206,7 @@ public class ShowInfoPanel extends Panels {
 			info = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			 new EditInfoFrame();
+			 new EditInfoFrame(info.mf,true,result,pid,info);
 		}
 	};
 

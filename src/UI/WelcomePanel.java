@@ -15,16 +15,22 @@ public class WelcomePanel extends Panels {
 		this.initialize();
 	}
 	private void initialize(){
-		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(getMsg(),BorderLayout.CENTER);
+		this.setLayout(new BorderLayout());
+		this.add(getMsg(),BorderLayout.CENTER);
 		this.addText(mf.getName(),mf.getStringPrivileges());
 	}
 	private void addText(String name, String[] pri){
-		getMsg().setText("Welcome "+name+"\n");
-		getMsg().setText("You have the following privileges\n");
+		//System.out.println(pri[0]);
+		getMsg().setText("Welcome\n");
+		getMsg().append("ID: " + mf.getID() + 
+				"\nName: " + mf.getName()+ " \n" );
+		getMsg().append("You have the following privileges\n");
 		for(int i = 0; i < pri.length; i++){
-			getMsg().setText(pri[i]+"\n");
+			if ( pri[i] != null)
+				getMsg().append(pri[i]+"\n");
 		}
+		getMsg().invalidate();
+		getMsg().validate();
 		
 		
 	}
@@ -34,7 +40,5 @@ public class WelcomePanel extends Panels {
 		}
 		return msg;
 	}
-	private JPanel getContentPane(){
-		return this.getContentPane();
-	}
+
 }
