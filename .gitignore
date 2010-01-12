@@ -1,5 +1,12 @@
 #This file allowed git to ignore certain file to be versioned.
+<<<<<<< HEAD
 Echo.java
 .classpath
 .project
 
+=======
+*.class
+.classpath
+.project
+Echo.java
+>>>>>>> 633b1f7013f439151ed0c1cb0fdcb49cf61ad6bd
