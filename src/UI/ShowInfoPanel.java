@@ -234,7 +234,7 @@ public class ShowInfoPanel extends Panels {
 				o.showMessageDialog(null, "Record not selected");
 			}	
 			else{
-				EditInfoFrame eif = new EditInfoFrame(info.mf,true,result,pid,info);
+				EditInfoDialog eif = new EditInfoDialog(info.mf,result,pid,info);
 			}
 			 //info.mf.addPopUP(eif);
 		}

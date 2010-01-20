@@ -19,7 +19,7 @@ import javax.swing.WindowConstants;
 
 import control.Client;
 
-public class LoginDialog extends JDialog {
+public class LoginDialog extends Dialogs {
 	//private JTextField nameFld = null;
 	private JPasswordField pwFld = null;
 	private Client client = null;

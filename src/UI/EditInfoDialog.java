@@ -35,10 +35,10 @@ import UI.MainFrame.CloseAction;
  *
  */
 
-public class EditInfoFrame extends JDialog {
+public class EditInfoDialog extends Dialogs {
 	
 	private MainFrame mf = null;
-	private String id = "-1";
+	//private String id = null;
 	private JLabel idLab = null;
 	private JTextField idFld = null;
 	private JLabel nameLab = null;
@@ -75,7 +75,7 @@ public class EditInfoFrame extends JDialog {
 	/**
 	 * 
 	 */
-	public EditInfoFrame() {
+	public EditInfoDialog() {
 		super();
 		initialize();
 	}
@@ -83,13 +83,13 @@ public class EditInfoFrame extends JDialog {
 	 *  
 	 * @param x 
 	 */
-	public EditInfoFrame(MainFrame parent, boolean modal,String[][] result,
+	public EditInfoDialog(MainFrame parent, String[][] result,
 			String x, ShowInfoPanel sip){
-		super(parent,modal);
+		super(parent);
 		this.mf = parent;
 		this.result = result;
 		this.sip = sip;
-		id = x;
+		//id = x;
 		this.fit();
 		initialize();
 	}
@@ -100,7 +100,7 @@ public class EditInfoFrame extends JDialog {
 	 */
 	public void fit(){
 		//System.out.println("***");
-		this.getIdFld().setText(id);
+		this.getIdFld().setText(this.getID());
 		this.getNameFld().setText(result[0][0]);
 		if ( result[0][1].equals("M"))
 			this.getGenderBox().setSelectedIndex(0);
@@ -123,7 +123,7 @@ public class EditInfoFrame extends JDialog {
 		this.mf.addPopUP(this);
 		this.addWindowListener(new CloseAction(this.mf));
 		this.setSize(new Dimension(300, 500));
-		this.setTitle(id + "'s Personal Information");
+		this.setTitle(this.getID() + "'s Personal Information");
 
 		this.setLayout(new BorderLayout());
 		//add
@@ -357,8 +357,8 @@ public class EditInfoFrame extends JDialog {
 		return genderBox;
 	}
 	class CancelAction implements ActionListener  {
-		private EditInfoFrame frame = null;
-		public CancelAction(EditInfoFrame f){
+		private EditInfoDialog frame = null;
+		public CancelAction(EditInfoDialog f){
 			super();
 			frame = f;
 		}
@@ -368,8 +368,8 @@ public class EditInfoFrame extends JDialog {
 		}
 	};
 	class DoneAction implements ActionListener  {
-		private EditInfoFrame frame = null;
-		public DoneAction(EditInfoFrame f){
+		private EditInfoDialog frame = null;
+		public DoneAction(EditInfoDialog f){
 			super();
 			frame = f;
 		}
@@ -397,7 +397,7 @@ public class EditInfoFrame extends JDialog {
 				String[] fields = {"name","gender","address","contact_no","birthday",
 					"pic","description"};
 				
-				String[][] result2 = frame.mf.sendQuery("UPDATE", tables, fields, "pid = " + frame.id, result[0]);
+				String[][] result2 = frame.mf.sendQuery("UPDATE", tables, fields, "pid = " + frame.getID(), result[0]);
 				if ( result2[0][0].equals("true")){
 					JOptionPane m = new JOptionPane();
 					this.frame.mf.addPopUP(o);

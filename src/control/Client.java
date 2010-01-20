@@ -57,6 +57,8 @@ public class Client {
 	private JCard card;
 	private SecretKeySpec skeySpec;
 	
+	private PrivilegeHandler pHandler = null;
+	
 	public void reset(){
 		
 		this.id = null;
