@@ -62,22 +62,20 @@ public class MainFrame extends JFrame {
 	/**
 	 * This is the constructor
 	 */
-	public MainFrame(Client c) {
+	public MainFrame() {
 		super();
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e){
 			e.printStackTrace();
 		}	
-		client = c;
+		client = Client.getInstance();
 		initialize();		
 	}
 	public String[] getStringPrivileges(){
 		return client.getStringPrivileges();
 	}
-	public String[] getPrivileges(){
-		return client.getPrivileges();
-	}
+	
 	public String getName(){
 		return client.getName();
 	}
@@ -147,10 +145,10 @@ public class MainFrame extends JFrame {
 		client.setPassword(pw);
 	}
 	public void checkPrivilege(){
-		if ( client.getPrivileges() == null)
+		if ( client.getStringPrivileges() == null)
 			return;
 		
-		String[] pri = client.getPrivileges();
+		String[] pri = client.getStringPrivileges();
 		/* 0 = READ, 1 = WRITE, 2 = ADD*/
 		if ( pri[0].equals("true")){
 			enableButton(0);
@@ -336,7 +334,7 @@ public class MainFrame extends JFrame {
 	    	 if ( client.isConnected()){
 	 			JOptionPane o = new JOptionPane();
 				this.mf.addPopUP(o);
-	    		 int ans = o.showConfirmDialog(null, "Logout and exit?");
+	    		 int ans = JOptionPane.showConfirmDialog(null, "Logout and exit?");
 	    		 if ( ans == 0 ){
 	    			 mf.doLogout();
 	    			 System.exit(0);

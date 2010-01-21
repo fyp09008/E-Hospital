@@ -15,23 +15,28 @@ import message.AuthRequestMessage;
 import message.AuthResponseMessage;
 import message.ServerAuthRequestMessage;
 import message.ServerAuthResponseMessage;
-import UI.Task;
 import cipher.RSASoftware;
 
 public class AuthHandler extends Handler{
 	
+	private String id = null;
+	private String name = null;
+	private String password = null;
+	
 	public boolean authenicate() {
-		if ( ! isConnected)
-			this.connect();
-		if (isConnected) {
+		if (!Connector.getInstance().isConnected()) {
+			
+			Connector.getInstance().connect();
+			
+		} else {
 			//TODO separate into class
 			
 			ServerAuthRequestMessage sarm = new ServerAuthRequestMessage();
 			try {
-				out.writeObject((Object) encryptPAES(objToBytes(sarm)));
-				ServerAuthResponseMessage response = (ServerAuthResponseMessage)BytesToObj(decryptPAES((byte[])in.readObject()));
+				Connector.getInstance().write((Object) encryptPAES(objToBytes(sarm)));
+				ServerAuthResponseMessage response = (ServerAuthResponseMessage)BytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
 				RSASoftware rsaServer = new RSASoftware();
-				rsaServer.setPublicKey(this.pub, mod);
+				rsaServer.setPublicKey(this.getPub(), getMod());
 				byte[] fpReceived = response.getEncryptedFingerprint();
 				fpReceived = rsaServer.unsign(fpReceived, fpReceived.length);
 				if (!cmpByteArray(fpReceived,fingerprint)) {
@@ -54,8 +59,8 @@ public class AuthHandler extends Handler{
 				t.cancel();
 				if (rsaHard.initJavaCard("285921800099") == -1){
 					JOptionPane.showMessageDialog(null, "init card Fail");
-					disconnect();
-					isConnected = false;
+					Connector.getInstance().disconnect();
+
 			    	t = new Timer();
 			    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 					return false;
@@ -66,8 +71,8 @@ public class AuthHandler extends Handler{
 				System.out.println("after sign"+reqMsg.getPassword());
 				if ( reqMsg.getPassword() == null){
 					JOptionPane.showMessageDialog(null, "Fail");
-					disconnect();
-					isConnected = false;
+					Connector.getInstance().disconnect();
+
 			    	t = new Timer();
 			    	t.schedule(new Task(t, mf, Task.PRE_AUTH), new Date(), Task.PERIOD);
 					return false;

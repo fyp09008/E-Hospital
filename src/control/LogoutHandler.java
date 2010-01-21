@@ -3,18 +3,24 @@ package control;
 import message.DisconnRequestMessage;
 import message.DisconnResponseMessage;
 
-public class LogoutHandler {
+public class LogoutHandler extends Handler{
+	
+	private byte[] signedLogoutMsg;
+	
+	public LogoutHandler(byte[] s) {
+		this.signedLogoutMsg = s;
+	}
 	
 	public boolean logout(){
-		if (isConnected){
+		if (Connector.getInstance().isConnected()){
 			DisconnRequestMessage msg = new DisconnRequestMessage();
 			System.out.println("****"+signedLogoutMsg);
 			msg.setSignature(signedLogoutMsg);
 			try {
-				out.writeObject((Object) encryptPAES(objToBytes(msg)));
-				DisconnResponseMessage  msg2 = (DisconnResponseMessage)BytesToObj(decryptPAES((byte[])in.readObject()));
+				Connector.getInstance().write(((Object) encryptPAES(objToBytes(msg))));
+				DisconnResponseMessage  msg2 = (DisconnResponseMessage)BytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
 				if (msg2.getStatus()){
-					this.reset();
+					Client.getInstance().reset();
 					return true;
 				}
 				

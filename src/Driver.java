@@ -8,11 +8,11 @@ import UI.*;
 
 public class Driver {
 	public static void main(String[] arg) {
-		Client client = new Client();
+		Client client = Client.getInstance();
 		Timer t = new Timer();
 		Date now = new Date();
-		client.setT(t);
-		MainFrame mf = new MainFrame(client);
+		//client.setT(t);
+		MainFrame mf = new MainFrame();
 		//mf.loginPanel.enableAll();
 		Task task = new Task(t, mf, Task.PRE_AUTH);
 		client.setMf(mf);

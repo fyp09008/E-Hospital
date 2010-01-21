@@ -28,6 +28,14 @@ public class LoginDialog extends JDialog {
 	private JPanel btnPanel = null;
 	private JPanel fldPanel = null;
 
+	public LoginDialog(MainFrame parent, boolean modal,Client c){
+		
+		super(parent,modal);
+		this.parent = parent;
+		this.client = c;
+		initialize();
+	}
+	
 	public JPanel getFldPanel() {
 		if ( fldPanel == null){
 			fldPanel = new JPanel(new GridLayout(1,2));
@@ -38,13 +46,7 @@ public class LoginDialog extends JDialog {
 		}
 		return fldPanel;
 	}
-	public LoginDialog(MainFrame parent, boolean modal,Client c){
-		
-		super(parent,modal);
-		this.parent = parent;
-		this.client = c;
-		initialize();
-	}
+	
 	public JButton getLoginBtn() {
 		if ( loginBtn == null){
 			loginBtn = new JButton("Login");
@@ -94,10 +96,10 @@ public class LoginDialog extends JDialog {
 				ld.client.reload();
 			}
 			else{
-				ld.client.getT().cancel();
-				ld.client.setT(new Timer());
-				ld.client.getT().schedule(new Task(ld.client.getT(), ld.parent, Task.PRE_AUTH), new Date(), Task.PERIOD);
-				ld.client.reset();
+				//ld.client.getT().cancel();
+				//ld.client.setT(new Timer());
+				//ld.client.getT().schedule(new Task(ld.client.getT(), ld.parent, Task.PRE_AUTH), new Date(), Task.PERIOD);
+				//ld.client.reset();
 				System.out.println("not ok");
 				
 			}

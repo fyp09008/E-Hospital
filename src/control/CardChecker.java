@@ -3,11 +3,13 @@ package control;
 import java.util.Date;
 import java.util.Timer;
 
-import UI.Task;
 
 public class CardChecker {
 	
+	Timer t;
+	
 	public Timer getT() {
+		
 		return t;
 	}
 

@@ -17,6 +17,8 @@ import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+
+import control.Client;
 public class ShowInfoPanel extends Panels {
 
 	private JScrollPane jScrollPane = null;
@@ -95,7 +97,7 @@ public class ShowInfoPanel extends Panels {
 		this.getInfo().append(br+"*******************************"+br);
 	}
 	public void checkPrivilege(){
-		String[] pri = mf.getPrivileges();
+		String[] pri = Client.getInstance().getPrivileges();
 		//write
 		if ( pri[1].equals("true")){
 			editBtn.setEnabled(true);
