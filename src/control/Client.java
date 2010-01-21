@@ -1,5 +1,6 @@
 package control;
 
+import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,7 +39,22 @@ import message.*;
 import com.ibm.jc.JCard;
 
 public class Client {
-	
+
+		   // Private constructor prevents instantiation from other classes
+		   private Client() {}
+		 
+		   /**
+		    * SingletonHolder is loaded on the first execution of Singleton.getInstance() 
+		    * or the first access to SingletonHolder.INSTANCE, not before.
+		    */
+		   private static class ClientHolder { 
+		     private static final Client INSTANCE = new Client();
+		   }
+		 
+		   public static Client getInstance() {
+		     return ClientHolder.INSTANCE;
+		   }
+
 	private byte[] signedLogoutMsg = null;
 	private Timer t;
 	private MainFrame mf;
@@ -49,7 +65,6 @@ public class Client {
 	private int port = 8899;
 	private String server = "localhost";
 	private boolean isConnected = false;
-	
 	private Socket s;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
@@ -57,17 +72,26 @@ public class Client {
 	private JCard card;
 	private SecretKeySpec skeySpec;
 	
+	private AuthHandler aHandler = null;
+	private LogoutHandler lHandler = null;
 	private PrivilegeHandler pHandler = null;
+	private QueryHandler qHandler = null;	
 	
+	
+	public boolean authenticate(){
+		return aHandler.authenicate();
+	}
 	public void reset(){
 		
 		this.id = null;
 		this.name = null;
 		this.password = null;
-		this.privileges = null;
-		this.stringPrivileges = null;
+		
+		this.pHandler = null;
 		
 		signedLogoutMsg = null;
+		//LogoutHandler = null;
+		
 		this.isConnected = false;
 		
 		this.card = null;
@@ -142,13 +166,49 @@ public class Client {
 	
 	public void re_login()
 	{	
-		new LoginDialog(mf,true,this);
+		new LoginDialog();
 	}
 	public void reload(){
 		t.cancel();
 		mf.restorePanel();
 		t = new Timer();
-		t.schedule(new Task(t, mf, Task.AFTER_AUTH), new Date(), Task.PERIOD);
+		t.schedule(new Task(t, Task.AFTER_AUTH), new Date(), Task.PERIOD);
+	}
+	public String[] getStringPrivileges() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String[] getPrivileges() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String[][] sendQuery(String type, String[] table, String[] field,
+			String whereClause, String[] values) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean logout() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public MainFrame getMf() {
+		return mf;
+	}
+	public Timer getT() {
+		return t;
+	}
+
+	public void setT(Timer t) {
+		this.t = t;
+	}
+	
+	public void card_unplug()
+	{
+		t.cancel();
+		t = new Timer();
+		t.schedule(new Task(t, Task.WAIT_REAUTH), new Date(),Task.PERIOD);
 	}
 		
 }

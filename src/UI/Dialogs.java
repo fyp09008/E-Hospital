@@ -4,6 +4,8 @@ import java.awt.Frame;
 
 import javax.swing.JDialog;
 
+import control.Client;
+
 public class Dialogs extends JDialog {
 	private String id = null;
 
@@ -16,12 +18,9 @@ public class Dialogs extends JDialog {
 	}
 
 	public Dialogs() {
-		super();
+		super(Client.getInstance().getMf(),true);
 		// TODO Auto-generated constructor stub
 	}
 
-	public Dialogs(Frame owner) {
-		super(owner, true);
-		// TODO Auto-generated constructor stub
-	}
+
 }

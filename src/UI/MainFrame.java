@@ -62,21 +62,21 @@ public class MainFrame extends JFrame {
 	/**
 	 * This is the constructor
 	 */
-	public MainFrame(Client c) {
+	public MainFrame() {
 		super();
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e){
 			e.printStackTrace();
 		}	
-		client = c;
+		//client = c;
 		initialize();		
 	}
 	public String[] getStringPrivileges(){
-		return client.getStringPrivileges();
+		return Client.getInstance().getStringPrivileges();
 	}
 	public String[] getPrivileges(){
-		return client.getPrivileges();
+		return Client.getInstance().getPrivileges();
 	}
 	public String getName(){
 		return client.getName();
@@ -90,8 +90,7 @@ public class MainFrame extends JFrame {
 	public void restorePanel(){
 			this.enableAllBtns();
 			this.checkPrivilege();
-		//if (!( prePanel.getComponent(0) instanceof LoginPanel))
-		//{
+
 			prePanel.revalidate();
 			prePanel.getComponent(0).validate();
 			mainPanel = new Panels();
@@ -102,7 +101,6 @@ public class MainFrame extends JFrame {
 			jContentPane.add(mainPanel,BorderLayout.CENTER);
 			jContentPane.invalidate();
 			jContentPane.validate();
-		//}
 	}
 	 /**
 	  * This method changes current panel and store
@@ -123,7 +121,7 @@ public class MainFrame extends JFrame {
 			case -2: {
 				this.disableAllBtns();
 				mainPanel.add(new Panels()); 
-				client.card_unplug(); 
+				Client.getInstance().card_unplug(); 
 				break;
 			}
 			case 0: { mainPanel.add(new MyPatientList(this)); break;}
@@ -141,7 +139,7 @@ public class MainFrame extends JFrame {
 	}
 	public String[][] sendQuery(String type, String[] table, String[] field, 
 			String whereClause, String[] values) {
-		return client.sendQuery(type, table, field, whereClause,values);
+		return Client.getInstance().sendQuery(type, table, field, whereClause,values);
 	}
 	public void setPassword(String pw){
 		client.setPassword(pw);
@@ -164,7 +162,7 @@ public class MainFrame extends JFrame {
 	public boolean authenicate(String name, String password){
 		client.setName(name);
 		client.setPassword(password);
-		return client.authenicate();
+		return Client.getInstance().authenticate();
 	}
 	public String getID(){
 		return client.getID();
@@ -207,9 +205,9 @@ public class MainFrame extends JFrame {
 			JOptionPane o = new JOptionPane();
 			this.addPopUP(o);
 			o.showMessageDialog(null,"Logout+ed");
-			client.getT().cancel();
-			client.setT(new Timer());
-			client.getT().schedule(new Task(client.getT(), this, Task.PRE_AUTH), new Date(), Task.PERIOD);
+			Client.getInstance().getT().cancel();
+			Client.getInstance().setT(new Timer());
+			Client.getInstance().getT().schedule(new Task(client.getT(), Task.PRE_AUTH), new Date(), Task.PERIOD);
 			logoutPanel(true);
 		}
 		else{
@@ -218,22 +216,9 @@ public class MainFrame extends JFrame {
 			o.showMessageDialog(null,"un logout");
 		}
 	}
-/*	class BackActions implements ActionListener{
-		int no;
-		MainFrame mf = null;
-		public BackActions(MainFrame mf,int x){
-			this.mf=mf;
-			no = x;
-		}
-		public void actionPerformed(ActionEvent e) {
-			System.out.println("inclass"+no);
-			mf.restorePanel();
-			//jContentPane.add(new MyPatientList(),BorderLayout.CENTER);
-		}
-	}
-	*/
+
 	public boolean logout(){
-		return client.logout();
+		return Client.getInstance().logout();
 	}
 	 /**
 	 * This method change the panel to LoginPanel

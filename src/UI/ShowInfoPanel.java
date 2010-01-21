@@ -32,9 +32,9 @@ public class ShowInfoPanel extends Panels {
 	 * This method initializes 
 	 * 
 	 */
-	public ShowInfoPanel(MainFrame mf) {
+	public ShowInfoPanel() {
 		super();
-		this.mf = mf;
+		//this.mf = mf;
 		initialize();
 		this.checkPrivilege();
 	}
@@ -234,7 +234,7 @@ public class ShowInfoPanel extends Panels {
 				o.showMessageDialog(null, "Record not selected");
 			}	
 			else{
-				EditInfoDialog eif = new EditInfoDialog(info.mf,result,pid,info);
+				EditInfoDialog eif = new EditInfoDialog(result,pid);
 			}
 			 //info.mf.addPopUP(eif);
 		}

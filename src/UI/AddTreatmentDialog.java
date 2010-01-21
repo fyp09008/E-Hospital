@@ -51,7 +51,7 @@ public class AddTreatmentDialog extends Dialogs {
 		this.setSize(400,300);
 		this.setVisible(true);
 		this.setLayout(new BorderLayout());
-		this.add(comp)
+		//this.add(comp);
 		
 	}
 	

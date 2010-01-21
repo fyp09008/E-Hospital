@@ -122,7 +122,7 @@ public class MyPatientList extends Panels {
 			showPanel = new JPanel();
 			showPanel.setPreferredSize(new Dimension(750, 10));
 			showPanel.setLayout(new BorderLayout());
-			showInfo = new ShowInfoPanel(this.mf);
+			showInfo = new ShowInfoPanel();
 			showPanel.add(showInfo,BorderLayout.CENTER);
 		}
 		return showPanel;

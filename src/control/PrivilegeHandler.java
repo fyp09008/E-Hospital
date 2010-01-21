@@ -15,7 +15,7 @@ public class PrivilegeHandler extends Handler {
 	public String[] getPrivileges(){
 		return privileges;
 	}
-
+	
 	public void setStringPrivilege(String[] pri){
 		this.stringPrivileges = new String[NUM_OF_PRIL];
 		if ( pri[0].equals("true"))
@@ -38,5 +38,7 @@ public class PrivilegeHandler extends Handler {
     	for ( int i = 0;i < this.privileges.length; i++)
     		System.out.println(this.privileges[i]);
 	}
+
+
 	
 }

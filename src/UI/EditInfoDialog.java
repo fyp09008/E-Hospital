@@ -28,6 +28,8 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollBar;
 import javax.swing.WindowConstants;
 
+import control.Client;
+
 import UI.MainFrame.CloseAction;
 
 /**
@@ -37,7 +39,7 @@ import UI.MainFrame.CloseAction;
 
 public class EditInfoDialog extends Dialogs {
 	
-	private MainFrame mf = null;
+	//private MainFrame mf = null;
 	//private String id = null;
 	private JLabel idLab = null;
 	private JTextField idFld = null;
@@ -83,12 +85,12 @@ public class EditInfoDialog extends Dialogs {
 	 *  
 	 * @param x 
 	 */
-	public EditInfoDialog(MainFrame parent, String[][] result,
-			String x, ShowInfoPanel sip){
-		super(parent);
-		this.mf = parent;
+	public EditInfoDialog(String[][] result,
+			String x){
+		super();
+		//this.mf = parent;
 		this.result = result;
-		this.sip = sip;
+		//this.sip = sip;
 		//id = x;
 		this.fit();
 		initialize();
@@ -120,8 +122,8 @@ public class EditInfoDialog extends Dialogs {
 	 * 
 	 */
 	private void initialize() {
-		this.mf.addPopUP(this);
-		this.addWindowListener(new CloseAction(this.mf));
+		Client.getInstance().getMf().addPopUP(this);
+		this.addWindowListener(new CloseAction());
 		this.setSize(new Dimension(300, 500));
 		this.setTitle(this.getID() + "'s Personal Information");
 
@@ -363,7 +365,7 @@ public class EditInfoDialog extends Dialogs {
 			frame = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			 frame.mf.popup = new ArrayList<Component>();
+			 Client.getInstance().getMf().popup = new ArrayList<Component>();
 			 frame.dispose();// TODO Auto-generated Event stub actionPerformed()
 		}
 	};
@@ -375,7 +377,7 @@ public class EditInfoDialog extends Dialogs {
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			JOptionPane o = new JOptionPane();
-			this.frame.mf.addPopUP(o);
+			Client.getInstance().getMf().addPopUP(o);
 			int ans = o.showConfirmDialog(null, "Sure?");
 			if ( ans == 0){
 				//parentPanel.hasEditted();
@@ -397,21 +399,21 @@ public class EditInfoDialog extends Dialogs {
 				String[] fields = {"name","gender","address","contact_no","birthday",
 					"pic","description"};
 				
-				String[][] result2 = frame.mf.sendQuery("UPDATE", tables, fields, "pid = " + frame.getID(), result[0]);
+				String[][] result2 = Client.getInstance().getMf().sendQuery("UPDATE", tables, fields, "pid = " + frame.getID(), result[0]);
 				if ( result2[0][0].equals("true")){
 					JOptionPane m = new JOptionPane();
-					this.frame.mf.addPopUP(o);
+					Client.getInstance().getMf().addPopUP(o);
 					m.showMessageDialog(null, "Record modified!");
 					m.showMessageDialog(null, "Refresh now");
-					frame.mf.changePanel(0);
+					Client.getInstance().getMf().changePanel(0);
 					
 					m.showMessageDialog(null, "refresh finish");
-					frame.mf.popup = new ArrayList<Component>();
+					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					frame.dispose();
 				}else {
 					JOptionPane m = new JOptionPane();
-					this.frame.mf.addPopUP(o);
-					frame.mf.popup = new ArrayList<Component>();
+					Client.getInstance().getMf().addPopUP(o);
+					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					m.showMessageDialog(null, "Fail!");
 				}
 				
@@ -422,13 +424,13 @@ public class EditInfoDialog extends Dialogs {
 	
 	class CloseAction implements WindowListener{
 		
-		MainFrame mf = null;
-		public CloseAction(MainFrame mf){
+		//MainFrame mf = null;
+		public CloseAction(){
 			//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			this.mf = mf;	
+			//this.mf = mf;	
 		}
 		public void windowClosing(WindowEvent we){
-			mf.popup = new ArrayList<Component>();
+			Client.getInstance().getMf().popup = new ArrayList<Component>();
 
 	      }
 		public void windowActivated(WindowEvent arg0) {

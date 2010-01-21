@@ -18,11 +18,12 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 import control.Client;
+import control.Task;
 
 public class LoginDialog extends Dialogs {
 	//private JTextField nameFld = null;
 	private JPasswordField pwFld = null;
-	private Client client = null;
+	//private Client client = null;
 	private JButton loginBtn = null;
 	private MainFrame parent = null;
 	private JPanel btnPanel = null;
@@ -38,11 +39,11 @@ public class LoginDialog extends Dialogs {
 		}
 		return fldPanel;
 	}
-	public LoginDialog(MainFrame parent, boolean modal,Client c){
+	public LoginDialog(){
 		
-		super(parent,modal);
-		this.parent = parent;
-		this.client = c;
+		super();
+		//this.parent = parent;
+		//this.client = c;
 		initialize();
 	}
 	public JButton getLoginBtn() {
@@ -88,16 +89,16 @@ public class LoginDialog extends Dialogs {
 		}
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			ld.client.setPassword(new String(ld.getPwFld().getPassword()));
-			if (ld.client.authenicate()){
+			Client.getInstance().setPassword(new String(ld.getPwFld().getPassword()));
+			if (Client.getInstance().authenticate()){
 				//System.out.println("ok");
-				ld.client.reload();
+				Client.getInstance().reload();
 			}
 			else{
-				ld.client.getT().cancel();
-				ld.client.setT(new Timer());
-				ld.client.getT().schedule(new Task(ld.client.getT(), ld.parent, Task.PRE_AUTH), new Date(), Task.PERIOD);
-				ld.client.reset();
+				Client.getInstance().getT().cancel();
+				Client.getInstance().setT(new Timer());
+				Client.getInstance().getT().schedule(new Task(Client.getInstance().getT(), Task.PRE_AUTH), new Date(), Task.PERIOD);
+				Client.getInstance().reset();
 				System.out.println("not ok");
 				
 			}
