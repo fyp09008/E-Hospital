@@ -5,3 +5,4 @@ Echo.java
 .project
 
 *.class
+bin/*

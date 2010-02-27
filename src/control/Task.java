@@ -1,7 +1,5 @@
 package control;
 
-import UI.MainFrame;
-
 import com.ibm.jc.JCTerminal;
 import com.ibm.jc.JCard;
 
@@ -18,29 +16,24 @@ public class Task extends TimerTask{
 	public static final int AFTER_AUTH = 1;
 	public static final int WAIT_REAUTH = 2;
 	private Timer t;
-	private MainFrame mf;
+	//private MainFrame mf;
 	private int mode;
 	public static final int PERIOD = 1000;
 	
-	public Task(Timer t, MainFrame mf, int mode) {
+	public Task(Timer t, int mode) {
 		super();
 		this.t = t;
-		this.mf = mf;
+		//this.mf = mf;
 		this.mode = mode;
 	}
 
-	public Task(Timer t, MainFrame mf) {
+	public Task(Timer t) {
 		super();
 		this.t = t;
-		this.mf = mf;
+		//this.mf = mf;
 	}
 
-	/**
-	 * @param t
-	 */
-	public Task(Timer t) {
-		this.t = t;
-	}
+
 
 	public void run() {
 		Date now = new Date(); 
@@ -61,10 +54,10 @@ public class Task extends TimerTask{
 	            switch (mode)
 	            {
 	            	case PRE_AUTH:
-	    	            mf.loginPanel.disableAll();
+	            		Client.getInstance().getMf().loginPanel.disableAll();
 	            		break;
 	            	case AFTER_AUTH:
-	    	            mf.changePanel(-2);
+	            		Client.getInstance().getMf().changePanel(-2);
 	            		break;
 	            	case WAIT_REAUTH:
 	            		break;
@@ -86,12 +79,12 @@ public class Task extends TimerTask{
 	            switch (mode)
 	            {
 	            	case PRE_AUTH:
-	    	            mf.loginPanel.enableAll();
+	            		Client.getInstance().getMf().loginPanel.enableAll();
 	            		break;
 	            	case AFTER_AUTH:
 	            		break;
 	            	case WAIT_REAUTH:
-	            		mf.getClient().re_login();
+	            		Client.getInstance().getMf().getClient().re_login();
 	            		break;
 	            }
 			}
@@ -100,10 +93,10 @@ public class Task extends TimerTask{
 	            switch (mode)
 	            {
 	            	case PRE_AUTH:
-	    	            mf.loginPanel.disableAll();
+	    	            Client.getInstance().getMf().loginPanel.disableAll();
 	            		break;
 	            	case AFTER_AUTH:
-	    	            mf.changePanel(-2);
+	            		Client.getInstance().getMf().changePanel(-2);
 	            		break;
 	            	case WAIT_REAUTH:
 	            		break;
