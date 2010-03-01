@@ -29,9 +29,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
 
 import message.*;
-import UI.LoginDialog;
-import UI.MainFrame;
-import UI.Task;
+import UI.*;
 import cipher.RSAHardware;
 import cipher.RSASoftware;
 import message.*;
@@ -41,7 +39,14 @@ import com.ibm.jc.JCard;
 public class Client {
 
 		   // Private constructor prevents instantiation from other classes
-		   private Client() {}
+		   private Client() {
+			   System.out.println("inited client");
+			   rsa = new RSASoftware();
+			   rsaHard = new RSAHardware();
+			   pHandler = new PrivilegeHandler();
+			   aHandler = new AuthHandler();
+			   qHandler = new QueryHandler();
+		   }
 		 
 		   /**
 		    * SingletonHolder is loaded on the first execution of Singleton.getInstance() 
@@ -62,24 +67,30 @@ public class Client {
 	private String id = null;
 	private String name = null;
 	private String password = null;
-	private int port = 8899;
-	private String server = "localhost";
-	private boolean isConnected = false;
-	private Socket s;
+	//private SecretKeySpec skeySpec = null;
+	//private int port = 8899;
+	//private String server = "localhost";
+	//private boolean isConnected = false;
+	//private Socket s;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	
+	private RSASoftware rsa = null;
+	private RSAHardware rsaHard = null;
 	private JCard card;
 	private SecretKeySpec skeySpec;
-	
 	private AuthHandler aHandler = null;
 	private LogoutHandler lHandler = null;
 	private PrivilegeHandler pHandler = null;
 	private QueryHandler qHandler = null;	
 	
-	
+	public PrivilegeHandler getPrivilegeHandler(){
+		return pHandler;
+	}
 	public boolean authenticate(){
 		return aHandler.authenicate();
+	}
+	public void initLogoutHandler(byte[] a){
+		lHandler = new LogoutHandler(a);
 	}
 	public void reset(){
 		
@@ -92,7 +103,7 @@ public class Client {
 		signedLogoutMsg = null;
 		//LogoutHandler = null;
 		
-		this.isConnected = false;
+		Connector.getInstance().setConnected(false);
 		
 		this.card = null;
 		this.skeySpec = null;
@@ -101,7 +112,7 @@ public class Client {
 	}
 	
 	public boolean isConnected(){
-		return isConnected;
+		return Connector.getInstance().isConnected();
 	}
 	
 	public String getID(){
@@ -123,7 +134,7 @@ public class Client {
 		return name;
 	}
 	
-	public boolean connect() {
+	/*public boolean connect() {
 		System.out.println("try to connect");
 		try {
 			rsa = new RSASoftware();
@@ -133,6 +144,7 @@ public class Client {
 			System.out.println("Connected");
 			out = new ObjectOutputStream(s.getOutputStream());
 			in = new ObjectInputStream(s.getInputStream());
+			System.out.println("in out ok");
 			isConnected = true;
 			System.out.println("is Connected = true");
 			return true;
@@ -145,9 +157,9 @@ public class Client {
 			e.printStackTrace();
 			return false;
 		}
-	}
+	}*/
 	
-	public void disconnect() {
+	/*public void disconnect() {
 		    try {
 				out.close();
 				in.close();
@@ -158,7 +170,7 @@ public class Client {
 				e.printStackTrace();
 			}
 		    
-	}
+	}*/
 
 	public void setMf(MainFrame mf) {
 		this.mf = mf;
@@ -174,19 +186,12 @@ public class Client {
 		t = new Timer();
 		t.schedule(new Task(t, Task.AFTER_AUTH), new Date(), Task.PERIOD);
 	}
-	public String[] getStringPrivileges() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public String[] getPrivileges() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	public String[][] sendQuery(String type, String[] table, String[] field,
 			String whereClause, String[] values) {
 		// TODO Auto-generated method stub
-		return null;
+		return qHandler.sendQuery(type, table, field, whereClause, values);
 	}
 
 	public boolean logout() {
@@ -210,6 +215,23 @@ public class Client {
 		t = new Timer();
 		t.schedule(new Task(t, Task.WAIT_REAUTH), new Date(),Task.PERIOD);
 	}
+
+	public RSAHardware getRSAHard(){
+		return rsaHard;
+	}
+	public RSASoftware getRSASoft(){
+		return rsa;
+	}
+	public String getPassword(){
+		return password;
+	}
+	public SecretKeySpec getSkeySpec() {
+		return skeySpec;
+	}
+	public void setSkeySpec(SecretKeySpec skeySpec) {
+		this.skeySpec = skeySpec;
+	}
+
 		
 }
 

@@ -34,6 +34,7 @@ public class QueryHandler extends Handler {
 		String query;
 		switch (TYPE) {
 			case TYPE_SELECT:{
+				System.out.println("*");
 				query = "select ";
 				for (int i = 0; i < field.length; i++) {
 					query = i == field.length -1 ? query +field[i] : query + field[i] + ",";
@@ -46,7 +47,7 @@ public class QueryHandler extends Handler {
 				}
 						
 				query = query + " where " + whereClause;
-				System.out.println(query);
+
 				break;
 			}
 			case TYPE_UPDATE:{
@@ -78,7 +79,7 @@ public class QueryHandler extends Handler {
 		}
 
 			
-		if(isConnected) {
+		if(Client.getInstance().isConnected()) {
 			QueryRequestMessage qmsg = null;
 			switch(TYPE){
 				case TYPE_SELECT: qmsg = new QueryRequestMessage(); break;
@@ -92,36 +93,29 @@ public class QueryHandler extends Handler {
 			}
 			qmsg.query = encryptAES(query.getBytes());
 			
-			qmsg.username = this.name;
-			try {
-				out.writeObject((Object) encryptPAES(objToBytes(qmsg)));
-				Object reqmsg = BytesToObj(decryptPAES((byte[])in.readObject()));
-				if ( reqmsg instanceof QueryResponseMessage){
-					QueryResponseMessage qrm = (QueryResponseMessage)reqmsg;
-					byte[] rawResultSet = decryptAES(qrm.resultSet);
-					ResultSet rs = byteToRS(rawResultSet);
-					try {
-						return RSparse(rs);
-					} catch (SQLException e) {
-					// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-				else if (reqmsg instanceof UpdateResponseMessage)
-				{
-					UpdateResponseMessage urm = (UpdateResponseMessage)reqmsg;
-					String[][] s = new String[1][1];
-					s[0][0] = Boolean.toString(urm.getStatus());
-					return s;
-				}
-			} catch (IOException e) {
+			qmsg.username = Client.getInstance().getName();
+			Connector.getInstance().write(((Object) encryptPAES(objToBytes(qmsg))));
+			Object reqmsg = bytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
+			if ( reqmsg instanceof QueryResponseMessage){
+				QueryResponseMessage qrm = (QueryResponseMessage)reqmsg;
+				byte[] rawResultSet = decryptAES(qrm.resultSet);
+				ResultSet rs = byteToRS(rawResultSet);
+				try {
+					return RSparse(rs);
+				} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					e.printStackTrace();
+				}
+			}
+			else if (reqmsg instanceof UpdateResponseMessage)
+			{
+				UpdateResponseMessage urm = (UpdateResponseMessage)reqmsg;
+				String[][] s = new String[1][1];
+				s[0][0] = Boolean.toString(urm.getStatus());
+				return s;
 			}
 		}
+		
 		return null;
 	}
 

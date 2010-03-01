@@ -1,5 +1,5 @@
 package UI;
-
+import control.*;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
@@ -17,8 +17,6 @@ import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
-
-import control.Client;
 public class ShowInfoPanel extends Panels {
 
 	private JScrollPane jScrollPane = null;
@@ -29,7 +27,7 @@ public class ShowInfoPanel extends Panels {
 	private JButton allgeryBtn = null;
 	private JButton treatmentBtn = null;
 	private String[][] result = null; 
-	private MainFrame mf = null;
+	//private MainFrame mf = null;
 	/**
 	 * This method initializes 
 	 * 
@@ -38,7 +36,7 @@ public class ShowInfoPanel extends Panels {
 		super();
 		//this.mf = mf;
 		initialize();
-		this.checkPrivilege();
+		//this.checkPrivilege();
 	}
 	public void fetchInfo(){
 		this.getInfo().setEditable(false);
@@ -49,8 +47,9 @@ public class ShowInfoPanel extends Panels {
 		String[] tables = {"Patient_personal"};
 		String[] fields = {"name","gender","address","contact_no",
 				"birthday","pic","description"};
-		result = mf.sendQuery("SELECT", tables, 
-				fields, "pid = '"+pid+"'",null);
+		//this.getInfo().append(this.pid);
+		result = Client.getInstance().sendQuery("SELECT", tables, 
+				fields, "pid = '" + pid + "'", null);	
 		if ( result != null){
 			this.getInfo().append("********** Personal **********"+br+br);
 			this.getInfo().append("Name: "+result[0][0]+br);
@@ -61,10 +60,11 @@ public class ShowInfoPanel extends Panels {
 			this.getInfo().append("Person In Charge: " + result[0][5]+br);
 			this.getInfo().append("Remarks: " + br + result[0][6]+br);			
 		}
+		
 		//deal with allergy
 		String[] allergyTable = {"allergy","`dia-allergy_rec`"};
 		String[] allergyFields = {"name"};
-		String[][] allergyResult = mf.sendQuery("SELECT", allergyTable, 
+		String[][] allergyResult = Client.getInstance().sendQuery("SELECT", allergyTable, 
 				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id"
 				+ " AND `dia-allergy_rec`.`pat_id` = "+pid, null);
 		System.out.println(allergyResult.length);
@@ -78,7 +78,7 @@ public class ShowInfoPanel extends Panels {
 		
 		String[] treatmentTable = {"treatment"};
 		String[] treatmentFields = {"pic","date_of_issue","description"};
-		String[][] treatmentResult = mf.sendQuery("SELECT", treatmentTable, 
+		String[][] treatmentResult = Client.getInstance().sendQuery("SELECT", treatmentTable, 
 				treatmentFields, "pid = "+pid, null);
 		if ( ! (treatmentResult.length == 0)){
 			this.getInfo().append(br+"********** Treatments **********"+br+br);
@@ -97,7 +97,7 @@ public class ShowInfoPanel extends Panels {
 		this.getInfo().append(br+"*******************************"+br);
 	}
 	public void checkPrivilege(){
-		String[] pri = Client.getInstance().getPrivileges();
+		String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
 		//write
 		if ( pri[1].equals("true")){
 			editBtn.setEnabled(true);
@@ -107,6 +107,7 @@ public class ShowInfoPanel extends Panels {
 		if ( pri[2].equals("true")){
 			treatmentBtn.setEnabled(true);
 		}
+		
 	}
 	/**
 	 * This method initializes this
@@ -206,7 +207,7 @@ public class ShowInfoPanel extends Panels {
 	}
 	public void setPID(String s){
 		this.pid = s;
-		System.out.println("IN GETID: "+s);
+		//System.out.println("IN GETID: "+s);
 	}
 
 	/**
@@ -232,7 +233,7 @@ public class ShowInfoPanel extends Panels {
 		public void actionPerformed(java.awt.event.ActionEvent e) {
 			if ( info.getInfo().getText().equals("")){
 				JOptionPane o = new JOptionPane();
-				this.info.mf.addPopUP(o);
+				Client.getInstance().getMf().addPopUP(o);
 				o.showMessageDialog(null, "Record not selected");
 			}	
 			else{

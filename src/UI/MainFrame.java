@@ -44,7 +44,7 @@ import java.awt.ComponentOrientation;
 public class MainFrame extends JFrame {
 	public ArrayList<Component> popup = null;
 	private static final long serialVersionUID = 1L;
-	private Client client = null;
+	//private Client client = null;
 	private JPanel jContentPane = null;
 	private Vector<JPanel> panels = null;  //  @jve:decl-index=0:
 	private JPanel upperPanel = null;
@@ -73,13 +73,15 @@ public class MainFrame extends JFrame {
 		initialize();		
 	}
 	public String[] getStringPrivileges(){
-		return Client.getInstance().getStringPrivileges();
+		return Client.getInstance().getPrivilegeHandler().getStringPrivileges();
 	}
 	public String[] getPrivileges(){
-		return Client.getInstance().getPrivileges();
+		if (Client.getInstance().getPrivilegeHandler().getPrivileges() == null)
+			System.out.println("FUCK");
+		return Client.getInstance().getPrivilegeHandler().getPrivileges();
 	}
 	public String getName(){
-		return client.getName();
+		return Client.getInstance().getName();
 	}
 	/**
 	 * This method restore previous panel
@@ -124,7 +126,7 @@ public class MainFrame extends JFrame {
 				Client.getInstance().card_unplug(); 
 				break;
 			}
-			case 0: { mainPanel.add(new MyPatientList(this)); break;}
+			case 0: { mainPanel.add(new MyPatientPanel()); break;}
 			//case 1: { mainPanel.add(new ShowInfoPanel()); break;}
 			}
 			jContentPane.remove(1);
@@ -135,20 +137,21 @@ public class MainFrame extends JFrame {
 			jContentPane.validate();
 		}
 	public void setName(String name){
-		client.setName(name);
+		Client.getInstance().setName(name);
 	}
 	public String[][] sendQuery(String type, String[] table, String[] field, 
 			String whereClause, String[] values) {
+		//System.out.println("on99");
 		return Client.getInstance().sendQuery(type, table, field, whereClause,values);
 	}
 	public void setPassword(String pw){
-		client.setPassword(pw);
+		Client.getInstance().setPassword(pw);
 	}
 	public void checkPrivilege(){
-		if ( client.getPrivileges() == null)
+		if ( Client.getInstance().getPrivilegeHandler().getPrivileges() == null)
 			return;
 		
-		String[] pri = client.getPrivileges();
+		String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
 		/* 0 = READ, 1 = WRITE, 2 = ADD*/
 		if ( pri[0].equals("true")){
 			enableButton(0);
@@ -160,12 +163,12 @@ public class MainFrame extends JFrame {
 		enableButton(buttons.size()-1);
 	}
 	public boolean authenicate(String name, String password){
-		client.setName(name);
-		client.setPassword(password);
+		Client.getInstance().setName(name);
+		Client.getInstance().setPassword(password);
 		return Client.getInstance().authenticate();
 	}
 	public String getID(){
-		return client.getID();
+		return Client.getInstance().getID();
 	}
 	 /**
 	 * This method add ActionListeners to the buttons
@@ -207,7 +210,7 @@ public class MainFrame extends JFrame {
 			o.showMessageDialog(null,"Logout+ed");
 			Client.getInstance().getT().cancel();
 			Client.getInstance().setT(new Timer());
-			Client.getInstance().getT().schedule(new Task(client.getT(), Task.PRE_AUTH), new Date(), Task.PERIOD);
+			Client.getInstance().getT().schedule(new Task(Client.getInstance().getT(), Task.PRE_AUTH), new Date(), Task.PERIOD);
 			logoutPanel(true);
 		}
 		else{
@@ -318,7 +321,7 @@ public class MainFrame extends JFrame {
 		}
 		public void windowClosing(WindowEvent we){
 			mf.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-	    	 if ( client.isConnected()){
+	    	 if ( Connector.getInstance().isConnected()){
 	 			JOptionPane o = new JOptionPane();
 				this.mf.addPopUP(o);
 	    		 int ans = o.showConfirmDialog(null, "Logout and exit?");
@@ -474,11 +477,6 @@ public class MainFrame extends JFrame {
 		}
 		return mainPanel;
 	}
-	public Client getClient() {
-		return client;
-	}
-	public void setClient(Client client) {
-		this.client = client;
-	}
+
 
 }  //  @jve:decl-index=0:visual-constraint="16,7"

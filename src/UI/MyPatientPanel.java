@@ -22,26 +22,26 @@ import javax.swing.event.ListSelectionListener;
 
 import java.awt.Font;
 import java.sql.ResultSet;
-
-public class MyPatientList extends Panels {
+import control.*;
+public class MyPatientPanel extends Panels {
 	
 	private JScrollPane[] jScrollPane = null;
 	private JTabbedPane tabPanel = null;
-	private JPanel goPanel = null;
+	//private JPanel goPanel = null;
 	private JPanel upPanel = null;
 	private JPanel showPanel = null;
 	//private JButton editBtn = null;
-	private JPanel jPanel = null;
+	//private JPanel jPanel = null;
 	private JTable[] tables = null;
 	private static int TABLENUM = 7;
 	private JLabel tempLab = null;
 	private ShowInfoPanel showInfo = null; 
 	ListSelectionModel[] listSelectionModel;  //  @jve:decl-index=0:
-	private MainFrame mf = null;
+	//private MainFrame mf = null;
 	
-	public MyPatientList(MainFrame mf){
+	public MyPatientPanel(){
 		super();
-		this.mf = mf;
+		//this.mf = mf;
 		initTables();
 		initialize();	
 	}
@@ -54,6 +54,7 @@ public class MyPatientList extends Panels {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setSize(1024, 690);		
         this.add(getUpPanel(), null);
+        System.out.println("Finsh");
         //this.add(getGoPanel(),null);
 	}
 
@@ -76,11 +77,24 @@ public class MyPatientList extends Panels {
 			tabPanel.addTab("Q-T", jScrollPane[4]);
 			tabPanel.addTab("U-X", jScrollPane[5]);
 			tabPanel.addTab("Y-etc", jScrollPane[6]);
+			/*for(int i = 0; i < jScrollPane.length; i++)
+			if ( jScrollPane[i] == null){
+				System.out.println("I know the problem");
+			}
+			tabPanel.addTab("A-D", new JPanel());
+			tabPanel.addTab("E-H", new JPanel());
+			tabPanel.addTab("I-L", new JPanel());
+			tabPanel.addTab("M-P", new JPanel());
+			tabPanel.addTab("Q-T", new JPanel());
+			tabPanel.addTab("U-X", new JPanel());
+			tabPanel.addTab("Y-etc", new JPanel());*/
+			
 		}
 		return tabPanel;
 	}
 	
 	private JScrollPane[] getJScrollPane() {
+		System.out.println("In jscrollpane");
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane[TABLENUM];
 			for ( int j = 0; j < TABLENUM; j++)
@@ -89,7 +103,7 @@ public class MyPatientList extends Panels {
 			for ( int i = 0 ;i < TABLENUM; i++){
 				jScrollPane[i] = new JScrollPane();
 				jScrollPane[i].setViewportView(tables[i]);
-				System.out.println(i + "is done");
+				//System.out.println(i + "is done");
 			}
 		}
 		return jScrollPane;
@@ -125,14 +139,10 @@ public class MyPatientList extends Panels {
 			showInfo = new ShowInfoPanel();
 			showPanel.add(showInfo,BorderLayout.CENTER);
 		}
+		//System.out.println("OK");
 		return showPanel;
 	}
-	private JPanel getGoPanel() {
-		if (goPanel == null) {
-			goPanel = new JPanel();
-		}
-		return goPanel;
-	}
+
 	private void initTables(){
 		System.out.println("firstline of initTable()");
 		/*
@@ -150,8 +160,8 @@ public class MyPatientList extends Panels {
 		String[] where = new String[TABLENUM];
 		System.out.println("before where");
 		//where clauses
-		String allWhere = "(pid in ( SELECT pid FROM treatment where pic = " + mf.getClient().getID()
-					+ ") or pid in ( SELECT pid from patient_personal where pic = " + mf.getClient().getID() + " )) ";
+		String allWhere = "(pid in ( SELECT pid FROM treatment where pic = " + Client.getInstance().getID()
+					+ ") or pid in ( SELECT pid from patient_personal where pic = " + Client.getInstance().getID() + " )) ";
 		where[0] = allWhere + " AND " + "name rlike '^[abcd]' ORDER BY name";
 		where[1] = allWhere + " AND " + "name rlike '^[efgh]' ORDER BY name";
 		where[2] = allWhere + " AND " + "name rlike '^[ijkl]' ORDER BY name";
@@ -166,7 +176,7 @@ public class MyPatientList extends Panels {
 		listSelectionModel = new ListSelectionModel[TABLENUM];
 		System.out.println("before send query");
 		for ( int i = 0; i < TABLENUM; i++){
-			String temp[][] = mf.sendQuery("SELECT", table, field, where[i],null);
+			String temp[][] = Client.getInstance().getMf().sendQuery("SELECT", table, field, where[i],null);
 			//if ( temp != null)
 			tables[i] = new JTable(temp,column);
 			//else{

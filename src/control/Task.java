@@ -84,7 +84,7 @@ public class Task extends TimerTask{
 	            	case AFTER_AUTH:
 	            		break;
 	            	case WAIT_REAUTH:
-	            		Client.getInstance().getMf().getClient().re_login();
+	            		Client.getInstance().re_login();
 	            		break;
 	            }
 			}

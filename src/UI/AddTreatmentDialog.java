@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 //Add treatment requires Add privilege
 public class AddTreatmentDialog extends Dialogs {
 	
@@ -12,6 +14,23 @@ public class AddTreatmentDialog extends Dialogs {
 	private JPanel btnPanel = null;
 	private JButton done = null;
 	private JButton cancel = null;
+	private JScrollPane scroll = null;
+	
+	public JScrollPane getScroll() {
+		if ( scroll == null){
+			scroll = new JScrollPane(getText());
+		}
+		return scroll;
+	}
+
+	public JTextArea getText() {
+		if ( text == null){
+			text = new JTextArea();
+		}
+		return text;
+	}
+
+	private JTextArea text = null;
 	
 	
 	public JButton getDone() {
@@ -23,7 +42,7 @@ public class AddTreatmentDialog extends Dialogs {
 
 	public JButton getCancel() {
 		if ( cancel == null){
-			cancel = new JButton("Done");
+			cancel = new JButton("Cancel");
 		}
 		return cancel;
 	}
@@ -49,8 +68,10 @@ public class AddTreatmentDialog extends Dialogs {
 	private void initialize() {
 		// TODO Auto-generated method stub
 		this.setSize(400,300);
-		this.setVisible(true);
 		this.setLayout(new BorderLayout());
+		this.add(getScroll(),BorderLayout.CENTER);
+		this.add(getBtnPanel(),BorderLayout.SOUTH);
+		this.setVisible(true);
 		//this.add(comp);
 		
 	}

@@ -122,8 +122,8 @@ public class EditInfoDialog extends Dialogs {
 	 * 
 	 */
 	private void initialize() {
-		Client.getInstance().getMf().addPopUP(this);
-		this.addWindowListener(new CloseAction());
+		//Client.getInstance().getMf().addPopUP(this);
+		//this.addWindowListener(new CloseAction());this.addWindowListener(new CloseAction());
 		this.setSize(new Dimension(300, 500));
 		this.setTitle(this.getID() + "'s Personal Information");
 
@@ -422,40 +422,6 @@ public class EditInfoDialog extends Dialogs {
 		}
 	};
 	
-	class CloseAction implements WindowListener{
-		
-		//MainFrame mf = null;
-		public CloseAction(){
-			//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			//this.mf = mf;	
-		}
-		public void windowClosing(WindowEvent we){
-			Client.getInstance().getMf().popup = new ArrayList<Component>();
-
-	      }
-		public void windowActivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		public void windowClosed(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-		}
-		public void windowDeactivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		public void windowDeiconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		public void windowIconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		public void windowOpened(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-	}
+	
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

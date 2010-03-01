@@ -8,6 +8,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -34,10 +37,14 @@ public class Handler {
 	private static final SecretKeySpec ProgramKey = new SecretKeySpec(key, "AES");
 	
 	private JCard card;
-	private SecretKeySpec skeySpec;
+	//protected SecretKeySpec skeySpec;
 
-	protected RSAHardware rsaHard;
-	private RSASoftware rsa;
+	//protected RSAHardware rsaHard;
+	//protected RSASoftware rsa;
+	
+		//protected ObjectOutputStream out;
+		//protected ObjectInputStream in;
+	
 	
 	public byte[] objToBytes(Object obj){
 	      ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
@@ -59,7 +66,7 @@ public class Handler {
 		} return null;
 	}
 	
-	public Object BytesToObj(byte[] b){
+	public Object bytesToObj(byte[] b){
 	      ByteArrayInputStream bis = new ByteArrayInputStream(b); 
 	      ObjectInputStream ois;
 		try {
@@ -78,7 +85,7 @@ public class Handler {
 	    return null;
 	}
 	
-	private boolean cmpByteArray(byte[] b1, byte[] b2) {
+	protected boolean cmpByteArray(byte[] b1, byte[] b2) {
 		if(b1.length != b2.length) {
 			return false;
 		}
@@ -93,7 +100,9 @@ public class Handler {
 	public byte[] encryptAES(byte[] plaintext) {
 		try {
 			Cipher cipher = Cipher.getInstance("aes");
-			cipher.init(Cipher.ENCRYPT_MODE, this.skeySpec);
+		//	if ( this.skeySpec == null)
+			//	System.out.println("!!!!");
+			cipher.init(Cipher.ENCRYPT_MODE, Client.getInstance().getSkeySpec());
 			
 			byte[] ciphertext = cipher.doFinal(plaintext);
 			return ciphertext;
@@ -122,7 +131,7 @@ public class Handler {
 	public byte[] decryptAES(byte[] ciphertext) {
 		try {
 			Cipher cipher = Cipher.getInstance("aes");
-			cipher.init(Cipher.DECRYPT_MODE, this.skeySpec);
+			cipher.init(Cipher.DECRYPT_MODE, Client.getInstance().getSkeySpec());
 			
 			byte[] plaintext = cipher.doFinal(ciphertext);
 			return plaintext;
@@ -208,11 +217,32 @@ public class Handler {
 	
 	public byte[] decryptRSA(byte[] ciphertext) {
 		
-		rsaHard.initJavaCard("285921800006");
+		Client.getInstance().getRSAHard().initJavaCard("285921800006");
 			
-		byte plaintext[] = rsaHard.decrypt(ciphertext, ciphertext.length);
+		byte plaintext[] = Client.getInstance().getRSAHard().decrypt(ciphertext, ciphertext.length);
 		return plaintext;
 	
+	}
+	public static String[][] RSparse(ResultSet result) throws SQLException
+	{
+		String[][] s = null;
+		ArrayList<String[]> slist = new ArrayList<String[]>();
+		while (result.next())
+		{
+			String[] tmp = new String[result.getMetaData().getColumnCount()];
+			for (int i = 0; i < result.getMetaData().getColumnCount(); i++)
+			{
+				tmp[i] = result.getString(i+1);
+			}
+			slist.add(tmp);
+		}
+		s = new String[slist.size()][result.getMetaData().getColumnCount()];
+		for (int i = 0; i < slist.size(); i++)
+		{
+			s[i] = slist.get(i);
+		}
+		return s;
+		
 	}
 
 	/**

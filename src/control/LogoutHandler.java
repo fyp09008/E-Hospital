@@ -18,7 +18,7 @@ public class LogoutHandler extends Handler{
 			msg.setSignature(signedLogoutMsg);
 			try {
 				Connector.getInstance().write(((Object) encryptPAES(objToBytes(msg))));
-				DisconnResponseMessage  msg2 = (DisconnResponseMessage)BytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
+				DisconnResponseMessage  msg2 = (DisconnResponseMessage)bytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
 				if (msg2.getStatus()){
 					Client.getInstance().reset();
 					return true;
