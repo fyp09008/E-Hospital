@@ -73,12 +73,15 @@ public class EditInfoDialog extends Dialogs {
 	private JScrollPane scroll = null;
 	private String[][] result = null;
 	private ShowInfoPanel sip = null;
-
+	//private static final int SEARCH_PATIENT = 0;
+	//private static final int MY_PATIENT = 1;
+	//private int mode;
 	/**
 	 * 
 	 */
 	public EditInfoDialog() {
 		super();
+		//this.mode = mode;
 		initialize();
 	}
 	/**
@@ -88,11 +91,9 @@ public class EditInfoDialog extends Dialogs {
 	public EditInfoDialog(String[][] result,
 			String x){
 		super();
-		//this.mf = parent;
+		//this.mode = mode;
 		this.result = result;
 		this.setID(x);
-		//this.sip = sip;
-		//id = x;
 		this.fit();
 		initialize();
 	}
@@ -404,18 +405,16 @@ public class EditInfoDialog extends Dialogs {
 				if ( result2[0][0].equals("true")){
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);
-					m.showMessageDialog(null, "Record modified!");
-					m.showMessageDialog(null, "Refresh now");
-					Client.getInstance().getMf().changePanel(0);
-					
-					m.showMessageDialog(null, "refresh finish");
+					m.showMessageDialog(null, "Record modification succeed!");
+					//for MyPatientList use, auto refresh
+					//Client.getInstance().getMf().changePanel(0);
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					frame.dispose();
 				}else {
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
-					m.showMessageDialog(null, "Fail!");
+					m.showMessageDialog(null, "Record modification failed!");
 				}
 				
 			}

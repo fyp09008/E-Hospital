@@ -34,7 +34,6 @@ public class QueryHandler extends Handler {
 		String query;
 		switch (TYPE) {
 			case TYPE_SELECT:{
-				System.out.println("*");
 				query = "select ";
 				for (int i = 0; i < field.length; i++) {
 					query = i == field.length -1 ? query +field[i] : query + field[i] + ",";
@@ -78,7 +77,7 @@ public class QueryHandler extends Handler {
 				return null;	
 		}
 
-		Logger.println(query);
+		//Logger.println(query);
 		if(Client.getInstance().isConnected()) {
 			QueryRequestMessage qmsg = null;
 			switch(TYPE){

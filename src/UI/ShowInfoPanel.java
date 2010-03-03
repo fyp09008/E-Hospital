@@ -27,6 +27,7 @@ public class ShowInfoPanel extends Panels {
 	private JButton allgeryBtn = null;
 	private JButton treatmentBtn = null;
 	private String[][] result = null; 
+	private ButtonAction bc;
 	//private MainFrame mf = null;
 	/**
 	 * This method initializes 
@@ -35,6 +36,7 @@ public class ShowInfoPanel extends Panels {
 	public ShowInfoPanel() {
 		super();
 		//this.mf = mf;
+		bc = new ButtonAction(this);
 		initialize();
 		this.checkPrivilege();
 	}
@@ -114,12 +116,14 @@ public class ShowInfoPanel extends Panels {
 	 * 
 	 */
 	private void initialize() {
-        this.setLayout(new BorderLayout());
+		
+		this.setLayout(new BorderLayout());
         this.setSize(new Dimension(1024, 590));
         //this.add(getInfo(), BorderLayout.CENTER);
         this.add(getJScrollPane(), BorderLayout.CENTER);
         getInfo().setText("");
         this.add(getBtnPanel(),BorderLayout.SOUTH);
+        
 	}
 	private JPanel getBtnPanel(){
 		if ( btnPanel == null){
@@ -141,7 +145,8 @@ public class ShowInfoPanel extends Panels {
 		editBtn.setVerticalTextPosition(AbstractButton.BOTTOM);
 	    editBtn.setHorizontalTextPosition(AbstractButton.CENTER);
 		editBtn.setPreferredSize(new Dimension(59, 80));
-		editBtn.addActionListener(new EditAction(this));
+		editBtn.setActionCommand("edit");
+		editBtn.addActionListener(bc);
 		editBtn.setEnabled(false);
 		return editBtn;
 	}
@@ -164,14 +169,12 @@ public class ShowInfoPanel extends Panels {
 		//ImageIcon icon = createImageIcon("edit-icon.png",
         //"a pretty but meaningless splat");
 		treatmentBtn = new JButton("Add Treatment");
+		treatmentBtn.setActionCommand("treatment");
+		treatmentBtn.addActionListener(bc);
 		treatmentBtn.setVerticalTextPosition(AbstractButton.BOTTOM);
 		treatmentBtn.setHorizontalTextPosition(AbstractButton.CENTER);
 		treatmentBtn.setPreferredSize(new Dimension(59, 80));
-		treatmentBtn.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				//new EditInfoFrame(); // TODO Auto-generated Event stub actionPerformed()
-			}
-		});
+
 		treatmentBtn.setEnabled(false);
 		return treatmentBtn;
 	}
@@ -224,22 +227,28 @@ public class ShowInfoPanel extends Panels {
 		}
 		return info;
 	}
-	class EditAction implements ActionListener  {
+	class ButtonAction implements ActionListener  {
 		private ShowInfoPanel info = null;
-		public EditAction(ShowInfoPanel f){
+		public ButtonAction(ShowInfoPanel f){
 			super();
+			System.out.println("in constructor");
 			info = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if ( info.getInfo().getText().equals("")){
-				JOptionPane o = new JOptionPane();
-				Client.getInstance().getMf().addPopUP(o);
-				o.showMessageDialog(null, "Record not selected");
-			}	
-			else{
-				EditInfoDialog eif = new EditInfoDialog(result,pid);
+			if ( e.getActionCommand().equals("edit")){
+				if ( info.getInfo().getText().equals("")){
+					JOptionPane o = new JOptionPane();
+					Client.getInstance().getMf().addPopUP(o);
+					o.showMessageDialog(null, "Record not selected");
+				}	
+				else{
+					EditInfoDialog eif = new EditInfoDialog(result,pid);
+				}
 			}
-			 //info.mf.addPopUP(eif);
+			else if ( e.getActionCommand().equals("treatment")){
+				AddTreatmentDialog atd = new AddTreatmentDialog();
+			}
+			else{}
 		}
 	};
 

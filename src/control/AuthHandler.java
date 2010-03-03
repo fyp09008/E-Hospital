@@ -118,12 +118,8 @@ public class AuthHandler extends Handler{
 			    	Client.getInstance().initLogoutHandler(signedLogoutMsg);
 			    	//erase the password in memory as soon as possible
 			    	this.password=null;
-			    	//Logger.println("HERE");
-			    	//Timer t = Client.getInstance().getT();
-			    	//t = new Timer();
-			    	//Logger.println("3");
-			    	//t.schedule(new Task( Task.AFTER_AUTH), new Date(), Task.PERIOD);
-			    	System.out.println("Going to set to after_auth right after auth");
+		
+			    	//Logger("Going to set to after_auth right after auth");
 			    	Client.getInstance().resetTimer(Task.AFTER_AUTH);
 			    	return true;
 			    } else {
