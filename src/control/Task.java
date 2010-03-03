@@ -109,20 +109,17 @@ public class Task extends TimerTask{
 	            switch (mode)
 	            {
 	            	case PRE_AUTH:{
-	            
-	            		System.out.println("No card before auth");
+	            		//Logger.println("No card before auth");
 	    	            Client.getInstance().getMf().loginPanel.disableAll();
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
-	            		System.out.println("No card after auth");
+	            		//Logger.println("No card after auth");
 	            		Client.getInstance().getMf().changePanel(-2);
-	            		//System.out.println("!!!");
 	            		break;
 	            	}
 	            	case WAIT_REAUTH:{
-	            		System.out.println("No card while waiting auth");
-	            	
+	            		//Logger.println("No card while waiting auth");
 	            		break;
 	            	}
 	            }
@@ -143,15 +140,15 @@ public class Task extends TimerTask{
 	            switch (mode)
 	            {
 	            	case PRE_AUTH:{
-	            		System.out.println("Card in before auth");
+	            		//Logger.println("Card in before auth");
 	            		Client.getInstance().getMf().loginPanel.enableAll();
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
-	            		System.out.println("Card in after auth");
+	            		//Logger.println("Card in after auth");
 	            		break;}
 	            	case WAIT_REAUTH:{
-	            		System.out.println("Card in while waiting reauth");
+	            		//Logger.println("Card in while waiting reauth");
 	            		Client.getInstance().re_login();
 	            		break;
 	            	}
@@ -162,18 +159,17 @@ public class Task extends TimerTask{
 	            switch (mode)
 	            {
 	            	case PRE_AUTH:{
-	            		System.out.println("No card before auth 2");
+	            		//Logger.println("No card before auth 2");
 	            		Client.getInstance().getMf().loginPanel.disableAll();
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
-	            		System.out.println("No card after auth 2");
-	            	
+	            		//Logger.println("No card after auth 2");
 	            		Client.getInstance().getMf().changePanel(-2);
 	            		break;
 	            	}
 	            	case WAIT_REAUTH:{
-	            		System.out.println("No card while waiting re-auth 2");
+	            		//Logger.println("No card while waiting re-auth 2");
 	            		break;
 	            	}
 	            }

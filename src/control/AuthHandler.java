@@ -47,7 +47,7 @@ public class AuthHandler extends Handler{
 			try {
 				md = MessageDigest.getInstance("md5");
 				Logger.println("before inin jc");
-				Client.getInstance().getT().cancel();
+				//Client.getInstance().getT().cancel();
 				
 				RSAHardware rsaHard = Client.getInstance().getRSAHard();
 				if (rsaHard.initJavaCard("285921800099") == -1){

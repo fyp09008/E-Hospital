@@ -90,6 +90,7 @@ public class EditInfoDialog extends Dialogs {
 		super();
 		//this.mf = parent;
 		this.result = result;
+		this.setID(x);
 		//this.sip = sip;
 		//id = x;
 		this.fit();

@@ -78,7 +78,7 @@ public class QueryHandler extends Handler {
 				return null;	
 		}
 
-			
+		Logger.println(query);
 		if(Client.getInstance().isConnected()) {
 			QueryRequestMessage qmsg = null;
 			switch(TYPE){

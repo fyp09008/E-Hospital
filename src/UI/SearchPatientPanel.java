@@ -26,6 +26,17 @@ public class SearchPatientPanel extends Panels {
 	
 	private JScrollPane jScrollPane = null;
 	private JTextField searchName = null;
+	private JTextField searchID = null;
+	private JButton searchBtn = null;
+	private JPanel upPanel = null;
+	private JPanel showPanel = null;
+	private JPanel leftPanel = null;
+	private JPanel inputPanel = null;
+	private JPanel fieldPanel = null;
+	private JRadioButton byName = null;
+	private JRadioButton byID = null;
+	private JTable table = null;
+	
 	public JTextField getSearchName() {
 		if ( searchName == null){
 			searchName = new JTextField();
@@ -40,15 +51,6 @@ public class SearchPatientPanel extends Panels {
 		}
 		return searchID;
 	}
-	private JTextField searchID = null;
-	private JButton searchBtn = null;
-	private JPanel upPanel = null;
-	private JPanel showPanel = null;
-	private JPanel leftPanel = null;
-	private JPanel inputPanel = null;
-	private JPanel fieldPanel = null;
-	private JRadioButton byName = null;
-	private JRadioButton byID = null;
 	
 	public JRadioButton getByName() {
 		if ( byName == null){
@@ -95,9 +97,7 @@ public class SearchPatientPanel extends Panels {
 			
 		}
 		return inputPanel;
-	}
-	private JTable table = null;
-	
+	}	
 	private ShowInfoPanel showInfo = null; 
 	private ListSelectionModel listSelectionModel;  //  @jve:decl-index=0:
 	private MainFrame mf = null;
@@ -124,7 +124,8 @@ public class SearchPatientPanel extends Panels {
 	public JTable getTable() {
 		if ( table == null){
 			String[] column = {"ID","Name"};
-			String[][] a = {{"hihi","ooo"},{"fdsfds","ppp"}};
+			//String[][] a = {{"hihi","ooo"},{"fdsfds","ppp"}};
+			String[][] a = {{"",""}};
 			table = new JTable(a,column);
 			listSelectionModel = table.getSelectionModel();
 			listSelectionModel.addListSelectionListener(new SharedListSelectionHandler(table));
@@ -138,8 +139,8 @@ public class SearchPatientPanel extends Panels {
 			showPanel = new JPanel();
 			showPanel.setPreferredSize(new Dimension(750, 10));
 			showPanel.setLayout(new BorderLayout());
-			//showInfo = new ShowInfoPanel();
-			//showPanel.add(showInfo,BorderLayout.CENTER);
+			showInfo = new ShowInfoPanel();
+			showPanel.add(showInfo,BorderLayout.CENTER);
 		}
 		return showPanel;
 	}
@@ -160,7 +161,7 @@ public class SearchPatientPanel extends Panels {
 			leftPanel = new JPanel();
 			leftPanel.setLayout(new BorderLayout());
 			leftPanel.add(getInputPanel(),BorderLayout.NORTH);
-			leftPanel.add(getJScrollPane(),BorderLayout.CENTER);
+			//leftPanel.add(getJScrollPane(),BorderLayout.CENTER);
 		}
 		return leftPanel;
 	}
@@ -201,8 +202,8 @@ public class SearchPatientPanel extends Panels {
             	   System.out.println((String)table.getValueAt(i,0));
                 	   //for doing once  only , if not,might be doing twice
                    lsm.clearSelection();               	  
-                    	//showInfo.setPID((String)table.getValueAt(i, 0));
-                    	//showInfo.fetchInfo();
+                    	showInfo.setPID((String)table.getValueAt(i, 0));
+                    	showInfo.fetchInfo();
                 }
             }
 	    }

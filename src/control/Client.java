@@ -173,7 +173,7 @@ public class Client {
 		Logger.println("8 " + Thread.currentThread().getName() );
 		//t = Client.getInstance().getT();
 		t.cancel();
-		t.purge();
+		//t.purge();
 		//t = null;
 		t = new Timer();
 		t.schedule(new Task(Task.WAIT_REAUTH), new Date(),Task.PERIOD);

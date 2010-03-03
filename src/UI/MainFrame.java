@@ -123,16 +123,11 @@ public class MainFrame extends JFrame {
 			case -2: {
 				this.disableAllBtns();
 				mainPanel.add(new Panels()); 
-				//Timer t = Client.getInstance().getT();
-				//t.cancel();
-				//t = new Timer();
-				//t.schedule(new Task( Task.WAIT_REAUTH), new Date(), Task.PERIOD);
-				//Client.getInstance().card_unplug(); 
-				Client.getInstance().resetTimer(Task.WAIT_REAUTH);
+				Client.getInstance().card_unplug(); 	
 				break;
 			}
 			case 0: { mainPanel.add(new MyPatientPanel()); break;}
-			//case 1: { mainPanel.add(new ShowInfoPanel()); break;}
+			case 1: { mainPanel.add(new SearchPatientPanel()); break;}
 			}
 			jContentPane.remove(1);
 			mainPanel.setLayout(new GridLayout());
@@ -212,7 +207,7 @@ public class MainFrame extends JFrame {
 		if (this.logout()){
 			JOptionPane o = new JOptionPane();
 			this.addPopUP(o);
-			o.showMessageDialog(null,"Logout+ed");
+			o.showMessageDialog(null,"Logged out");
 			control.Logger.println("10");
 			Client.getInstance().resetTimer(Task.PRE_AUTH);
 			//Client.getInstance().getT().cancel();

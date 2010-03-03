@@ -20,7 +20,7 @@ import javax.swing.WindowConstants;
 import control.Client;
 import control.Task;
 
-public class LoginDialog extends Dialogs {
+public class LoginDialog extends JDialog {
 	//private JTextField nameFld = null;
 	private JPasswordField pwFld = null;
 	//private Client client = null;
@@ -41,7 +41,7 @@ public class LoginDialog extends Dialogs {
 	}
 	public LoginDialog(){
 		
-		super();
+		super(Client.getInstance().getMf(),true);
 		//this.parent = parent;
 		//this.client = c;
 		initialize();
@@ -62,7 +62,7 @@ public class LoginDialog extends Dialogs {
 		return btnPanel;
 	}
 	public void initialize(){
-		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.setLocationRelativeTo(parent);
 		this.setTitle("re-authentication");
 		this.setSize(new Dimension(300,100));
@@ -93,16 +93,15 @@ public class LoginDialog extends Dialogs {
 			
 			if (Client.getInstance().authenticate()){
 				Client.getInstance().getT().cancel();
-				//System.out.println("ok la going to run reload()");
 				Client.getInstance().reload();
-				//Client.getInstance().resetTimer(Task.AFTER_AUTH);
 			}
 			else{
 				Client.getInstance().reset();
 				Client.getInstance().resetTimer(Task.PRE_AUTH);
 			}
-			Client.getInstance().getMf().resumePopUp();
 			ld.dispose();
+			Client.getInstance().getMf().resumePopUp();
+			
 			
 		}
 		

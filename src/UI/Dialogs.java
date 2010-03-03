@@ -26,7 +26,7 @@ public class Dialogs extends JDialog {
 		super(Client.getInstance().getMf(),true);
 		//super();
 		//use later, comment when debugging
-		//Client.getInstance().getMf().addPopUP(this);
+		Client.getInstance().getMf().addPopUP(this);
 		this.addWindowListener(new CloseAction());
 		// TODO Auto-generated constructor stub
 	}
