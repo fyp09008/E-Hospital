@@ -36,7 +36,7 @@ public class ShowInfoPanel extends Panels {
 		super();
 		//this.mf = mf;
 		initialize();
-		//this.checkPrivilege();
+		this.checkPrivilege();
 	}
 	public void fetchInfo(){
 		this.getInfo().setEditable(false);

@@ -26,17 +26,15 @@ public class PrivilegeHandler extends Handler {
 			this.stringPrivileges[2] = "Add";
 		
 		for(int i = 0 ; i < stringPrivileges.length; i++)
-			System.out.println(stringPrivileges[i]);
+			Logger.println("Privilege: "+stringPrivileges[i]);
 	}
 	public void setPrivilege(String[] pri){
 		this.privileges = new String[NUM_OF_PRIL];
 		for( int i = 1; i < pri.length; i++){
-			System.out.println(pri[i]);
+			//Logger.println(pri[i]);
 			this.privileges[i-1] = pri[i];
 		}
-		
-    	for ( int i = 0;i < this.privileges.length; i++)
-    		System.out.println(this.privileges[i]);
+
 	}
 
 

@@ -3,6 +3,8 @@ package control;
 import com.ibm.jc.JCTerminal;
 import com.ibm.jc.JCard;
 
+
+
 import java.io.IOException;
 import java.util.*;
 
@@ -10,6 +12,63 @@ import org.omg.CORBA.portable.IndirectionException;
 
 import hku.hk.cs.javacard.*;
 
+/*public class Task extends TimerTask{
+	
+	public static final int PRE_AUTH = 0;
+	public static final int AFTER_AUTH = 1;
+	public static final int WAIT_REAUTH = 2;
+	private int mode;
+	public static final int PERIOD = 1000;
+	
+	public Task(int mode ) {
+		super();
+		this.mode = mode;
+	}
+	
+	public void run(){
+		System.out.println("## "+Thread.currentThread().getName());
+		if (Client.getInstance().sc.isPlug){
+            switch (mode)
+            {
+            	case PRE_AUTH:{
+            		System.out.println("Card in before auth" + this.hashCode());
+            		Client.getInstance().getMf().loginPanel.enableAll();
+            		break;
+            	}
+            	case AFTER_AUTH:{
+            		System.out.println("Card in after auth" + this.hashCode());
+            		break;}
+            	case WAIT_REAUTH:{
+            		System.out.println("Card in while waiting reauth" + this.hashCode());
+            		Client.getInstance().re_login();
+            		break;
+            	}
+            }
+		}
+		else{
+            switch (mode)
+            {
+            	case PRE_AUTH:{
+            
+            		System.out.println("No card before auth" + this.hashCode());
+    	            Client.getInstance().getMf().loginPanel.disableAll();
+            		break;
+            	}
+            	case AFTER_AUTH:{
+            		System.out.println("No card after auth" + this.hashCode());
+            		Client.getInstance().getMf().changePanel(-2);
+            		//System.out.println("!!!");
+            		break;
+            	}
+            	case WAIT_REAUTH:{
+            		System.out.println("No card while waiting auth" + this.hashCode());
+            	
+            		break;
+            	}
+            }
+		}
+	}
+}*/
 public class Task extends TimerTask{
 
 	public static final int PRE_AUTH = 0;
@@ -20,20 +79,16 @@ public class Task extends TimerTask{
 	private int mode;
 	public static final int PERIOD = 1000;
 	
-	public Task(Timer t, int mode) {
+	public Task( int mode) {
 		super();
-		this.t = t;
-		//this.mf = mf;
+		
 		this.mode = mode;
 	}
 
-	public Task(Timer t) {
-		super();
-		this.t = t;
-		//this.mf = mf;
-	}
 
 
+
+	
 
 	public void run() {
 		Date now = new Date(); 
@@ -53,14 +108,23 @@ public class Task extends TimerTask{
       			haveCard = false;
 	            switch (mode)
 	            {
-	            	case PRE_AUTH:
-	            		Client.getInstance().getMf().loginPanel.disableAll();
+	            	case PRE_AUTH:{
+	            
+	            		System.out.println("No card before auth");
+	    	            Client.getInstance().getMf().loginPanel.disableAll();
 	            		break;
-	            	case AFTER_AUTH:
+	            	}
+	            	case AFTER_AUTH:{
+	            		System.out.println("No card after auth");
 	            		Client.getInstance().getMf().changePanel(-2);
+	            		//System.out.println("!!!");
 	            		break;
-	            	case WAIT_REAUTH:
+	            	}
+	            	case WAIT_REAUTH:{
+	            		System.out.println("No card while waiting auth");
+	            	
 	            		break;
+	            	}
 	            }
       	};
       	
@@ -78,32 +142,48 @@ public class Task extends TimerTask{
 	            //System.err.println("OK!");
 	            switch (mode)
 	            {
-	            	case PRE_AUTH:
+	            	case PRE_AUTH:{
+	            		System.out.println("Card in before auth");
 	            		Client.getInstance().getMf().loginPanel.enableAll();
 	            		break;
-	            	case AFTER_AUTH:
-	            		break;
-	            	case WAIT_REAUTH:
+	            	}
+	            	case AFTER_AUTH:{
+	            		System.out.println("Card in after auth");
+	            		break;}
+	            	case WAIT_REAUTH:{
+	            		System.out.println("Card in while waiting reauth");
 	            		Client.getInstance().re_login();
 	            		break;
+	            	}
 	            }
 			}
 	         else {
 	        	//System.err.println("Erorr!");
 	            switch (mode)
 	            {
-	            	case PRE_AUTH:
-	    	            Client.getInstance().getMf().loginPanel.disableAll();
+	            	case PRE_AUTH:{
+	            		System.out.println("No card before auth 2");
+	            		Client.getInstance().getMf().loginPanel.disableAll();
 	            		break;
-	            	case AFTER_AUTH:
+	            	}
+	            	case AFTER_AUTH:{
+	            		System.out.println("No card after auth 2");
+	            	
 	            		Client.getInstance().getMf().changePanel(-2);
 	            		break;
-	            	case WAIT_REAUTH:
+	            	}
+	            	case WAIT_REAUTH:{
+	            		System.out.println("No card while waiting re-auth 2");
 	            		break;
+	            	}
 	            }
-	         }
-      	}     
+	       }
+	       
+      	   
      }
-	
+
+	}
 }
+
+
 

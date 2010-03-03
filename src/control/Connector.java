@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import javax.swing.JOptionPane;
+
 public class Connector {
 	
 	private int port = 8899;
@@ -54,23 +56,24 @@ public class Connector {
 	}
 	
 	public boolean connect() {
-		System.out.println("try to connect");
 		try {
-			System.out.println("Connecting...");
+			Logger.println("Connecting...");
 			s = new Socket(server,port);
-			System.out.println("Connected");
+			Logger.println("Connected to socket");
 			out = new ObjectOutputStream(s.getOutputStream());
 			in = new ObjectInputStream(s.getInputStream());
 			isConnected = true;
-			System.out.println("is Connected = true");
+			Logger.println("I/O initialized");
 			return true;
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Server Unavailable");
+			Logger.println("Unknown host");
 			return false;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Server Unavailable");
+			Logger.println("IO Exception");
 			return false;
 		}
 	}

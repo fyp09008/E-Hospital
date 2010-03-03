@@ -90,20 +90,20 @@ public class LoginDialog extends Dialogs {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			Client.getInstance().setPassword(new String(ld.getPwFld().getPassword()));
+			
 			if (Client.getInstance().authenticate()){
-				//System.out.println("ok");
+				Client.getInstance().getT().cancel();
+				//System.out.println("ok la going to run reload()");
 				Client.getInstance().reload();
+				//Client.getInstance().resetTimer(Task.AFTER_AUTH);
 			}
 			else{
-				Client.getInstance().getT().cancel();
-				Client.getInstance().setT(new Timer());
-				Client.getInstance().getT().schedule(new Task(Client.getInstance().getT(), Task.PRE_AUTH), new Date(), Task.PERIOD);
 				Client.getInstance().reset();
-				System.out.println("not ok");
-				
+				Client.getInstance().resetTimer(Task.PRE_AUTH);
 			}
+			Client.getInstance().getMf().resumePopUp();
 			ld.dispose();
-			ld.parent.resumePopUp();
+			
 		}
 		
 	}

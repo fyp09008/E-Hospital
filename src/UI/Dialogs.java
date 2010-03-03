@@ -23,8 +23,8 @@ public class Dialogs extends JDialog {
 
 	public Dialogs() {
 		//use it finally!!!!
-		//super(Client.getInstance().getMf(),true);
-		super();
+		super(Client.getInstance().getMf(),true);
+		//super();
 		//use later, comment when debugging
 		//Client.getInstance().getMf().addPopUP(this);
 		this.addWindowListener(new CloseAction());

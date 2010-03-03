@@ -54,7 +54,7 @@ public class MyPatientPanel extends Panels {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setSize(1024, 690);		
         this.add(getUpPanel(), null);
-        System.out.println("Finsh");
+        //System.out.println("Finsh");
         //this.add(getGoPanel(),null);
 	}
 
@@ -94,11 +94,9 @@ public class MyPatientPanel extends Panels {
 	}
 	
 	private JScrollPane[] getJScrollPane() {
-		System.out.println("In jscrollpane");
+		//System.out.println("In jscrollpane");
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane[TABLENUM];
-			for ( int j = 0; j < TABLENUM; j++)
-				if ( tables[j] == null) System.out.println("!!!");
 			
 			for ( int i = 0 ;i < TABLENUM; i++){
 				jScrollPane[i] = new JScrollPane();
@@ -144,7 +142,7 @@ public class MyPatientPanel extends Panels {
 	}
 
 	private void initTables(){
-		System.out.println("firstline of initTable()");
+		//System.out.println("firstline of initTable()");
 		/*
 		 * 0 = A-D
 		 * 1 = E-H
@@ -158,7 +156,7 @@ public class MyPatientPanel extends Panels {
 		String[] field = {"pid","name"};
 		String[] table = {"Patient_personal"};
 		String[] where = new String[TABLENUM];
-		System.out.println("before where");
+		//System.out.println("before where");
 		//where clauses
 		String allWhere = "(pid in ( SELECT pid FROM treatment where pic = " + Client.getInstance().getID()
 					+ ") or pid in ( SELECT pid from patient_personal where pic = " + Client.getInstance().getID() + " )) ";
@@ -174,7 +172,7 @@ public class MyPatientPanel extends Panels {
 		
 		String[] column = {"ID","Name"};
 		listSelectionModel = new ListSelectionModel[TABLENUM];
-		System.out.println("before send query");
+		//System.out.println("before send query");
 		for ( int i = 0; i < TABLENUM; i++){
 			String temp[][] = Client.getInstance().getMf().sendQuery("SELECT", table, field, where[i],null);
 			//if ( temp != null)
@@ -183,7 +181,7 @@ public class MyPatientPanel extends Panels {
 				//String[][] temp2 = {{"temp","temp"}};
 				//tables[i] = new JTable(temp2,column);
 			//}
-			System.out.println("after sql");
+			//System.out.println("after sql");
 			tables[i].setRowSelectionAllowed(true);
 			listSelectionModel[i] = tables[i].getSelectionModel();
 			listSelectionModel[i].addListSelectionListener(new SharedListSelectionHandler(tables[i]));

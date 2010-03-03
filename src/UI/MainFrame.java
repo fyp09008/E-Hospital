@@ -114,7 +114,7 @@ public class MainFrame extends JFrame {
 	 * 2 - add patient, X
 	 */
 	public void changePanel(int no){
-		System.out.println("Changepanel");
+		//System.out.println("Changepanel");
 			prePanel = (Panels)mainPanel.clone();
 			mainPanel = new Panels();
 			switch(no){
@@ -123,7 +123,12 @@ public class MainFrame extends JFrame {
 			case -2: {
 				this.disableAllBtns();
 				mainPanel.add(new Panels()); 
-				Client.getInstance().card_unplug(); 
+				//Timer t = Client.getInstance().getT();
+				//t.cancel();
+				//t = new Timer();
+				//t.schedule(new Task( Task.WAIT_REAUTH), new Date(), Task.PERIOD);
+				//Client.getInstance().card_unplug(); 
+				Client.getInstance().resetTimer(Task.WAIT_REAUTH);
 				break;
 			}
 			case 0: { mainPanel.add(new MyPatientPanel()); break;}
@@ -208,9 +213,11 @@ public class MainFrame extends JFrame {
 			JOptionPane o = new JOptionPane();
 			this.addPopUP(o);
 			o.showMessageDialog(null,"Logout+ed");
-			Client.getInstance().getT().cancel();
-			Client.getInstance().setT(new Timer());
-			Client.getInstance().getT().schedule(new Task(Client.getInstance().getT(), Task.PRE_AUTH), new Date(), Task.PERIOD);
+			control.Logger.println("10");
+			Client.getInstance().resetTimer(Task.PRE_AUTH);
+			//Client.getInstance().getT().cancel();
+			//Client.getInstance().setT(new Timer());
+			//Client.getInstance().getT().schedule(new Task( Task.PRE_AUTH), new Date(), Task.PERIOD);
 			logoutPanel(true);
 		}
 		else{
@@ -303,7 +310,7 @@ public class MainFrame extends JFrame {
 	public void disableAllBtns(){
 		for ( int i = 0 ; i < buttons.size(); i++)
 			buttons.get(i).setEnabled(false);
-		System.out.println("read to lock popup");
+		//System.out.println("ready to lock popup");
 		this.killPopUp();
 	}
 
@@ -381,7 +388,7 @@ public class MainFrame extends JFrame {
 	public void killPopUp(){
 		for ( int i = 0 ; i < popup.size(); i++){
 			if( popup.get(i) != null){
-				System.out.println("lock");
+				//System.out.println("lock");
 				popup.get(i).setVisible(false);
 				if ( popup.get(i).getClass().getName().equals("javax.swing.JOptionPane")){
 					((JOptionPane)popup.get(i)).getRootFrame().setVisible(false);
@@ -390,6 +397,9 @@ public class MainFrame extends JFrame {
 		}
 	}
 	public void resumePopUp(){
+		//if (popup == null){
+			//return;
+		//}
 		for ( int i = 0 ; i < popup.size(); i++){
 			if( popup.get(i) != null){
 				System.out.println("resume");

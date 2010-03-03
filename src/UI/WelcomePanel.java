@@ -25,10 +25,10 @@ public class WelcomePanel extends Panels {
 		getMsg().append("ID: " + mf.getID() + 
 				"\nName: " + mf.getName()+ " \n" );
 		getMsg().append("You have the following privileges\n");
-		for(int i = 0; i < pri.length; i++){
+		/*for(int i = 0; i < pri.length; i++){
 			if ( pri[i] != null)
 				getMsg().append(pri[i]+"\n");
-		}
+		}*/
 		getMsg().invalidate();
 		getMsg().validate();
 		

@@ -1,5 +1,4 @@
 package control;
-
 import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -32,7 +31,6 @@ import message.*;
 import UI.*;
 import cipher.RSAHardware;
 import cipher.RSASoftware;
-import message.*;
 
 import com.ibm.jc.JCard;
 
@@ -40,12 +38,14 @@ public class Client {
 
 		   // Private constructor prevents instantiation from other classes
 		   private Client() {
-			   System.out.println("inited client");
 			   rsa = new RSASoftware();
 			   rsaHard = new RSAHardware();
 			   pHandler = new PrivilegeHandler();
 			   aHandler = new AuthHandler();
 			   qHandler = new QueryHandler();
+			  // sc = new SoftCard();
+			  
+			   //logout handler initialized by aHandler later
 		   }
 		 
 		   /**
@@ -60,20 +60,14 @@ public class Client {
 		     return ClientHolder.INSTANCE;
 		   }
 
-	private byte[] signedLogoutMsg = null;
-	private Timer t;
+	//private byte[] signedLogoutMsg = null;
+		   
+	//public SoftCard  sc = null;
+	private Timer t = null;
 	private MainFrame mf;
-	
 	private String id = null;
 	private String name = null;
 	private String password = null;
-	//private SecretKeySpec skeySpec = null;
-	//private int port = 8899;
-	//private String server = "localhost";
-	//private boolean isConnected = false;
-	//private Socket s;
-	private ObjectOutputStream out;
-	private ObjectInputStream in;
 	private RSASoftware rsa = null;
 	private RSAHardware rsaHard = null;
 	private JCard card;
@@ -97,18 +91,18 @@ public class Client {
 		this.id = null;
 		this.name = null;
 		this.password = null;
-		
-		this.pHandler = null;
-		
-		signedLogoutMsg = null;
-		//LogoutHandler = null;
-		
+		rsa = new RSASoftware();
+		rsaHard = new RSAHardware();
+		pHandler = new PrivilegeHandler();
+		aHandler = new AuthHandler();
+		qHandler = new QueryHandler();
+				
 		Connector.getInstance().setConnected(false);
 		
 		this.card = null;
 		this.skeySpec = null;
 		this.mf.logoutPanel(true);
-		System.out.println("Reseted all");
+		Logger.println("Logged out and Reseted all");
 	}
 	
 	public boolean isConnected(){
@@ -134,57 +128,24 @@ public class Client {
 		return name;
 	}
 	
-	/*public boolean connect() {
-		System.out.println("try to connect");
-		try {
-			rsa = new RSASoftware();
-			rsaHard = new RSAHardware();
-			System.out.println("Connecting...");
-			s = new Socket(server,port);
-			System.out.println("Connected");
-			out = new ObjectOutputStream(s.getOutputStream());
-			in = new ObjectInputStream(s.getInputStream());
-			System.out.println("in out ok");
-			isConnected = true;
-			System.out.println("is Connected = true");
-			return true;
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-	}*/
-	
-	/*public void disconnect() {
-		    try {
-				out.close();
-				in.close();
-				s.close();
-				isConnected = false;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		    
-	}*/
-
 	public void setMf(MainFrame mf) {
 		this.mf = mf;
 	}
 	
 	public void re_login()
 	{	
+		
 		new LoginDialog();
 	}
 	public void reload(){
-		t.cancel();
+		Logger.println("in reload, going to resetTimer to after_auth");
+		//this.t.cancel();
 		mf.restorePanel();
-		t = new Timer();
-		t.schedule(new Task(t, Task.AFTER_AUTH), new Date(), Task.PERIOD);
+		//Logger.println("######After resotre, going to reinvoke timer");
+		//this.t = new Timer();
+		Logger.println("6");
+		//this.t.schedule(new Task( Task.AFTER_AUTH), new Date(), Task.PERIOD);
+		resetTimer(Task.AFTER_AUTH);
 	}
 
 
@@ -196,7 +157,7 @@ public class Client {
 
 	public boolean logout() {
 		// TODO Auto-generated method stub
-		return false;
+		return lHandler.logout();
 	}
 	public MainFrame getMf() {
 		return mf;
@@ -204,16 +165,19 @@ public class Client {
 	public Timer getT() {
 		return t;
 	}
-
 	public void setT(Timer t) {
 		this.t = t;
 	}
-	
 	public void card_unplug()
 	{
+		Logger.println("8 " + Thread.currentThread().getName() );
+		//t = Client.getInstance().getT();
 		t.cancel();
+		t.purge();
+		//t = null;
 		t = new Timer();
-		t.schedule(new Task(t, Task.WAIT_REAUTH), new Date(),Task.PERIOD);
+		t.schedule(new Task(Task.WAIT_REAUTH), new Date(),Task.PERIOD);
+		//Logger.println("@@@@");
 	}
 
 	public RSAHardware getRSAHard(){
@@ -230,8 +194,12 @@ public class Client {
 	}
 	public void setSkeySpec(SecretKeySpec skeySpec) {
 		this.skeySpec = skeySpec;
+	}		
+	public void resetTimer(int mode){
+		if ( t != null)
+			t.cancel();
+		t = new Timer();
+		t.schedule(new Task(mode),new Date(),Task.PERIOD);
 	}
-
-		
 }
 
