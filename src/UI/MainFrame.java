@@ -56,6 +56,8 @@ public class MainFrame extends JFrame {
 	//store previuos panel
 	private Panels prePanel;
 	public LoginPanel loginPanel = null;
+	public static int MY_PATIENT_LIST = 0;
+	public static int SEARCH_PATIENTS = 1;
 	//store current panel
 	//private JPanel currentPanel = null;
 	
@@ -72,14 +74,14 @@ public class MainFrame extends JFrame {
 		//client = c;
 		initialize();		
 	}
-	public String[] getStringPrivileges(){
-		return Client.getInstance().getPrivilegeHandler().getStringPrivileges();
-	}
-	public String[] getPrivileges(){
-		if (Client.getInstance().getPrivilegeHandler().getPrivileges() == null)
-			System.out.println("FUCK");
-		return Client.getInstance().getPrivilegeHandler().getPrivileges();
-	}
+	//public String[] getStringPrivileges(){
+		//return Client.getInstance().getPrivilegeHandler().getStringPrivileges();
+	//}
+	//public String[] getPrivileges(){
+		//if (Client.getInstance().getPrivilegeHandler().getPrivileges() == null)
+			//System.out.println("FUCK");
+		//return Client.getInstance().getPrivilegeHandler().getPrivileges();
+	//}
 	public String getName(){
 		return Client.getInstance().getName();
 	}
@@ -136,6 +138,31 @@ public class MainFrame extends JFrame {
 			jContentPane.invalidate();
 			jContentPane.validate();
 		}
+	public void refreshMyPatient(){
+		prePanel = (Panels)mainPanel.clone();
+		mainPanel = new Panels();
+		mainPanel.add(new MyPatientPanel());
+		jContentPane.remove(1);
+		mainPanel.setLayout(new GridLayout());
+		mainPanel.setPreferredSize(new Dimension(1024, 590));
+		jContentPane.add(mainPanel,BorderLayout.CENTER);
+		jContentPane.invalidate();
+		jContentPane.validate();
+	}
+	public void refreshSearchPanel(String mode, String param){
+		prePanel = (Panels)mainPanel.clone();
+		mainPanel = new Panels();
+		SearchPatientPanel spp = new SearchPatientPanel();
+		mainPanel.add(spp);
+		jContentPane.remove(1);
+		mainPanel.setLayout(new GridLayout());
+		mainPanel.setPreferredSize(new Dimension(1024, 590));
+		jContentPane.add(mainPanel,BorderLayout.CENTER);
+		jContentPane.invalidate();
+		jContentPane.validate();
+		spp.refresh(mode, param);
+
+	}
 	public void setName(String name){
 		Client.getInstance().setName(name);
 	}
@@ -148,16 +175,13 @@ public class MainFrame extends JFrame {
 		Client.getInstance().setPassword(pw);
 	}
 	public void checkPrivilege(){
-		if ( Client.getInstance().getPrivilegeHandler().getPrivileges() == null)
-			return;
+		//String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
 		
-		String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
-		/* 0 = READ, 1 = WRITE, 2 = ADD*/
-		if ( pri[0].equals("true")){
+		if ( Client.getInstance().isRead()){
 			enableButton(0);
 			enableButton(1);
 		}
-		if ( pri[1].equals("true")){
+		if ( Client.getInstance().isWrite()){
 			enableButton(2);
 		}
 		enableButton(buttons.size()-1);
@@ -208,7 +232,7 @@ public class MainFrame extends JFrame {
 			JOptionPane o = new JOptionPane();
 			this.addPopUP(o);
 			o.showMessageDialog(null,"Logged out");
-			control.Logger.println("10");
+			//control.Logger.println("10");
 			Client.getInstance().resetTimer(Task.PRE_AUTH);
 			//Client.getInstance().getT().cancel();
 			//Client.getInstance().setT(new Timer());
@@ -412,7 +436,7 @@ public class MainFrame extends JFrame {
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJContentPane() {
+	public JPanel getJContentPane() {
 		if (jContentPane == null) {
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
@@ -471,7 +495,7 @@ public class MainFrame extends JFrame {
 	}
 
 
-	private Panels getMainPanel() {
+	public Panels getMainPanel() {
 		if (mainPanel == null) {
 			GridLayout gridLayout1 = new GridLayout();
 			gridLayout1.setRows(1);

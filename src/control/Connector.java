@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 
 import javax.swing.JOptionPane;
 
+//singleton class
 public class Connector {
 	
 	private int port = 8899;
@@ -16,12 +17,9 @@ public class Connector {
 	private Socket s;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-
 	private boolean isConnected = false;
 	
-	private Connector() {
-		
-	}
+	private Connector() {}
 	
 	private static class ConnectorHolder { 
 	     private static final Connector INSTANCE = new Connector();
@@ -36,7 +34,6 @@ public class Connector {
 			out.writeObject(m);
 			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -46,10 +43,8 @@ public class Connector {
 		try {
 			return in.readObject();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -57,23 +52,21 @@ public class Connector {
 	
 	public boolean connect() {
 		try {
-			Logger.println("Connecting...");
+			Logger.println(this.getClass().getName(),"Connecting...");
 			s = new Socket(server,port);
-			Logger.println("Connected to socket");
+			Logger.println(this.getClass().getName(),"Connected to server");
 			out = new ObjectOutputStream(s.getOutputStream());
 			in = new ObjectInputStream(s.getInputStream());
 			isConnected = true;
-			Logger.println("I/O initialized");
+			Logger.println(this.getClass().getName(),"Server/Client I/O initialized");
 			return true;
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
-			Logger.println("Unknown host");
+			Logger.println(this.getClass().getName(),"Unknown host");
 			return false;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
-			Logger.println("IO Exception");
+			Logger.println(this.getClass().getName(),"IO Exception");
 			return false;
 		}
 	}

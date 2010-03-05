@@ -28,16 +28,18 @@ public class ShowInfoPanel extends Panels {
 	private JButton treatmentBtn = null;
 	private String[][] result = null; 
 	private ButtonAction bc;
+	private int panelToRefresh;
 	//private MainFrame mf = null;
 	/**
 	 * This method initializes 
 	 * 
 	 */
-	public ShowInfoPanel() {
+	public ShowInfoPanel(int panel) {
 		super();
 		//this.mf = mf;
 		bc = new ButtonAction(this);
 		initialize();
+		panelToRefresh = panel;
 		this.checkPrivilege();
 	}
 	public void fetchInfo(){
@@ -99,14 +101,13 @@ public class ShowInfoPanel extends Panels {
 		this.getInfo().append(br+"*******************************"+br);
 	}
 	public void checkPrivilege(){
-		String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
 		//write
-		if ( pri[1].equals("true")){
+		if ( Client.getInstance().isWrite()){
 			editBtn.setEnabled(true);
 			allgeryBtn.setEnabled(true);
 		}
-		//read
-		if ( pri[2].equals("true")){
+		//add
+		if (Client.getInstance().isAdd()){
 			treatmentBtn.setEnabled(true);
 		}
 		
@@ -242,7 +243,7 @@ public class ShowInfoPanel extends Panels {
 					o.showMessageDialog(null, "Record not selected");
 				}	
 				else{
-					EditInfoDialog eif = new EditInfoDialog(result,pid);
+					EditInfoDialog eif = new EditInfoDialog(result,pid,panelToRefresh);
 				}
 			}
 			else if ( e.getActionCommand().equals("treatment")){

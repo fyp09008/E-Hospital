@@ -118,7 +118,7 @@ public class QueryHandler extends Handler {
 		return null;
 	}
 
-	/*by chun, byte array to ResultSet*/
+	/*By chris, byte array to ResultSet*/
 	public ResultSet byteToRS(byte[] rawResultSet){
 		ResultSet rs = null;
 		try {

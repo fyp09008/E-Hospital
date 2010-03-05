@@ -1,5 +1,5 @@
 package UI;
-
+import control.Client;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
@@ -17,18 +17,18 @@ public class WelcomePanel extends Panels {
 	private void initialize(){
 		this.setLayout(new BorderLayout());
 		this.add(getMsg(),BorderLayout.CENTER);
-		this.addText(mf.getName(),mf.getStringPrivileges());
+		this.addText(mf.getName());
 	}
-	private void addText(String name, String[] pri){
-		//System.out.println(pri[0]);
+	private void addText(String name){
 		getMsg().setText("Welcome\n");
 		getMsg().append("ID: " + mf.getID() + 
 				"\nName: " + mf.getName()+ " \n" );
 		getMsg().append("You have the following privileges\n");
-		for(int i = 0; i < pri.length; i++){
-			if ( pri[i] != null)
-				getMsg().append(pri[i]+"\n");
-		}
+		String privil = "";
+		privil += Client.getInstance().isRead()?"Read\n":"";
+		privil += Client.getInstance().isWrite()?"Write\n":"";
+		privil += Client.getInstance().isAdd()?"Add\n":"";
+		getMsg().append(privil);
 		getMsg().invalidate();
 		getMsg().validate();
 		

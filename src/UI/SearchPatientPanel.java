@@ -41,6 +41,8 @@ public class SearchPatientPanel extends Panels {
 	private JRadioButton byID = null;
 	private JTable table = null;
 	private ShowInfoPanel showInfo = null; 
+	private String mode;
+	private String param;
 	private ListSelectionModel listSelectionModel = null;  //  @jve:decl-index=0:
 	//private MainFrame mf = null;
 	
@@ -48,12 +50,19 @@ public class SearchPatientPanel extends Panels {
 		super();
 		initialize();
 	}
-	
+	public JTable getTable(){
+		return table;
+	}
 	private void initialize() {
+		mode = "ID";
+		param = "";
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setSize(1024, 690);		
         this.add(getUpPanel(), null);
         this.setVisible(true);
+	}
+	public ShowInfoPanel getShowInfo(){
+		return showInfo;
 	}
 	public JTextField getSearchName() {
 		if ( searchName == null){
@@ -73,14 +82,14 @@ public class SearchPatientPanel extends Panels {
 	public JRadioButton getByName() {
 		if ( byName == null){
 			byName = new JRadioButton("Name");
-			byName.setActionCommand("name");
+			byName.setActionCommand("NAME");
 		}
 		return byName;
 	}
 	public JRadioButton getByID() {
 		if ( byID == null){
 			byID = new JRadioButton("ID");
-			byID.setActionCommand("id");
+			byID.setActionCommand("ID");
 			byID.setSelected(true);
 		}
 		return byID;
@@ -143,7 +152,7 @@ public class SearchPatientPanel extends Panels {
 			showPanel = new JPanel();
 			showPanel.setPreferredSize(new Dimension(750, 10));
 			showPanel.setLayout(new BorderLayout());
-			showInfo = new ShowInfoPanel();
+			showInfo = new ShowInfoPanel(MainFrame.SEARCH_PATIENTS);
 			showPanel.add(showInfo,BorderLayout.CENTER);
 		}
 		return showPanel;
@@ -169,7 +178,30 @@ public class SearchPatientPanel extends Panels {
 		}
 		return leftPanel;
 	}
-
+	public void refresh(String mode, String param){
+		setTable(doSearch(mode,param));
+		setScrollPane();
+		showTable();
+		getShowInfo().setPID((String)getTable().getValueAt(0, 0));
+		getShowInfo().fetchInfo();
+	}
+	public String[][] doSearch(String mode, String param){
+		
+		String[] tables = {"Patient_personal"};
+		String[] fields = {"pid","name"};
+		if ( mode.equals("ID"))
+			return Client.getInstance().sendQuery("SELECT", tables, 
+				fields, "pid = '" + param + "'", null);
+		else
+			return Client.getInstance().sendQuery("SELECT", tables, 
+					fields, "name LIKE '%" + param + "%'", null);
+	}
+	/*public String[][] doSearchName(String name){
+		String[] tables = {"Patient_personal"};
+		String[] fields = {"pid","name"};
+		return Client.getInstance().sendQuery("SELECT", tables, 
+				fields, "name LIKE '%" + name + "%'", null);
+	}*/
 	public void showTable(){
 		//System.out.println("in show table");
 		leftPanel.remove(0);
@@ -189,10 +221,12 @@ public class SearchPatientPanel extends Panels {
 		
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			if ( arg0.getActionCommand().equals("name")){
-				getSearchBtn().setActionCommand("name");
+			if ( arg0.getActionCommand().equals("NAME")){
+				getSearchBtn().setActionCommand("NAME");
 				getSearchName().setEnabled(true);
 				getSearchID().setEnabled(false);
+				mode = "NAME";
+				param = searchName.getText();
 				getByID().setSelected(false);
 			}
 			else{
@@ -200,10 +234,13 @@ public class SearchPatientPanel extends Panels {
 				getSearchID().setEnabled(true);
 				getSearchName().setEnabled(false);
 				getByName().setSelected(false);
+				param = searchID.getText();
+				mode = "ID";
 			}	
 		}
 		
 	}
+
 	class ButtonAction implements ActionListener{
 		//SearchPatientPanel spp = null;
 		//public ButtonAction(SearchPatientPanel spp){
@@ -211,19 +248,21 @@ public class SearchPatientPanel extends Panels {
 		//}
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			//System.out.println("gihi");
-			String[] tables = {"Patient_personal"};
-			String[] fields = {"pid","name"};
-			//this.getInfo().append(this.pid);
+			//String[] tables = {"Patient_personal"};
+			//String[] fields = {"pid","name"};
+			
 			String [][]result;
 			if ( arg0.getActionCommand().equals("ID")){
-				result = Client.getInstance().sendQuery("SELECT", tables, 
-						fields, "pid = '" + getSearchID().getText() + "'", null);	
+				//result = Client.getInstance().sendQuery("SELECT", tables, 
+						//fields, "pid = '" + getSearchID().getText() + "'", null);
+				result = doSearch("ID",getSearchID().getText());
 			}
 			else{
-				result = Client.getInstance().sendQuery("SELECT", tables, 
-						fields, "name LIKE '%" + getSearchName().getText() + "%'", null);
+				result = doSearch("NAME",getSearchName().getText());
+				//result = Client.getInstance().sendQuery("SELECT", tables, 
+						//fields, "name LIKE '%" + getSearchName().getText() + "%'", null);
 			}
+	
 			if ( result.length != 0 && result!= null){
 				//System.out.println("not null: ");
 				setTable(result);
@@ -249,7 +288,7 @@ public class SearchPatientPanel extends Panels {
             for (int i = minIndex; i <= maxIndex; i++) {
                	//patient selected
                if (lsm.isSelectedIndex(i)) {
-            	   System.out.println((String)table.getValueAt(i,0));
+            	   //System.out.println((String)table.getValueAt(i,0));
                 	   //for doing once  only , if not,might be doing twice
                    lsm.clearSelection();               	  
                     	showInfo.setPID((String)table.getValueAt(i, 0));
