@@ -1,7 +1,9 @@
 package UI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,12 +37,12 @@ public class LoginDialog extends JDialog {
 			JLabel label = new JLabel("Password");
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			fldPanel.add(new JLabel("Password"));
-			fldPanel.add(getPwFld());
+			fldPanel.add(getPwFd());
 		}
 		return fldPanel;
 	}
 	public LoginDialog(){
-		
+		//super();
 		super(Client.getInstance().getMf(),true);
 		//this.parent = parent;
 		//this.client = c;
@@ -64,21 +66,26 @@ public class LoginDialog extends JDialog {
 	public void initialize(){
 		//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.setLocationRelativeTo(parent);
-		this.setTitle("re-authentication");
-		this.setSize(new Dimension(300,100));
+		this.setTitle("CLOSE it before unplugging card");
+		this.setSize(new Dimension(600,180));
 		this.setLayout(new BorderLayout());
 		//this.add(new JLabel("Name"));
 		//this.add(getNameFld());
 		//this.add(new JLabel("Password"));
 		//this.add(getPwFld());
+		
+		//this.add(warning,BorderLayout.NORTH);
+		
+		this.add(new KeyboardPanel(this),BorderLayout.SOUTH);
 		this.add(getFldPanel(),BorderLayout.CENTER);
-		this.add(getBtnPanel(),BorderLayout.SOUTH);
 		this.setVisible(true);
 		
 	}
-	public JPasswordField getPwFld() {
-		if ( pwFld == null)
+	public JPasswordField getPwFd() {
+		if ( pwFld == null){
 			pwFld = new JPasswordField();
+			pwFld.setEnabled(false);
+		}
 		return pwFld;
 	}
 	
@@ -89,7 +96,7 @@ public class LoginDialog extends JDialog {
 		}
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			Client.getInstance().setPassword(new String(ld.getPwFld().getPassword()));
+			Client.getInstance().setPassword(new String(ld.getPwFd().getPassword()));
 			
 			if (Client.getInstance().authenticate()){
 				Client.getInstance().getT().cancel();

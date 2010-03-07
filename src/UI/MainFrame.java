@@ -42,6 +42,7 @@ import java.awt.event.WindowListener;
 import java.awt.ComponentOrientation;
 
 public class MainFrame extends JFrame {
+	public Keyboard keyboard = null;
 	public ArrayList<Component> popup = null;
 	private static final long serialVersionUID = 1L;
 	//private Client client = null;
@@ -186,7 +187,7 @@ public class MainFrame extends JFrame {
 		}
 		enableButton(buttons.size()-1);
 	}
-	public boolean authenicate(String name, String password){
+	public boolean authenticate(String name, String password){
 		Client.getInstance().setName(name);
 		Client.getInstance().setPassword(password);
 		return Client.getInstance().authenticate();
@@ -261,7 +262,7 @@ public class MainFrame extends JFrame {
 		jContentPane.remove(1);
 		mainPanel.setLayout(new GridLayout());
 		mainPanel.setPreferredSize(new Dimension(1024, 590));
-		loginPanel = new LoginPanel(this);
+		loginPanel = new LoginPanel();
 		if (open)
 			loginPanel.enableAll();
 		mainPanel.add(loginPanel);
@@ -400,9 +401,10 @@ public class MainFrame extends JFrame {
 		logoutPanel(false);
 	}
 	public void addPopUP(Component o){
-		//System.out.println("add component: " + o.toString());
+		System.out.println("add component: " + o.toString());
 		this.popup.add(o);
 	}
+	
 	
 	public void killPopUp(){
 		for ( int i = 0 ; i < popup.size(); i++){
@@ -430,6 +432,7 @@ public class MainFrame extends JFrame {
 		}
 		//popup = new ArrayList<Component>();
 	}
+
 	
 	/**
 	 * This method initializes jContentPane

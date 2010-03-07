@@ -1,5 +1,7 @@
 package control;
 
+import UI.LoginDialog;
+
 import com.ibm.jc.JCTerminal;
 import com.ibm.jc.JCard;
 
@@ -14,7 +16,7 @@ import hku.hk.cs.javacard.*;
 
 
 public class Task extends TimerTask{
-
+	public LoginDialog  ld;
 	public static final int PRE_AUTH = 0;
 	public static final int AFTER_AUTH = 1;
 	public static final int WAIT_REAUTH = 2;
@@ -43,6 +45,8 @@ public class Task extends TimerTask{
 	            {
 	            	case PRE_AUTH:{
 	    	            Client.getInstance().getMf().loginPanel.disableAll();
+	    	            if ( Client.getInstance().getMf().keyboard != null)
+	    	            	Client.getInstance().getMf().keyboard.dispose();
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
@@ -50,6 +54,10 @@ public class Task extends TimerTask{
 	            		break;
 	            	}
 	            	case WAIT_REAUTH:{
+	            		if ( ld != null){
+	            			ld.dispose();
+	            			ld = null;
+	            		}
 	            		break;
 	            	}
 	            }
@@ -66,12 +74,16 @@ public class Task extends TimerTask{
 	            {
 	            	case PRE_AUTH:{
 	            		Client.getInstance().getMf().loginPanel.enableAll();
+	            		//Client.getInstance().getMf().resumePopUp();
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
+	    	            if ( Client.getInstance().getMf().keyboard != null)
+	    	            	Client.getInstance().getMf().keyboard.dispose();
 	            		break;}
 	            	case WAIT_REAUTH:{
-	            		Client.getInstance().re_login();
+	            		ld = new LoginDialog();
+	            		//Client.getInstance().re_login();
 	            		break;
 	            	}
 	            }
@@ -81,6 +93,8 @@ public class Task extends TimerTask{
 	            {
 	            	case PRE_AUTH:{
 	            		Client.getInstance().getMf().loginPanel.disableAll();
+	            		if ( Client.getInstance().getMf().keyboard != null)
+	    	            	Client.getInstance().getMf().keyboard.dispose();
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
@@ -88,6 +102,10 @@ public class Task extends TimerTask{
 	            		break;
 	            	}
 	            	case WAIT_REAUTH:{
+	            		if ( ld != null){
+	            			ld.dispose();
+	            			ld = null;
+	            		}
 	            		break;
 	            	}
 	            }
