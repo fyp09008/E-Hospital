@@ -1,5 +1,7 @@
 package UI;
 import control.*;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
@@ -17,10 +19,35 @@ import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 public class ShowInfoPanel extends Panels {
+	
 
+	static SimpleAttributeSet BOLD_BLACK = new SimpleAttributeSet();
+	static SimpleAttributeSet ITALIC_GRAY = new SimpleAttributeSet();
+	static SimpleAttributeSet BLACK = new SimpleAttributeSet();
+	static {
+	    StyleConstants.setForeground(BOLD_BLACK, Color.black);
+	    StyleConstants.setBold(BOLD_BLACK, true);
+	    StyleConstants.setFontFamily(BOLD_BLACK, "Helvetica");
+	    StyleConstants.setFontSize(BOLD_BLACK, 14);
+	    
+	    StyleConstants.setForeground(ITALIC_GRAY, Color.gray);
+	    StyleConstants.setItalic(ITALIC_GRAY, true);
+	    StyleConstants.setFontFamily(ITALIC_GRAY, "Helvetica");
+	    StyleConstants.setFontSize(ITALIC_GRAY, 14);
+	    
+	    StyleConstants.setForeground(BLACK, Color.black);
+	    StyleConstants.setFontFamily(BLACK, "Helvetica");
+	    StyleConstants.setFontSize(BLACK, 14);
+	}
+	private static final String br = "\n";
+	private static final String star = "***************";
 	private JScrollPane jScrollPane = null;
-	private JTextArea info = null;
+	private JTextPane info = null;
 	private String pid = null;
 	private JPanel btnPanel = null;
 	private JButton editBtn = null;
@@ -42,11 +69,19 @@ public class ShowInfoPanel extends Panels {
 		panelToRefresh = panel;
 		this.checkPrivilege();
 	}
+	protected void insertText(String text, AttributeSet set) {
+		try {
+			info.getDocument().insertString(
+			info.getDocument().getLength(), text, set);
+		} catch (BadLocationException e) {
+		    e.printStackTrace();
+		}
+	}
 	public void fetchInfo(){
 		this.getInfo().setEditable(false);
-		String br = "\n";
+
 		this.getInfo().setText("");
-		this.getInfo().append("********** Read-only **********"+br+br);
+		insertText(star+" Read-only "+star+br+br,BOLD_BLACK);
 		//deal with patient personal info
 		String[] tables = {"Patient_personal"};
 		String[] fields = {"name","gender","address","contact_no",
@@ -55,27 +90,37 @@ public class ShowInfoPanel extends Panels {
 		result = Client.getInstance().sendQuery("SELECT", tables, 
 				fields, "pid = '" + pid + "'", null);	
 		if ( result != null){
-			this.getInfo().append("********** Personal **********"+br+br);
-			this.getInfo().append("Name: "+result[0][0]+br);
-			this.getInfo().append("Gender: " + result[0][1]+br);
-			this.getInfo().append("Address: " + result[0][2]+br);
-			this.getInfo().append("Contact No.: " + result[0][3]+br);
-			this.getInfo().append("Date Of Birth: " + result[0][4]+br);
-			this.getInfo().append("Person In Charge: " + result[0][5]+br);
-			this.getInfo().append("Remarks: " + br + result[0][6]+br);			
+			insertText(star+" Personal "+star+br+br,BOLD_BLACK);
+			insertText("Name: ",ITALIC_GRAY);
+			insertText(result[0][0]+br,BLACK);
+			insertText("Gender: ",ITALIC_GRAY);
+			insertText(result[0][1]+br,BLACK);
+			insertText("Address: ",ITALIC_GRAY);
+			insertText(result[0][2]+br,BLACK);
+			insertText("Contact No.: ",ITALIC_GRAY);
+			insertText(result[0][3]+br,BLACK);
+			insertText("Date Of Birth: ",ITALIC_GRAY);
+			insertText(result[0][4]+br,BLACK);
+			insertText("Person In Charge: ",ITALIC_GRAY);
+			insertText(result[0][5]+br,BLACK);
+			insertText("Remarks: ",ITALIC_GRAY);
+			insertText(br + result[0][6]+br,BLACK);			
 		}
 		
 		//deal with allergy
 		String[] allergyTable = {"allergy","`dia-allergy_rec`"};
-		String[] allergyFields = {"name"};
+		String[] allergyFields = {"name,description"};
 		String[][] allergyResult = Client.getInstance().sendQuery("SELECT", allergyTable, 
 				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id"
 				+ " AND `dia-allergy_rec`.`pat_id` = "+pid, null);
-		System.out.println(allergyResult.length);
+		//System.out.println(allergyResult.length);
 		if ( ! (allergyResult.length == 0)){
-			this.getInfo().append(br+"********** Allergies **********"+br+br);
+			insertText(br+star+" Allergies "+star+br+br,BOLD_BLACK);
 			for ( int i = 0; i < allergyResult.length; i++){
-				this.getInfo().append(allergyResult[i][0]+br);
+				insertText("Allergy: ",ITALIC_GRAY);
+				insertText(allergyResult[i][0]+br,BLACK);//allergy name
+				insertText("Descriptions: ",ITALIC_GRAY);
+				insertText(allergyResult[i][1]+br,BLACK);//allergy descriptions
 			}
 		}
 		
@@ -85,20 +130,19 @@ public class ShowInfoPanel extends Panels {
 		String[][] treatmentResult = Client.getInstance().sendQuery("SELECT", treatmentTable, 
 				treatmentFields, "pid = "+pid, null);
 		if ( ! (treatmentResult.length == 0)){
-			this.getInfo().append(br+"********** Treatments **********"+br+br);
+			insertText(br+star+" Treatments "+star+br+br,BOLD_BLACK);
 			for ( int i = 0;  i < treatmentResult.length; i++){
-				this.getInfo().append("PIC: ");
-				this.getInfo().append(treatmentResult[i][0]+br);
-				this.getInfo().append("Date of Issue: ");
-				this.getInfo().append(treatmentResult[i][1]+br);
-				this.getInfo().append("Description: ");
-				this.getInfo().append(treatmentResult[i][2]+br);
-				this.getInfo().append(br+"+++++++++++++++++++++++++++++++"+br);
+				insertText("PIC: ",ITALIC_GRAY);
+				insertText(treatmentResult[i][0]+br,BLACK);
+				insertText("Date of Issue: ",ITALIC_GRAY);
+				insertText(treatmentResult[i][1]+br,BLACK);
+				insertText("Description: ",ITALIC_GRAY);
+				insertText(treatmentResult[i][2]+br,BLACK);
 			}
 			
 		}
 		
-		this.getInfo().append(br+"*******************************"+br);
+		insertText(br+star+star+br,BLACK);
 	}
 	public void checkPrivilege(){
 		//write
@@ -201,14 +245,8 @@ public class ShowInfoPanel extends Panels {
 		}
 		return jScrollPane;
 	}
-	public void setInfo(String s){
-		getInfo().append(s);
-	}
-	public void setInfo(String s, char de){
-		//for(int i =0; i < s.length; i++)
-		getInfo().append(s);
-		//getInfo().setText("\n");
-	}
+
+
 	public void setPID(String s){
 		this.pid = s;
 		//System.out.println("IN GETID: "+s);
@@ -219,12 +257,12 @@ public class ShowInfoPanel extends Panels {
 	 * 	
 	 * @return javax.swing.JTextPane	
 	 */
-	private JTextArea getInfo() {
+	private JTextPane getInfo() {
 		if (info == null) {
-			info = new JTextArea();
-			info.setText("***********************************\n" 
+			info = new JTextPane();
+			insertText("***********************************\n" 
 					+ "Click to see info"
-					+ "\n***********************************\n");
+					+ "\n***********************************\n",BLACK);
 		}
 		return info;
 	}

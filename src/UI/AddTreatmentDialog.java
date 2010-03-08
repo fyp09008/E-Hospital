@@ -10,7 +10,7 @@ import javax.swing.JTextArea;
 //Add treatment requires Add privilege
 public class AddTreatmentDialog extends Dialogs {
 	
-	private MainFrame mf = null;
+	//private MainFrame mf = null;
 	private JPanel btnPanel = null;
 	private JButton done = null;
 	private JButton cancel = null;
@@ -47,9 +47,7 @@ public class AddTreatmentDialog extends Dialogs {
 		return cancel;
 	}
 
-	public void setMf(MainFrame mf) {
-		this.mf = mf;
-	}
+
 
 	public JPanel getBtnPanel() {
 		if ( btnPanel == null){

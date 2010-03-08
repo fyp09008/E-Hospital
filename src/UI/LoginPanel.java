@@ -41,7 +41,7 @@ public class LoginPanel extends Panels  {
 	private JTextField nameFd = null;
 	private JPasswordField pwFd = null;
 	public JButton loginBtn = null;
-	private Client client = null;
+	//private Client client = null;
 	//private MainFrame mf = null;
 	public boolean openKeyboard = true;
 	public LoginPanel() {
@@ -119,6 +119,13 @@ public class LoginPanel extends Panels  {
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
 			nameFd.setText("---------- Insert your card ----------");
+			nameFd.addFocusListener(new FocusListener(){
+				public void focusGained(FocusEvent arg0) {
+					nameFd.setText("");
+				}
+				public void focusLost(FocusEvent arg0) {}
+			
+			});
 		}
 		return nameFd;
 	}
@@ -200,16 +207,7 @@ public class LoginPanel extends Panels  {
 		public void actionPerformed(ActionEvent e) {
 			String id = nameFd.getText();
 			String pw = new String(pwFd.getPassword());
-			//System.out.println(pw);
-			//if (id.equals("") || pw.equals("")){
-				//JOptionPane jop = new JOptionPane();
-				//JOptionPane.showMessageDialog(jop, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
-				//JOptionPane jop = new JOptionPane();
-			//	mf.addPopUP(jop);
-				
-				//jop.showMessageDialog(null, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
-			//}
-			//else{
+	
 				if (p.login(id,pw)){
 					Client.getInstance().getMf().checkPrivilege();
 					Client.getInstance().getMf().changePanel(-1);
@@ -225,8 +223,10 @@ public class LoginPanel extends Panels  {
 		}
 		public void focusGained(FocusEvent arg0) {
 		// TODO Auto-generated method stub
-			if ( openKeyboard)
-				new Keyboard(lp);
+			if ( openKeyboard){
+				Keyboard keyboard = new Keyboard(lp);
+				//keyboard.setLocation(100,500);
+			}
 			else
 				openKeyboard = true;
 	}

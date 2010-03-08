@@ -39,8 +39,6 @@ public class Keyboard extends JDialog {
 		login = lp;
 		initialize();	
 	}
-
-
 	private void initialize() {
 		Client.getInstance().getMf().keyboard = this;
 		BorderLayout bl = new BorderLayout();
@@ -64,6 +62,7 @@ public class Keyboard extends JDialog {
 				
 			}});
 		this.add(loginButton,BorderLayout.SOUTH);
+		this.setLocationRelativeTo(Client.getInstance().getMf());
 		this.setVisible(true);
 	
 	}

@@ -27,7 +27,7 @@ public class LoginDialog extends JDialog {
 	private JPasswordField pwFld = null;
 	//private Client client = null;
 	private JButton loginBtn = null;
-	private MainFrame parent = null;
+	//private MainFrame parent = null;
 	private JPanel btnPanel = null;
 	private JPanel fldPanel = null;
 
@@ -65,8 +65,8 @@ public class LoginDialog extends JDialog {
 	}
 	public void initialize(){
 		//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		this.setLocationRelativeTo(parent);
-		this.setTitle("CLOSE it before unplugging card");
+		this.setLocationRelativeTo(Client.getInstance().getMf());
+		this.setTitle("CLOSE it AFTER unplugging card");
 		this.setSize(new Dimension(600,180));
 		this.setLayout(new BorderLayout());
 		//this.add(new JLabel("Name"));

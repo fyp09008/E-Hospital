@@ -125,7 +125,7 @@ public class MainFrame extends JFrame {
 			//lock screen
 			case -2: {
 				this.disableAllBtns();
-				mainPanel.add(new Panels()); 
+				mainPanel.add(new LockPanel()); 
 				Client.getInstance().card_unplug(); 	
 				break;
 			}
@@ -351,11 +351,13 @@ public class MainFrame extends JFrame {
 	    	 if ( Connector.getInstance().isConnected()){
 	 			JOptionPane o = new JOptionPane();
 				this.mf.addPopUP(o);
-	    		 int ans = o.showConfirmDialog(null, "Logout and exit?");
+	    		 /*int ans = o.showConfirmDialog(null, "Logout and exit?");
 	    		 if ( ans == 0 ){
 	    			 mf.doLogout();
 	    			 System.exit(0);
-	    		 }
+	    		 }*/
+				o.showMessageDialog(null,"Please use logout button to exit");
+	    		 
 	    	 }
 	    	 else
 	    		 System.exit(0);
@@ -386,6 +388,7 @@ public class MainFrame extends JFrame {
 	}
 	private void initialize() {
 		this.addWindowListener(new CloseAction(this));
+		//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.popup = new ArrayList<Component>();
 		//init buttons
 		this.
