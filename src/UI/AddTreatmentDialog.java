@@ -58,13 +58,15 @@ public class AddTreatmentDialog extends Dialogs {
 		return btnPanel;
 	}
 
-	public AddTreatmentDialog() {
+	public AddTreatmentDialog(String pid) {
 		super();
+		setID(pid);
 		initialize();
 	}
 
 	private void initialize() {
 		// TODO Auto-generated method stub
+		this.setTitle("Add New Treatment Record for patient "+getID());
 		this.setSize(400,300);
 		this.setLayout(new BorderLayout());
 		this.add(getScroll(),BorderLayout.CENTER);

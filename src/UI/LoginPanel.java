@@ -118,7 +118,8 @@ public class LoginPanel extends Panels  {
 			nameFd.setFont(new Font("Dialog", Font.BOLD, 14));
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
-			nameFd.setText("---------- Insert your card ----------");
+			//nameFd.setText("---------- Insert your card ----------");
+			nameFd.setText("test");
 			nameFd.addFocusListener(new FocusListener(){
 				public void focusGained(FocusEvent arg0) {
 					nameFd.setText("");
@@ -156,7 +157,7 @@ public class LoginPanel extends Panels  {
 	 */
 	public JPasswordField getPwFd() {
 		if (pwFd == null) {
-			pwFd = new JPasswordField();
+			pwFd = new JPasswordField("test");
 			pwFd.setPreferredSize(new Dimension(100, 20));
 			pwFd.setEnabled(false);
 			

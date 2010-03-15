@@ -111,7 +111,7 @@ public class ShowInfoPanel extends Panels {
 		String[] allergyTable = {"allergy","`dia-allergy_rec`"};
 		String[] allergyFields = {"name,description"};
 		String[][] allergyResult = Client.getInstance().sendQuery("SELECT", allergyTable, 
-				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id"
+				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id and `dia-allergy_rec`.valid = 1"
 				+ " AND `dia-allergy_rec`.`pat_id` = "+pid, null);
 		//System.out.println(allergyResult.length);
 		if ( ! (allergyResult.length == 0)){
@@ -184,7 +184,7 @@ public class ShowInfoPanel extends Panels {
 		this.getInfo().setText("Modification is made, Please select again");
 	}
 	private JButton getEditButton(){
-		ImageIcon icon = createImageIcon("edit-icon.png",
+		ImageIcon icon = createImageIcon("icons/edit-icon.png",
         "a pretty but meaningless splat");
 		editBtn = new JButton("Personal Info",icon);
 		editBtn.setVerticalTextPosition(AbstractButton.BOTTOM);
@@ -198,15 +198,12 @@ public class ShowInfoPanel extends Panels {
 	private JButton getAllgeryButton(){
 		//ImageIcon icon = createImageIcon("edit-icon.png",
         //"a pretty but meaningless splat");
-		allgeryBtn = new JButton("Edit Allgery");
+		allgeryBtn = new JButton("Edit allergy");
 		allgeryBtn.setVerticalTextPosition(AbstractButton.BOTTOM);
 		allgeryBtn.setHorizontalTextPosition(AbstractButton.CENTER);
 		allgeryBtn.setPreferredSize(new Dimension(59, 80));
-		allgeryBtn.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				//new EditInfoFrame(); // TODO Auto-generated Event stub actionPerformed()
-			}
-		});
+		allgeryBtn.setActionCommand("allergy");
+		allgeryBtn.addActionListener(bc);
 		allgeryBtn.setEnabled(false);
 		return allgeryBtn;
 	}
@@ -274,20 +271,22 @@ public class ShowInfoPanel extends Panels {
 			info = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
-			if ( e.getActionCommand().equals("edit")){
-				if ( info.getInfo().getText().equals("")){
-					JOptionPane o = new JOptionPane();
-					Client.getInstance().getMf().addPopUP(o);
-					o.showMessageDialog(null, "Record not selected");
-				}	
-				else{
+			if ( info.getInfo().getText().equals("")){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null, "Record not selected");
+			}	
+			else{
+				if ( e.getActionCommand().equals("edit")){
 					EditInfoDialog eif = new EditInfoDialog(result,pid,panelToRefresh);
 				}
+				else if ( e.getActionCommand().equals("treatment")){
+					AddTreatmentDialog atd = new AddTreatmentDialog(pid);
+				}
+				else{
+					EditAllergyDialog ead = new EditAllergyDialog(pid);
+				}
 			}
-			else if ( e.getActionCommand().equals("treatment")){
-				AddTreatmentDialog atd = new AddTreatmentDialog();
-			}
-			else{}
 		}
 	};
 

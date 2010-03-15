@@ -75,14 +75,7 @@ public class MainFrame extends JFrame {
 		//client = c;
 		initialize();		
 	}
-	//public String[] getStringPrivileges(){
-		//return Client.getInstance().getPrivilegeHandler().getStringPrivileges();
-	//}
-	//public String[] getPrivileges(){
-		//if (Client.getInstance().getPrivilegeHandler().getPrivileges() == null)
-			//System.out.println("FUCK");
-		//return Client.getInstance().getPrivilegeHandler().getPrivileges();
-	//}
+
 	public String getName(){
 		return Client.getInstance().getName();
 	}
@@ -295,23 +288,23 @@ public class MainFrame extends JFrame {
 		//buttons.add(new JButton(""));
 		
 		//0-view my patient button
-		ImageIcon icon = createImageIcon("a.png",
+		ImageIcon icon = createImageIcon("icons/a.png",
 		"view my patients");
 		buttons.add(new JButton(icon));
 		
 		//1-search patient
-		icon = createImageIcon("search.png",
+		icon = createImageIcon("icons/search.png",
         "search");
 		buttons.add(new JButton(icon));
 		
 		//2-add patient
-		icon = createImageIcon("add-user.png",
+		icon = createImageIcon("icons/add-user.png",
         "add patient");
 		
 		buttons.add(new JButton(icon));
 		buttons.add(new JButton("X"));
 		
-		icon = createImageIcon("logout.png",
+		icon = createImageIcon("icons/logout.png",
         "logout");
 		buttons.add(new JButton(icon));
 		
@@ -404,7 +397,7 @@ public class MainFrame extends JFrame {
 		logoutPanel(false);
 	}
 	public void addPopUP(Component o){
-		System.out.println("add component: " + o.toString());
+		//System.out.println("add component: " + o.toString());
 		this.popup.add(o);
 	}
 	
