@@ -5,6 +5,7 @@ import control.*;
 import java.awt.BorderLayout;
 
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -42,15 +43,23 @@ import java.awt.event.WindowListener;
 import java.awt.ComponentOrientation;
 
 public class MainFrame extends JFrame {
+	private JMenuItem viewAll;
+	private JMenuItem search;
+	private JMenuItem add;
+	private final static int VIEW_ALL = 0;
+	private final static int SEARCH = 1;
+	private final static int ADD = 2;
+	private final static int LOGOUT = 3;
 	public Keyboard keyboard = null;
+	private ButtonActions ba;
 	public ArrayList<Component> popup = null;
 	private static final long serialVersionUID = 1L;
 	//private Client client = null;
 	private JPanel jContentPane = null;
 	private Vector<JPanel> panels = null;  //  @jve:decl-index=0:
 	private JPanel upperPanel = null;
-	private JMenuBar jJMenuBar = null;
-	private JMenu jMenu = null;
+	private JMenuBar menuBar = null;
+	public JMenu funcMenu = null;
 	private Panels mainPanel = null;
 	//private Module control = null;
 	private Vector<JButton> buttons = null;  //  @jve:decl-index=0:
@@ -72,7 +81,6 @@ public class MainFrame extends JFrame {
 		} catch (Exception e){
 			e.printStackTrace();
 		}	
-		//client = c;
 		initialize();		
 	}
 
@@ -86,7 +94,7 @@ public class MainFrame extends JFrame {
 	 */
 	
 	public void restorePanel(){
-			this.enableAllBtns();
+			//this.enableAllBtns();
 			this.checkPrivilege();
 
 			prePanel.revalidate();
@@ -117,6 +125,9 @@ public class MainFrame extends JFrame {
 			case -1: {mainPanel.add(new WelcomePanel(this)); break;} //welcome page
 			//lock screen
 			case -2: {
+				//funcMenu.setSelected(false);
+				funcMenu.setEnabled(false);
+				funcMenu.setPopupMenuVisible(false);
 				this.disableAllBtns();
 				mainPanel.add(new LockPanel()); 
 				Client.getInstance().card_unplug(); 	
@@ -170,13 +181,16 @@ public class MainFrame extends JFrame {
 	}
 	public void checkPrivilege(){
 		//String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
-		
+		funcMenu.setEnabled(true);
 		if ( Client.getInstance().isRead()){
 			enableButton(0);
 			enableButton(1);
+			viewAll.setEnabled(true);
+			search.setEnabled(true);
 		}
 		if ( Client.getInstance().isWrite()){
 			enableButton(2);
+			add.setEnabled(true);
 		}
 		enableButton(buttons.size()-1);
 	}
@@ -188,49 +202,17 @@ public class MainFrame extends JFrame {
 	public String getID(){
 		return Client.getInstance().getID();
 	}
-	 /**
-	 * This method add ActionListeners to the buttons
-	 */
-	public void initButtonAction(){
-		for(int i = 0; i < buttons.size(); i++)
-			buttons.get(i).addActionListener(new ButtonActions(this,i));
-	}
-	 /**
-	 * @author cctang
-	 *	actions for the buttons
-	 */
-	class ButtonActions implements ActionListener{
-		int no;
-		MainFrame mf = null;
-		public ButtonActions(MainFrame mf,int x){
-			this.mf=mf;
-			no = x;
-		}
-		public void actionPerformed(ActionEvent e) {
-			if ( no == buttons.size()-1){ //last button = logout
-				JOptionPane o = new JOptionPane();
-				mf.addPopUP(o);
-	    		 int ans = o.showConfirmDialog(null, "Logout?");
-	    		 if ( ans == 0 ){
-	    			 mf.doLogout();
-	    			 //System.exit(0);
-	    		 }
-			}
-			else
-				mf.changePanel(no);
-		}
-	}
+
+
 	public void doLogout(){
 		
 		if (this.logout()){
 			JOptionPane o = new JOptionPane();
 			this.addPopUP(o);
 			o.showMessageDialog(null,"Logged out");
-			//control.Logger.println("10");
+
 			Client.getInstance().resetTimer(Task.PRE_AUTH);
-			//Client.getInstance().getT().cancel();
-			//Client.getInstance().setT(new Timer());
-			//Client.getInstance().getT().schedule(new Task( Task.PRE_AUTH), new Date(), Task.PERIOD);
+
 			logoutPanel(true);
 		}
 		else{
@@ -285,58 +267,83 @@ public class MainFrame extends JFrame {
 	 */
 	public void initButtons(){
 		buttons = new Vector<JButton>();
-		//buttons.add(new JButton(""));
+		JButton button;
 		
 		//0-view my patient button
 		ImageIcon icon = createImageIcon("icons/a.png",
 		"view my patients");
-		buttons.add(new JButton(icon));
+		button = new JButton(icon);
+		button.setActionCommand(Integer.toString(VIEW_ALL));
+		button.addActionListener(ba);
+		buttons.add(button);
 		
 		//1-search patient
 		icon = createImageIcon("icons/search.png",
         "search");
-		buttons.add(new JButton(icon));
+		button = new JButton(icon);
+		button.setActionCommand(Integer.toString(SEARCH));
+		button.addActionListener(ba);
+		buttons.add(button);
 		
 		//2-add patient
 		icon = createImageIcon("icons/add-user.png",
         "add patient");
+		button = new JButton(icon);
+		button.setActionCommand(Integer.toString(ADD));
+		button.addActionListener(ba);
+		buttons.add(button);
 		
-		buttons.add(new JButton(icon));
-		buttons.add(new JButton("X"));
 		
 		icon = createImageIcon("icons/logout.png",
         "logout");
-		buttons.add(new JButton(icon));
+		button = new JButton(icon);
+		button.setActionCommand(Integer.toString(LOGOUT));
+		button.addActionListener(ba);
+		buttons.add(button);
 		
-		//init buttons' actions
-		initButtonAction();
+	}
+	class ButtonActions implements ActionListener{
 
+		public ButtonActions(){}
+		
+		public void actionPerformed(ActionEvent e) {
+			if ( e.getActionCommand().equals(Integer.toString(LOGOUT))){ //last button = logout
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+	    		 int ans = o.showConfirmDialog(null, "Logout?");
+	    		 if ( ans == 0 ){
+	    			 Client.getInstance().getMf().doLogout();
+	    		 }
+			}
+			else if ( e.getActionCommand().equals(Integer.toString(VIEW_ALL)))
+				Client.getInstance().getMf().changePanel(VIEW_ALL);
+			else if ( e.getActionCommand().equals(Integer.toString(SEARCH)))
+				Client.getInstance().getMf().changePanel(SEARCH);
+			else
+				Client.getInstance().getMf().changePanel(ADD);
+		}
 	}
 	
 	public void enableButton(int i){
 		buttons.get(i).setEnabled(true);
 	}
-	public void enableAllBtns(){
+	/*public void enableAllBtns(){
 		for ( int i = 0 ; i < buttons.size(); i++)
 			buttons.get(i).setEnabled(false);
-	}
+		//funcMenu.setEnabled(true);
+	}*/
 	public void disableAllBtns(){
 		for ( int i = 0 ; i < buttons.size(); i++)
 			buttons.get(i).setEnabled(false);
-		//System.out.println("ready to lock popup");
+	
 		this.killPopUp();
 	}
 
-	/**
-	 * This method initializes this
-	 * 
-	 * @return void
-	 */
+
 	class CloseAction implements WindowListener{
 		
 		MainFrame mf = null;
 		public CloseAction(MainFrame mf){
-			//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 			this.mf = mf;	
 		}
 		public void windowClosing(WindowEvent we){
@@ -344,60 +351,42 @@ public class MainFrame extends JFrame {
 	    	 if ( Connector.getInstance().isConnected()){
 	 			JOptionPane o = new JOptionPane();
 				this.mf.addPopUP(o);
-	    		 /*int ans = o.showConfirmDialog(null, "Logout and exit?");
-	    		 if ( ans == 0 ){
-	    			 mf.doLogout();
-	    			 System.exit(0);
-	    		 }*/
+
 				o.showMessageDialog(null,"Please use logout button to exit");
-	    		 
 	    	 }
 	    	 else
 	    		 System.exit(0);
 	      }
 		public void windowActivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 		public void windowClosed(WindowEvent arg0) {
-			// TODO Auto-generated method stub
 		}
 		public void windowDeactivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 		public void windowDeiconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 		public void windowIconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 		public void windowOpened(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
 		}
 	}
 	private void initialize() {
 		this.addWindowListener(new CloseAction(this));
-		//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.popup = new ArrayList<Component>();
 		//init buttons
-		this.
-		initButtons();
+		ba = new ButtonActions();
+		this.initButtons();
 		//init UI
 		this.setSize(1024,750);
-		this.setJMenuBar(getJJMenuBar());
+		this.setJMenuBar(getBar());
+		
 		this.setContentPane(getJContentPane());
 		this.setTitle("Secure Medicial System - fyp09008");
 		this.setVisible(true);
-		
-		//init as logout status
+
 		logoutPanel(false);
 	}
 	public void addPopUP(Component o){
-		//System.out.println("add component: " + o.toString());
 		this.popup.add(o);
 	}
 	
@@ -405,7 +394,6 @@ public class MainFrame extends JFrame {
 	public void killPopUp(){
 		for ( int i = 0 ; i < popup.size(); i++){
 			if( popup.get(i) != null){
-				//System.out.println("lock");
 				popup.get(i).setVisible(false);
 				if ( popup.get(i).getClass().getName().equals("javax.swing.JOptionPane")){
 					((JOptionPane)popup.get(i)).getRootFrame().setVisible(false);
@@ -414,9 +402,7 @@ public class MainFrame extends JFrame {
 		}
 	}
 	public void resumePopUp(){
-		//if (popup == null){
-			//return;
-		//}
+
 		for ( int i = 0 ; i < popup.size(); i++){
 			if( popup.get(i) != null){
 				System.out.println("resume");
@@ -466,31 +452,38 @@ public class MainFrame extends JFrame {
 		return upperPanel;
 	}
 
-	/**
-	 * This method initializes jJMenuBar	
-	 * 	
-	 * @return javax.swing.JMenuBar	
-	 */
-	private JMenuBar getJJMenuBar() {
-		if (jJMenuBar == null) {
-			jJMenuBar = new JMenuBar();
-			jJMenuBar.setPreferredSize(new Dimension(20, 20));
-			jJMenuBar.add(getJMenu());
+	private JMenuBar getBar(){
+		if (menuBar == null) {
+			menuBar = new JMenuBar();
+			menuBar.setPreferredSize(new Dimension(20, 20));
+			menuBar.add(getFuncMenu());
 		}
-		return jJMenuBar;
+		return menuBar;
 	}
 
-	/**
-	 * This method initializes jMenu	
-	 * 	
-	 * @return javax.swing.JMenu	
-	 */
-	private JMenu getJMenu() {
-		if (jMenu == null) {
-			jMenu = new JMenu();
-			jMenu.setText("File");
+	private JMenu getFuncMenu() {
+		if (funcMenu == null) {
+			funcMenu = new JMenu();
+			funcMenu.setEnabled(false);
+			funcMenu.setText("Functions");
+			viewAll = new JMenuItem("My Patients");
+			viewAll.setActionCommand(Integer.toString(VIEW_ALL));
+			viewAll.addActionListener(ba);
+			funcMenu.add(viewAll);
+			
+			search = new JMenuItem("Search Patient");
+			search.setActionCommand(Integer.toString(SEARCH));
+			search.addActionListener(ba);
+			funcMenu.add(search);
+			
+			add = new JMenuItem("Add Patient");
+			add.setActionCommand(Integer.toString(ADD));
+			add.addActionListener(ba);
+			funcMenu.add(add);
+	
 		}
-		return jMenu;
+		
+		return funcMenu;
 	}
 
 

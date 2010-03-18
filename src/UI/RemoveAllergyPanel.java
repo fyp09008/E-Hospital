@@ -17,7 +17,7 @@ import javax.swing.JScrollPane;
 
 import control.Client;
 public class RemoveAllergyPanel extends Panels {
-	Vector<String> allergyName;
+	Vector<String> hasAllergyName;
 	Vector<String> description;
 	Vector<String> allergyID;
 	Vector<JCheckBox> boxes;
@@ -26,11 +26,29 @@ public class RemoveAllergyPanel extends Panels {
 			Vector<String> de){
 		super();
 		this.setID(pid);
-		allergyName = name;
+		hasAllergyName = name;
 		description = de;
 		allergyID = id;
 		boxes = new Vector<JCheckBox>();
 		initialize();
+	}
+	public void submit(){
+		String ids = null;
+		for(int i = 0; i < boxes.size(); i++){
+			if (  boxes.get(i).isSelected()){
+				if ( ids == null){
+					ids = new String("'"+allergyID.get(i)+"'");
+				}
+				else{
+					ids = ids + ", '" + allergyID.get(i)+"'";
+				}
+			}
+		}
+		String[] table = {"`dia-allergy_rec`"};
+		String[] field = {"valid"};
+		String where = "`dia-allergy_rec`.allergy_id IN (" + ids + " )";
+		String[] value = {"0"};
+		Client.getInstance().sendQuery("UPDATE", table, field, where, value );
 	}
 	private void initialize(){
 		
@@ -44,7 +62,7 @@ public class RemoveAllergyPanel extends Panels {
 
 		for(int i = 0;i < allergyID.size(); i++){
 			JPanel p = new JPanel();
-			JLabel name = new JLabel(allergyName.get(i));
+			JLabel name = new JLabel(hasAllergyName.get(i));
 			name.setFont(new Font("Helvetica",Font.BOLD,15));
 			name.setToolTipText(result[i][2]);
 			p.add(name);
@@ -59,29 +77,7 @@ public class RemoveAllergyPanel extends Panels {
 		 	this.add(p);
 		 	gl.setRows(gl.getRows()+1);
 		}
-		JButton button = new JButton("delete");
-		button.addActionListener(new ButtonAction());
-		this.add(button);
-		
 	}
-	class ButtonAction implements ActionListener{
-		String ids = null;
-		public void actionPerformed(ActionEvent arg0) {
-			for(int i = 0; i < boxes.size(); i++){
-				if (  boxes.get(i).isSelected()){
-					if ( ids == null){
-						ids = new String("'"+allergyID.get(i)+"'");
-					}
-					else{
-						ids = ids + ", '" + allergyID.get(i)+"'";
-					}
-				}
-			}
-			String[] table = {"`dia-allergy_rec`"};
-			String[] field = {"valid"};
-			String where = "`dia-allergy_rec`.allergy_id IN (" + ids + " )";
-			String[] value = {"0"};
-			Client.getInstance().sendQuery("UPDATE", table, field, where, value );
-		}
-	}
+	
+
 }

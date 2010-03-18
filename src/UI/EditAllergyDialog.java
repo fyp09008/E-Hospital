@@ -1,11 +1,15 @@
 package UI;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,20 +19,33 @@ import control.Client;
 
 public class EditAllergyDialog extends Dialogs {
 	
-	Vector<String> allergyName;
-	Vector<String> description;
+	
 	Vector<String> allergyID;
+	Vector<String> description;
+	Vector<String> hasAllergyName;
+	Vector<String> noDescription;
+	Vector<String> noAllergyName;
+	Vector<String> noAllergyID;
+	AddAllergyPanel aap;
+	RemoveAllergyPanel rap;
+	JPanel bigPanel;
+	JPanel btnPanel;
+	JButton done;
+	JButton cancel;
 	
 	public EditAllergyDialog(String pid){
 		super();
 		setID(pid);
-		allergyName = new Vector<String>();
+		noAllergyID = new Vector<String>();
+		noAllergyName = new Vector<String>();
+		hasAllergyName = new Vector<String>();
 		allergyID = new Vector<String>();
 		description = new Vector<String>();
+		noDescription = new Vector<String>();
+		doQueries();
 		initialize();
 	}
-	protected void initialize(){
-
+	private void doQueries(){
 		String[] tables = {"allergy","`dia-allergy_rec`"};
 		String[] fields = {"allergy_id","name","description"};
 		String where = "allergy.id = `dia-allergy_rec`.allergy_id and `dia-allergy_rec`.valid = 1 and" +
@@ -37,17 +54,61 @@ public class EditAllergyDialog extends Dialogs {
 		
 		for(int i = 0;i < result.length; i++){
 			allergyID.add(result[i][0]);
-			allergyName.add(result[i][1]);
+			hasAllergyName.add(result[i][1]);
 			description.add(result[i][2]);
 		}
-		this.setLayout(new GridLayout(2,1));
-		AddAllergyPanel aap = new AddAllergyPanel(getID(),allergyName);
+		String[] table = {"allergy"};
+		String[] field = {"id, name, description"};
+		String whereClause = "id not in (select allergy_id from `dia-allergy_rec` " +
+				"where pat_id = '"+getID()+"' and valid = '1') ORDER BY name";
+		String[][] result2 = Client.getInstance().sendQuery("SELECT", table, field, whereClause, null);
+		for(int i =0;i < result2.length;i++){
+			noAllergyID.add(result2[i][0]);
+			noAllergyName.add(result2[i][1]);
+			noDescription.add(result2[i][2]);
+		}
+	}
+	protected void initialize(){
+		this.setLayout(new BorderLayout());
+		aap = new AddAllergyPanel(getID(),noAllergyID,noAllergyName,noDescription);
 		JScrollPane scroll = new JScrollPane(aap);
-		RemoveAllergyPanel rap = new RemoveAllergyPanel(getID(),allergyID,allergyName,description);
+		rap = new RemoveAllergyPanel(getID(),allergyID,hasAllergyName,description);
 		JScrollPane scroll1 = new JScrollPane(rap);
-		this.add(scroll);
-		this.add(scroll1);
-		this.setSize(300,400);
+		getBigPanel().add(scroll,BorderLayout.NORTH);
+		getBigPanel().add(scroll1,BorderLayout.CENTER);
+		this.add(getBigPanel(),BorderLayout.CENTER);
+		this.add(getBtnPanel(),BorderLayout.SOUTH);
+		Actions actions = new Actions();
+		done = new JButton("Done");
+		done.setActionCommand("DONE");
+		done.addActionListener(actions);
+		cancel = new JButton("Cancel");
+		getBtnPanel().add(done);
+		getBtnPanel().add(cancel);
+		
+		this.setSize(300,300);
 		this.setVisible(true);
+	}
+	private JPanel getBigPanel(){
+		if( bigPanel == null){
+			bigPanel = new JPanel();
+			bigPanel.setLayout(new BorderLayout());
+		}
+		return bigPanel;
+	}
+	private JPanel getBtnPanel(){
+		if ( btnPanel == null){
+			btnPanel = new JPanel();
+			btnPanel.setLayout(new GridLayout(1,2));
+		}
+		return btnPanel;
+	}
+	class Actions implements ActionListener{
+		public void actionPerformed(ActionEvent ae) {
+			if ( ae.getActionCommand().equals("DONE")){
+				aap.submit();
+				rap.submit();
+			}
+		}
 	}
 }

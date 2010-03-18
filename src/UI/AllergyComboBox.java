@@ -15,7 +15,6 @@ public class AllergyComboBox extends JComboBox
 	public AllergyComboBox(Vector<String> allergies)
 	{
 		super(allergies);
-		//model = new ComboBoxModel(items);
 		model = new DefaultComboBoxModel();
 		for(int i = 0; i < allergies.size(); i++)
 			model.addElement(allergies.get(i));
@@ -28,7 +27,6 @@ public class AllergyComboBox extends JComboBox
 	    public void actionPerformed(ActionEvent e) {
 	    	AllergyComboBox cb = (AllergyComboBox)e.getSource();
 	        String petName = (String)cb.getSelectedItem();
-	        System.out.println(petName);
 	        ((JTextComponent)cb.getEditor().getEditorComponent()).setText(petName);
 	      
 	       
