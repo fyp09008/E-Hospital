@@ -174,7 +174,7 @@ public class EditInfoDialog extends Dialogs {
 	 */
 	private JButton getDoneBtn(){
 		if (doneBtn == null){
-			doneBtn = new JButton("Save");
+			doneBtn = new JButton("Done");
 			doneBtn.addActionListener(new DoneAction(this));	
 		}
 		return doneBtn;
@@ -393,7 +393,7 @@ public class EditInfoDialog extends Dialogs {
 					m.showMessageDialog(null, "Record modification succeed!");
 					//refresh to specific panel
 					if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
-						Client.getInstance().getMf().refreshMyPatient();
+						Client.getInstance().getMf().refreshMyPatient(frame.getID());
 					if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
 						Client.getInstance().getMf().refreshSearchPanel("ID", frame.getID());
 					}

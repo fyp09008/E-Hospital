@@ -35,12 +35,21 @@ public class AddAllergyPanel extends Panels {
 		}
 		return null;
 	}
-	public void submit(){
+	public boolean submit(){
 		String value = ((JTextComponent) box.getEditor().getEditorComponent()).getText();
+		if (value.equals("")){
+			System.out.println("no value for add");
+			return true;
+		}
 		String table[] = {"`dia-allergy_rec`"};
 		String fields[] = {"id","pat_id","allergy_id","valid"};
 		String values[] = {"null",getID(),findID(value),"1"};
-		Client.getInstance().sendQuery("INSERT", table, fields, null, values);
+		String[][] result2 = Client.getInstance().sendQuery("INSERT", table, fields, null, values);
+		if ( result2[0][0].equals("true"))
+			return true;
+		else
+			return false;
+			
 	}
 	private void initialize(){
 		box = new AllergyComboBox(noAllergyName);

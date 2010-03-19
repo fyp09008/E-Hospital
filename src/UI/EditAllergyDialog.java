@@ -2,6 +2,7 @@ package UI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -19,7 +21,7 @@ import control.Client;
 
 public class EditAllergyDialog extends Dialogs {
 	
-	
+	private int panelToRefresh; 
 	Vector<String> allergyID;
 	Vector<String> description;
 	Vector<String> hasAllergyName;
@@ -33,8 +35,9 @@ public class EditAllergyDialog extends Dialogs {
 	JButton done;
 	JButton cancel;
 	
-	public EditAllergyDialog(String pid){
+	public EditAllergyDialog(String pid, int panel){
 		super();
+		panelToRefresh = panel;
 		setID(pid);
 		noAllergyID = new Vector<String>();
 		noAllergyName = new Vector<String>();
@@ -70,6 +73,7 @@ public class EditAllergyDialog extends Dialogs {
 	}
 	protected void initialize(){
 		this.setLayout(new BorderLayout());
+		this.setLocationRelativeTo(Client.getInstance().getMf());
 		aap = new AddAllergyPanel(getID(),noAllergyID,noAllergyName,noDescription);
 		JScrollPane scroll = new JScrollPane(aap);
 		rap = new RemoveAllergyPanel(getID(),allergyID,hasAllergyName,description);
@@ -78,11 +82,13 @@ public class EditAllergyDialog extends Dialogs {
 		getBigPanel().add(scroll1,BorderLayout.CENTER);
 		this.add(getBigPanel(),BorderLayout.CENTER);
 		this.add(getBtnPanel(),BorderLayout.SOUTH);
-		Actions actions = new Actions();
+		Actions actions = new Actions(this);
 		done = new JButton("Done");
 		done.setActionCommand("DONE");
 		done.addActionListener(actions);
 		cancel = new JButton("Cancel");
+		cancel.setActionCommand("CANCEL");
+		cancel.addActionListener(actions);
 		getBtnPanel().add(done);
 		getBtnPanel().add(cancel);
 		
@@ -104,10 +110,40 @@ public class EditAllergyDialog extends Dialogs {
 		return btnPanel;
 	}
 	class Actions implements ActionListener{
+		EditAllergyDialog ead;
+		public Actions(EditAllergyDialog ead){
+			this.ead = ead;
+		}
 		public void actionPerformed(ActionEvent ae) {
 			if ( ae.getActionCommand().equals("DONE")){
-				aap.submit();
-				rap.submit();
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				int ans = o.showConfirmDialog(null, "Sure?");
+				if ( ans == 0){
+					boolean add = aap.submit();
+					boolean remove = rap.submit();
+					if(add && remove){
+						JOptionPane m = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(o);
+						m.showMessageDialog(null, "Record modification succeed!");
+						if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
+							Client.getInstance().getMf().refreshMyPatient(ead.getID());
+						if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
+							Client.getInstance().getMf().refreshSearchPanel("ID", ead.getID());
+						}
+						Client.getInstance().getMf().popup = new ArrayList<Component>();
+						ead.dispose();
+					}else {
+						JOptionPane m = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(o);
+						Client.getInstance().getMf().popup = new ArrayList<Component>();
+						m.showMessageDialog(null, "Record modification failed!");
+					}
+					
+				}
+			}else{
+				 Client.getInstance().getMf().popup = new ArrayList<Component>();
+				 ead.dispose();// TODO Auto-generated Event stub actionPerformed()
 			}
 		}
 	}

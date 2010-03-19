@@ -143,10 +143,12 @@ public class MainFrame extends JFrame {
 			jContentPane.invalidate();
 			jContentPane.validate();
 		}
-	public void refreshMyPatient(){
+	public void refreshMyPatient(String param){
 		prePanel = (Panels)mainPanel.clone();
 		mainPanel = new Panels();
-		mainPanel.add(new MyPatientPanel());
+		MyPatientPanel mpp = new MyPatientPanel();
+		mpp.refresh(param);
+		mainPanel.add(mpp);
 		jContentPane.remove(1);
 		mainPanel.setLayout(new GridLayout());
 		mainPanel.setPreferredSize(new Dimension(1024, 590));

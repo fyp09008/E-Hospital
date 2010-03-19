@@ -1,12 +1,19 @@
 package UI;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import control.Client;
 //Add treatment requires Add privilege
 public class AddTreatmentDialog extends Dialogs {
 	
@@ -15,39 +22,43 @@ public class AddTreatmentDialog extends Dialogs {
 	private JButton done = null;
 	private JButton cancel = null;
 	private JScrollPane scroll = null;
-	
+	private JTextArea text = null;
+	int panelToRefresh;
+	private Actions actions;
+	public AddTreatmentDialog(String pid, int panel){
+		this.setID(pid);
+		panelToRefresh = panel;
+	}
 	public JScrollPane getScroll() {
 		if ( scroll == null){
-			scroll = new JScrollPane(getText());
+			scroll = new JScrollPane(getTextArea());
 		}
 		return scroll;
 	}
 
-	public JTextArea getText() {
+	public JTextArea getTextArea() {
 		if ( text == null){
 			text = new JTextArea();
 		}
 		return text;
 	}
-
-	private JTextArea text = null;
-	
-	
 	public JButton getDone() {
 		if ( done == null){
 			done = new JButton("Done");
+			done.setActionCommand("DONE");
+			done.addActionListener(actions);
+			
 		}
 		return done;
 	}
-
 	public JButton getCancel() {
 		if ( cancel == null){
 			cancel = new JButton("Cancel");
+			cancel.setActionCommand("CANCEL");
+			cancel.addActionListener(actions);
 		}
 		return cancel;
 	}
-
-
 
 	public JPanel getBtnPanel() {
 		if ( btnPanel == null){
@@ -65,6 +76,7 @@ public class AddTreatmentDialog extends Dialogs {
 	}
 
 	private void initialize() {
+		actions = new Actions(this);
 		// TODO Auto-generated method stub
 		this.setTitle("Add New Treatment Record for patient "+getID());
 		this.setSize(400,300);
@@ -72,8 +84,49 @@ public class AddTreatmentDialog extends Dialogs {
 		this.add(getScroll(),BorderLayout.CENTER);
 		this.add(getBtnPanel(),BorderLayout.SOUTH);
 		this.setVisible(true);
-		//this.add(comp);
 		
 	}
-	
+	class Actions implements ActionListener{
+		AddTreatmentDialog atd;
+		public Actions(AddTreatmentDialog atd){
+			this.atd = atd;
+		}
+		public void actionPerformed(ActionEvent ae) {
+			if ( ae.getActionCommand().equals("DONE")){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				int ans = o.showConfirmDialog(null, "Sure?");
+				if ( ans == 0){
+					String[] table = {"treatment"};
+					String[] field = {"id","pid","pic","description","date_of_issue"};
+					String[] values = {"null",atd.getID(),Client.getInstance().getID(),"'"+getTextArea().getText()+"'","CURDATE()"};
+					String[][] result = Client.getInstance().sendQuery("INSERT", table, field, null, values);
+					if(result[0][0].equals("true")){
+						JOptionPane m = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(o);
+						m.showMessageDialog(null, "Record modification succeed!");
+						if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
+							Client.getInstance().getMf().refreshMyPatient(atd.getID());
+						if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
+							Client.getInstance().getMf().refreshSearchPanel("ID", atd.getID());
+						}
+						Client.getInstance().getMf().popup = new ArrayList<Component>();
+						atd.dispose();
+					}else {
+						JOptionPane m = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(o);
+						Client.getInstance().getMf().popup = new ArrayList<Component>();
+						m.showMessageDialog(null, "Record modification failed!");
+					}
+				}
+
+			}else{
+				//CANCEL action
+				 Client.getInstance().getMf().popup = new ArrayList<Component>();
+				 atd.dispose();// TODO Auto-generated Event stub actionPerformed()
+			}
+		}
+	}
 }
+	
+

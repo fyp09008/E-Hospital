@@ -32,7 +32,7 @@ public class RemoveAllergyPanel extends Panels {
 		boxes = new Vector<JCheckBox>();
 		initialize();
 	}
-	public void submit(){
+	public boolean submit(){
 		String ids = null;
 		for(int i = 0; i < boxes.size(); i++){
 			if (  boxes.get(i).isSelected()){
@@ -44,11 +44,19 @@ public class RemoveAllergyPanel extends Panels {
 				}
 			}
 		}
+		if ( ids == null){
+			System.out.println("no remove");
+			return true;
+		}
 		String[] table = {"`dia-allergy_rec`"};
 		String[] field = {"valid"};
 		String where = "`dia-allergy_rec`.allergy_id IN (" + ids + " )";
 		String[] value = {"0"};
-		Client.getInstance().sendQuery("UPDATE", table, field, where, value );
+		String result2[][] = Client.getInstance().sendQuery("UPDATE", table, field, where, value );
+		if ( result2[0][0].equals("true"))
+			return true;
+		else
+			return false;
 	}
 	private void initialize(){
 		

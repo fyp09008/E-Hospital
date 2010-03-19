@@ -35,7 +35,7 @@ public class MyPatientPanel extends Panels {
 	private JTable[] tables = null;
 	private static int TABLENUM = 7;
 	private JLabel tempLab = null;
-	private ShowInfoPanel showInfo = null; 
+	public ShowInfoPanel showInfo = null; 
 	ListSelectionModel[] listSelectionModel;  //  @jve:decl-index=0:
 	//private MainFrame mf = null;
 	
@@ -45,7 +45,10 @@ public class MyPatientPanel extends Panels {
 		initTables();
 		initialize();	
 	}
-
+	public void refresh(String pid){
+		showInfo.setPID(pid);
+		showInfo.fetchInfo();
+	}
 	/**
 	 * This method initializes this
 	 * 
@@ -77,17 +80,7 @@ public class MyPatientPanel extends Panels {
 			tabPanel.addTab("Q-T", jScrollPane[4]);
 			tabPanel.addTab("U-X", jScrollPane[5]);
 			tabPanel.addTab("Y-etc", jScrollPane[6]);
-			/*for(int i = 0; i < jScrollPane.length; i++)
-			if ( jScrollPane[i] == null){
-				System.out.println("I know the problem");
-			}
-			tabPanel.addTab("A-D", new JPanel());
-			tabPanel.addTab("E-H", new JPanel());
-			tabPanel.addTab("I-L", new JPanel());
-			tabPanel.addTab("M-P", new JPanel());
-			tabPanel.addTab("Q-T", new JPanel());
-			tabPanel.addTab("U-X", new JPanel());
-			tabPanel.addTab("Y-etc", new JPanel());*/
+
 			
 		}
 		return tabPanel;

@@ -284,7 +284,7 @@ public class ShowInfoPanel extends Panels {
 					AddTreatmentDialog atd = new AddTreatmentDialog(pid);
 				}
 				else{
-					EditAllergyDialog ead = new EditAllergyDialog(pid);
+					EditAllergyDialog ead = new EditAllergyDialog(pid,panelToRefresh);
 				}
 			}
 		}
