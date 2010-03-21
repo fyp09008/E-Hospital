@@ -1,45 +1,29 @@
 package UI;
 
-import control.*;
-
 import java.awt.BorderLayout;
-
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import javax.swing.JComboBox;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
-
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.GridBagLayout;
-import javax.swing.JButton;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
 import java.awt.GridLayout;
-import javax.swing.JLabel;
-
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Timer;
-import java.util.Vector;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.ComponentOrientation;
+import java.util.ArrayList;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+
+import control.Client;
+import control.Connector;
+import control.Task;
 
 public class MainFrame extends JFrame {
 	public ArrayList<Component> popup = null;
