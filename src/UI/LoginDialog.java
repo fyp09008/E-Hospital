@@ -1,7 +1,9 @@
 package UI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,12 +22,12 @@ import javax.swing.WindowConstants;
 import control.Client;
 import control.Task;
 
-public class LoginDialog extends Dialogs {
+public class LoginDialog extends JDialog {
 	//private JTextField nameFld = null;
 	private JPasswordField pwFld = null;
 	//private Client client = null;
 	private JButton loginBtn = null;
-	private MainFrame parent = null;
+	//private MainFrame parent = null;
 	private JPanel btnPanel = null;
 	private JPanel fldPanel = null;
 
@@ -35,13 +37,13 @@ public class LoginDialog extends Dialogs {
 			JLabel label = new JLabel("Password");
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			fldPanel.add(new JLabel("Password"));
-			fldPanel.add(getPwFld());
+			fldPanel.add(getPwFd());
 		}
 		return fldPanel;
 	}
 	public LoginDialog(){
-		
-		super();
+		//super();
+		super(Client.getInstance().getMf(),true);
 		//this.parent = parent;
 		//this.client = c;
 		initialize();
@@ -62,23 +64,28 @@ public class LoginDialog extends Dialogs {
 		return btnPanel;
 	}
 	public void initialize(){
-		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		this.setLocationRelativeTo(parent);
-		this.setTitle("re-authentication");
-		this.setSize(new Dimension(300,100));
+		//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.setLocationRelativeTo(Client.getInstance().getMf());
+		this.setTitle("CLOSE it AFTER unplugging card");
+		this.setSize(new Dimension(600,180));
 		this.setLayout(new BorderLayout());
 		//this.add(new JLabel("Name"));
 		//this.add(getNameFld());
 		//this.add(new JLabel("Password"));
 		//this.add(getPwFld());
+		
+		//this.add(warning,BorderLayout.NORTH);
+		
+		this.add(new KeyboardPanel(this),BorderLayout.SOUTH);
 		this.add(getFldPanel(),BorderLayout.CENTER);
-		this.add(getBtnPanel(),BorderLayout.SOUTH);
 		this.setVisible(true);
 		
 	}
-	public JPasswordField getPwFld() {
-		if ( pwFld == null)
+	public JPasswordField getPwFd() {
+		if ( pwFld == null){
 			pwFld = new JPasswordField();
+			pwFld.setEnabled(false);
+		}
 		return pwFld;
 	}
 	
@@ -89,20 +96,19 @@ public class LoginDialog extends Dialogs {
 		}
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			Client.getInstance().setPassword(new String(ld.getPwFld().getPassword()));
+			Client.getInstance().setPassword(new String(ld.getPwFd().getPassword()));
 			
 			if (Client.getInstance().authenticate()){
 				Client.getInstance().getT().cancel();
-				//System.out.println("ok la going to run reload()");
 				Client.getInstance().reload();
-				//Client.getInstance().resetTimer(Task.AFTER_AUTH);
 			}
 			else{
 				Client.getInstance().reset();
 				Client.getInstance().resetTimer(Task.PRE_AUTH);
 			}
-			Client.getInstance().getMf().resumePopUp();
 			ld.dispose();
+			Client.getInstance().getMf().resumePopUp();
+			
 			
 		}
 		

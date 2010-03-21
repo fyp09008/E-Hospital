@@ -20,76 +20,69 @@ import cipher.RSASoftware;
 
 public class AuthHandler extends Handler{
 	
-	//private String id = null;
 	private String name = null;
 	private String password = null;
 	
 	public boolean authenicate() {
+		//first time connection
 		if (!Connector.getInstance().isConnected()) {
 			Connector.getInstance().connect();
 		} 
-		
-		
+		//check if it is connected to the server
 		if (Connector.getInstance().isConnected()){
-
-				//TODO separate into class
-
+			
 			//do authentication
-	    	
 			name = Client.getInstance().getName();
 			password = Client.getInstance().getPassword();
-			Logger.println("Authenticating name:"+name);
-			Logger.println("password: " + password);
+			Logger.println(this.getClass().getName(),"Authenticating name: "+name);
+			Logger.println(this.getClass().getName(), "Authenticating password: "+password);
 			AuthRequestMessage reqMsg = new AuthRequestMessage();
 			reqMsg.setUsername(this.name);
+			
 			//sign and hash the password
 			MessageDigest md;
 			try {
 				md = MessageDigest.getInstance("md5");
-				Logger.println("before inin jc");
-				Client.getInstance().getT().cancel();
-				
+				Logger.println(this.getClass().getName(),"Before initializing jc");
 				RSAHardware rsaHard = Client.getInstance().getRSAHard();
 				if (rsaHard.initJavaCard("285921800099") == -1){
-					JOptionPane.showMessageDialog(null, "init card Fail");
+					JOptionPane.showMessageDialog(null, "Java Card cannot be initialized");
 					Connector.getInstance().disconnect();
-					Logger.println("1");
 					Client.getInstance().resetTimer(Task.PRE_AUTH);
-			    	//t = new Timer();
-			    	//t.schedule(new Task( Task.PRE_AUTH), new Date(), Task.PERIOD);
 					return false;
 				}
-				Logger.println("after inin jc");
-				reqMsg.setPassword(rsaHard.sign(md.digest(this.password.getBytes()), md.digest(this.password.getBytes()).length));
+				Logger.println(this.getClass().getName(),"After initializing jc");
+				reqMsg.setPassword(rsaHard.sign(md.digest(this.password.getBytes()), 
+						md.digest(this.password.getBytes()).length));
+				//case: password cannot be set to the request message
 				if ( reqMsg.getPassword() == null){
-					JOptionPane.showMessageDialog(null, "Fail");
+					JOptionPane.showMessageDialog(null, "Internal program failure\n " +
+							"Please restart the program");
 					Connector.getInstance().disconnect();
-					Logger.println("2");
 			    	Client.getInstance().resetTimer(Task.PRE_AUTH);
-					//t = new Timer();
-			    	//t.schedule(new Task(  Task.PRE_AUTH), new Date(), Task.PERIOD);
 					return false;
 				}
 			} catch (NoSuchAlgorithmException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
 		    try {
 		    	Connector connector = Connector.getInstance();
-		    	
 				connector.write((Object) encryptPAES(objToBytes(reqMsg)));
-			
-			    Logger.println("Sent authentication message");
-			    
+				
+			    Logger.println(this.getClass().getName(),"Authentication message sent");
 			    AuthResponseMessage reMsg = (AuthResponseMessage)bytesToObj(decryptPAES((byte[])connector.read()));
+			    
+			    //case: successful authentication
 			    if (reMsg.isAuth) {
-			    	Logger.println("Authentication succeed!");
+			    	Logger.println(this.getClass().getName(),"Authentication succeed");
 			    	//get session key first
-			    	Logger.println("decrypt session key");
+			    	Logger.println(this.getClass().getName(),"Decrypt session key");
+			    	//decrypt the session key given by the server
 			    	byte[] sKey = decryptRSA(reMsg.sessionKey);
+			    	//add to the Client
 			    	Client.getInstance().setSkeySpec( new SecretKeySpec(sKey, "AES"));
-			    	Logger.println("placed session key");
+			    	Logger.println(this.getClass().getName(),"Session key added to the Client");
 			    	//receive privileges and decrypt with session key
 			    	byte[] rs = decryptAES(reMsg.resultSet);
 			    	ResultSet rs1 = (ResultSet)bytesToObj(rs);
@@ -102,40 +95,32 @@ public class AuthHandler extends Handler{
 					PrivilegeHandler pl = Client.getInstance().getPrivilegeHandler();
 					//the first row is the ID and privileges
 			    	pl.setPrivilege(rs2[0]);
-			    	//first column = ID
+			    	//first column in first row is the ID
 			    	Client.getInstance().setID(rs2[0][0]);
-			    	//set the privileges
-			    	pl.setStringPrivilege(pl.privileges);
 			    	
+			    	Logger.println(this.getClass().getName(),"Initialize RSAHard");
 			    	Client.getInstance().getRSAHard().initJavaCard("285921800099");
-			    	Logger.println("init rsaHard");
+			    	
 			    	//get the logout msg, sign it and store in signedLogoutMsg
-			    	Logger.println("Before sign");
+			    	Logger.println(this.getClass().getName(),"Sign logout message");
 			    	byte[] signedLogoutMsg = Client.getInstance().getRSAHard().sign(decryptAES(reMsg.logoutmsg), 
 			    			decryptAES(reMsg.logoutmsg).length);
-			    	Logger.println("After sign");
+			    	Logger.println(this.getClass().getName(),"logout message signed and placed");
+			    	
 			    	//init and LogoutHandler and set the signed logout message 
 			    	Client.getInstance().initLogoutHandler(signedLogoutMsg);
+			    	
 			    	//erase the password in memory as soon as possible
 			    	this.password=null;
-			    	//Logger.println("HERE");
-			    	//Timer t = Client.getInstance().getT();
-			    	//t = new Timer();
-			    	//Logger.println("3");
-			    	//t.schedule(new Task( Task.AFTER_AUTH), new Date(), Task.PERIOD);
-			    	System.out.println("Going to set to after_auth right after auth");
 			    	Client.getInstance().resetTimer(Task.AFTER_AUTH);
 			    	return true;
+			    
+			    //case: authentication failed
 			    } else {
-			    	//authentication failed
-			    	JOptionPane.showMessageDialog(null, "Wrong Password");
+			    	JOptionPane.showMessageDialog(null, "Username/Password Incorrect\nPlease try again");
 			    	connector.disconnect();
 			    	this.password=null;
 			    	connector.setConnected(false);
-			    	Logger.println("4");
-			    	//Timer t = Client.getInstance().getT();
-			    	//t = new Timer();
-			    	//t.schedule(new Task(  Task.PRE_AUTH), new Date(), Task.PERIOD);
 			    	Client.getInstance().resetTimer(Task.PRE_AUTH);
 			    	return false;
 			    }
@@ -145,10 +130,6 @@ public class AuthHandler extends Handler{
 				connector.disconnect();
 				this.password=null;
 				connector.setConnected(false);
-				//Timer t = Client.getInstance().getT();
-				Logger.println("5");
-		    	//t = new Timer();
-		    	//t.schedule(new Task( Task.PRE_AUTH), new Date(), Task.PERIOD);
 				Client.getInstance().resetTimer(Task.PRE_AUTH);
 				return false;
 			}

@@ -5,6 +5,7 @@ import control.*;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,6 +16,8 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
@@ -28,6 +31,7 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 
 public class LoginPanel extends Panels  {
+	//public Keyboard keyboard;
 	private static final long serialVersionUID = 1L;
 	private JPanel namePanel = null;
 	private JPanel pwPanel = null;
@@ -36,13 +40,14 @@ public class LoginPanel extends Panels  {
 	private JLabel welcomeLab = null;
 	private JTextField nameFd = null;
 	private JPasswordField pwFd = null;
-	private JButton loginBtn = null;
-	private Client client = null;
-	private MainFrame mf = null;
-	public LoginPanel(MainFrame mf) {
+	public JButton loginBtn = null;
+	//private Client client = null;
+	//private MainFrame mf = null;
+	public boolean openKeyboard = true;
+	public LoginPanel() {
 		// TODO Auto-generated constructor stub
 		super();
-		this.mf = mf;
+		//this.mf = mf;
 		//client = c;
 		initialize();
 	}
@@ -54,6 +59,7 @@ public class LoginPanel extends Panels  {
 	 * @return void
 	 */
 	private void initialize() {
+		
 		GridBagConstraints gridBagConstraints10 = new GridBagConstraints();
 		gridBagConstraints10.gridx = 0;
 		gridBagConstraints10.gridy = 3;
@@ -76,7 +82,6 @@ public class LoginPanel extends Panels  {
 		this.add(welcomeLab, gridBagConstraints);
 		this.add(getLoginBtn(), gridBagConstraints10);
 		this.disableAll();
-		//this.addKeyListener(new KeyAction(this));
 	}
 
 	/**
@@ -106,14 +111,22 @@ public class LoginPanel extends Panels  {
 	 * 	
 	 * @return javax.swing.JTextField	
 	 */
-	private JTextField getNameFd() {
+	public JTextField getNameFd() {
 		if (nameFd == null) {
 			nameFd = new JTextField();
 			nameFd.setPreferredSize(new Dimension(100, 20));
 			nameFd.setFont(new Font("Dialog", Font.BOLD, 14));
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
-			nameFd.setText("---------- Insert your card ----------");
+			//nameFd.setText("---------- Insert your card ----------");
+			nameFd.setText("test");
+			nameFd.addFocusListener(new FocusListener(){
+				public void focusGained(FocusEvent arg0) {
+					nameFd.setText("");
+				}
+				public void focusLost(FocusEvent arg0) {}
+			
+			});
 		}
 		return nameFd;
 	}
@@ -142,11 +155,13 @@ public class LoginPanel extends Panels  {
 	 * 	
 	 * @return javax.swing.JPasswordField	
 	 */
-	private JPasswordField getPwFd() {
+	public JPasswordField getPwFd() {
 		if (pwFd == null) {
-			pwFd = new JPasswordField();
+			pwFd = new JPasswordField("test");
 			pwFd.setPreferredSize(new Dimension(100, 20));
-			pwFd.setEnabled(true);
+			pwFd.setEnabled(false);
+			
+			pwFd.addFocusListener(new Focus(this));
 		}
 		return pwFd;
 	}
@@ -156,7 +171,7 @@ public class LoginPanel extends Panels  {
 	 * 	
 	 * @return javax.swing.JButton	
 	 */
-	private JButton getLoginBtn() {
+	public JButton getLoginBtn() {
 		if (loginBtn == null) {
 			loginBtn = new JButton();
 			loginBtn.setText("Login");
@@ -166,10 +181,10 @@ public class LoginPanel extends Panels  {
 		}
 		return loginBtn;
 	}
-	private boolean login(String name, String password){
-		mf.setName(name);
-		mf.setPassword(password);
-		boolean logged = mf.authenicate(name,password);
+	public boolean login(String name, String password){
+		Client.getInstance().getMf().setName(name);
+		Client.getInstance().getMf().setPassword(password);
+		boolean logged = Client.getInstance().getMf().authenticate(name,password);
 		return logged;
 	}
 	public void enableAll(){
@@ -193,22 +208,32 @@ public class LoginPanel extends Panels  {
 		public void actionPerformed(ActionEvent e) {
 			String id = nameFd.getText();
 			String pw = new String(pwFd.getPassword());
-			System.out.println(pw);
-			//if (id.equals("") || pw.equals("")){
-				//JOptionPane jop = new JOptionPane();
-				//JOptionPane.showMessageDialog(jop, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
-				//JOptionPane jop = new JOptionPane();
-			//	mf.addPopUP(jop);
-				
-				//jop.showMessageDialog(null, "Empty Fields","ERROR",JOptionPane.ERROR_MESSAGE);
-			//}
-			//else{
+	
 				if (p.login(id,pw)){
-					mf.checkPrivilege();
-					mf.changePanel(-1);
+					Client.getInstance().getMf().checkPrivilege();
+					Client.getInstance().getMf().changePanel(-1);
 				}
 				else {}
 			//}
 		}
 	}
+	class Focus implements FocusListener{
+		LoginPanel lp;
+		public Focus(LoginPanel lp){
+			this.lp = lp;
+		}
+		public void focusGained(FocusEvent arg0) {
+		// TODO Auto-generated method stub
+			if ( openKeyboard){
+				Keyboard keyboard = new Keyboard(lp);
+				//keyboard.setLocation(100,500);
+			}
+			else
+				openKeyboard = true;
+	}
+
+	@Override
+	public void focusLost(FocusEvent arg0) {
+		getLoginBtn().requestFocus();
+	}}
 }

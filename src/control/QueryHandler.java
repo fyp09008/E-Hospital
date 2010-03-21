@@ -34,7 +34,6 @@ public class QueryHandler extends Handler {
 		String query;
 		switch (TYPE) {
 			case TYPE_SELECT:{
-				System.out.println("*");
 				query = "select ";
 				for (int i = 0; i < field.length; i++) {
 					query = i == field.length -1 ? query +field[i] : query + field[i] + ",";
@@ -71,14 +70,31 @@ public class QueryHandler extends Handler {
 				System.out.println(query);
 				break;
 			}
-			case TYPE_INSERT:
-				query = "insert ";
+			case TYPE_INSERT:{
+				query = "insert into ";
+				for(int i = 0; i < table.length; i++) {
+					query = i == table.length -1 ? query +table[i] : query + table[i] + ",";
+				}
+				query += "(";
+				if ( field != null){
+					for (int i = 0; i < field.length; i++) {
+						query = i == field.length -1 ? query +field[i] : query + field[i] + ",";
+					}
+				} 
+				query += ") VALUES (";
+				if ( value != null){
+					for (int i = 0; i < value.length; i++) {
+						query = i == field.length -1 ? query +value[i] : query + value[i] + ",";
+					}
+				}
+				query += ")";
 				break;
+			}
 			default:
 				return null;	
 		}
 
-			
+		Logger.println(this.getClass().getName(),query);
 		if(Client.getInstance().isConnected()) {
 			QueryRequestMessage qmsg = null;
 			switch(TYPE){
@@ -87,9 +103,10 @@ public class QueryHandler extends Handler {
 					((UpdateRequestMessage)qmsg).type = encryptAES(type.getBytes());
 					break;}
 				
-				case TYPE_INSERT: qmsg = new UpdateRequestMessage();
-					((UpdateRequestMessage)qmsg).type = type.getBytes();break;
-
+				case TYPE_INSERT: {qmsg = new UpdateRequestMessage();
+					((UpdateRequestMessage)qmsg).type = encryptAES(type.getBytes());
+					break;
+				}
 			}
 			qmsg.query = encryptAES(query.getBytes());
 			
@@ -119,7 +136,7 @@ public class QueryHandler extends Handler {
 		return null;
 	}
 
-	/*by chun, byte array to ResultSet*/
+	/*By chris, byte array to ResultSet*/
 	public ResultSet byteToRS(byte[] rawResultSet){
 		ResultSet rs = null;
 		try {

@@ -10,7 +10,6 @@ public class LogoutHandler extends Handler{
 	public LogoutHandler(byte[] s) {
 		this.signedLogoutMsg = s;
 	}
-	
 	public boolean logout(){
 		if (Connector.getInstance().isConnected()){
 			DisconnRequestMessage msg = new DisconnRequestMessage();
@@ -25,7 +24,6 @@ public class LogoutHandler extends Handler{
 				}
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			

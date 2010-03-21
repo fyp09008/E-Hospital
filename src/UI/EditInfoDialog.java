@@ -39,8 +39,6 @@ import UI.MainFrame.CloseAction;
 
 public class EditInfoDialog extends Dialogs {
 	
-	//private MainFrame mf = null;
-	//private String id = null;
 	private JLabel idLab = null;
 	private JTextField idFld = null;
 	private JLabel nameLab = null;
@@ -73,7 +71,7 @@ public class EditInfoDialog extends Dialogs {
 	private JScrollPane scroll = null;
 	private String[][] result = null;
 	private ShowInfoPanel sip = null;
-
+	private int panelToRefresh; 
 	/**
 	 * 
 	 */
@@ -86,13 +84,12 @@ public class EditInfoDialog extends Dialogs {
 	 * @param x 
 	 */
 	public EditInfoDialog(String[][] result,
-			String x){
+			String x, int panel){
 		super();
-		//this.mf = parent;
 		this.result = result;
-		//this.sip = sip;
-		//id = x;
+		this.setID(x);
 		this.fit();
+		panelToRefresh = panel;
 		initialize();
 	}
 	/**
@@ -101,7 +98,6 @@ public class EditInfoDialog extends Dialogs {
 	 * @param x 
 	 */
 	public void fit(){
-		//System.out.println("***");
 		this.getIdFld().setText(this.getID());
 		this.getNameFld().setText(result[0][0]);
 		if ( result[0][1].equals("M"))
@@ -111,7 +107,6 @@ public class EditInfoDialog extends Dialogs {
 		this.getContactFld().setText(result[0][3]);
 		this.getDobFld().setText(result[0][4]);
 		this.getPicFld().setText(result[0][5]);
-		//this.getLastFld().setText(result[0][6]);
 		this.getRemark().setText(result[0][6]);
 	}
 
@@ -122,8 +117,7 @@ public class EditInfoDialog extends Dialogs {
 	 * 
 	 */
 	private void initialize() {
-		//Client.getInstance().getMf().addPopUP(this);
-		//this.addWindowListener(new CloseAction());this.addWindowListener(new CloseAction());
+
 		this.setSize(new Dimension(300, 500));
 		this.setTitle(this.getID() + "'s Personal Information");
 
@@ -140,7 +134,6 @@ public class EditInfoDialog extends Dialogs {
 	 * 
 	 */
 	private JPanel getRePanel(){
-		//System.out.println("In getRePanel");
 		if (rePanel == null){
 			rePanel = new JPanel();
 			rePanel.setLayout(new GridLayout(1,2));
@@ -181,9 +174,8 @@ public class EditInfoDialog extends Dialogs {
 	 */
 	private JButton getDoneBtn(){
 		if (doneBtn == null){
-			doneBtn = new JButton("Save");
-			doneBtn.addActionListener(new DoneAction(this));
-			//neBtn.setLayout(new GridLayout(1,2));	
+			doneBtn = new JButton("Done");
+			doneBtn.addActionListener(new DoneAction(this));	
 		}
 		return doneBtn;
 	}
@@ -191,7 +183,6 @@ public class EditInfoDialog extends Dialogs {
 		if (cancelBtn == null){
 			cancelBtn = new JButton("Cancel");
 			cancelBtn.addActionListener(new CancelAction(this));
-			//neBtn.setLayout(new GridLayout(1,2));	
 		}
 		return cancelBtn;
 	}
@@ -227,6 +218,8 @@ public class EditInfoDialog extends Dialogs {
 		}
 		return lastPanel;
 	}
+	
+
 	/**
 	 * This method initializes idFld	
 	 * 	
@@ -278,8 +271,7 @@ public class EditInfoDialog extends Dialogs {
 	        fieldPanel.add(getDobFld(),getDobFld().getName());
 	        fieldPanel.add(picLab,picLab.getName());
 	        fieldPanel.add(getPicFld(),getPicFld().getName());
-	       // fieldPanel.add(reLab,reLab.getClass());
-	        //fieldPanel.add(getRePane(),getRePane().getName());
+
 		}
 		return fieldPanel;
 	}
@@ -287,7 +279,6 @@ public class EditInfoDialog extends Dialogs {
 		if (idFld == null) {
 			idFld = new JTextField();
 			idFld.setEnabled(false);
-			//idFld.setPreferredSize(new Dimension(5, 5));
 		}
 		return idFld;
 	}
@@ -318,7 +309,6 @@ public class EditInfoDialog extends Dialogs {
 	private JTextField getAddrFld() {
 		if (addrFld == null) {
 			addrFld = new JTextField();
-			//idFld.setPreferredSize(new Dimension(30, 20));
 		}
 		return addrFld;
 	}
@@ -380,8 +370,6 @@ public class EditInfoDialog extends Dialogs {
 			Client.getInstance().getMf().addPopUP(o);
 			int ans = o.showConfirmDialog(null, "Sure?");
 			if ( ans == 0){
-				//parentPanel.hasEditted();
-				//frame.dispose();
 				result[0][0] = frame.getNameFld().getText();
 				
 				if ( frame.getGenderBox().getSelectedIndex() == 0)
@@ -393,7 +381,6 @@ public class EditInfoDialog extends Dialogs {
 				result[0][3] = frame.getContactFld().getText();
 				result[0][4] = frame.getDobFld().getText();
 				result[0][5] = frame.getPicFld().getText();
-				//result[0][6] = "NOW()";
 				result[0][6] = frame.getRemark().getText();
 				String[] tables = {"Patient_personal"};
 				String[] fields = {"name","gender","address","contact_no","birthday",
@@ -403,18 +390,20 @@ public class EditInfoDialog extends Dialogs {
 				if ( result2[0][0].equals("true")){
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);
-					m.showMessageDialog(null, "Record modified!");
-					m.showMessageDialog(null, "Refresh now");
-					Client.getInstance().getMf().changePanel(0);
-					
-					m.showMessageDialog(null, "refresh finish");
+					m.showMessageDialog(null, "Record modification succeed!");
+					//refresh to specific panel
+					if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
+						Client.getInstance().getMf().refreshMyPatient(frame.getID());
+					if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
+						Client.getInstance().getMf().refreshSearchPanel("ID", frame.getID());
+					}
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					frame.dispose();
 				}else {
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
-					m.showMessageDialog(null, "Fail!");
+					m.showMessageDialog(null, "Record modification failed!");
 				}
 				
 			}

@@ -37,15 +37,7 @@ public class Handler {
 	private static final SecretKeySpec ProgramKey = new SecretKeySpec(key, "AES");
 	
 	private JCard card;
-	//protected SecretKeySpec skeySpec;
 
-	//protected RSAHardware rsaHard;
-	//protected RSASoftware rsa;
-	
-		//protected ObjectOutputStream out;
-		//protected ObjectInputStream in;
-	
-	
 	public byte[] objToBytes(Object obj){
 	      ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
 	      ObjectOutputStream oos;
@@ -61,7 +53,6 @@ public class Handler {
 			e.printStackTrace();
 			return null;
 		}catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} return null;
 	}
@@ -76,10 +67,8 @@ public class Handler {
 			bis.close();
 			return obj;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	    return null;
@@ -100,14 +89,10 @@ public class Handler {
 	public byte[] encryptAES(byte[] plaintext) {
 		try {
 			Cipher cipher = Cipher.getInstance("aes");
-		//	if ( this.skeySpec == null)
-			//	System.out.println("!!!!");
-			cipher.init(Cipher.ENCRYPT_MODE, Client.getInstance().getSkeySpec());
-			
+			cipher.init(Cipher.ENCRYPT_MODE, Client.getInstance().getSkeySpec());			
 			byte[] ciphertext = cipher.doFinal(plaintext);
 			return ciphertext;
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
 		} catch (NoSuchPaddingException e) {

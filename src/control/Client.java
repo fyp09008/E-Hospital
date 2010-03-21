@@ -35,34 +35,29 @@ import cipher.RSASoftware;
 import com.ibm.jc.JCard;
 
 public class Client {
+	
+	// Private constructor prevents instantiation from other classes
+	private Client() {
+		rsa = new RSASoftware();
+		rsaHard = new RSAHardware();
+		pHandler = new PrivilegeHandler();
+		aHandler = new AuthHandler();
+		qHandler = new QueryHandler();
+		//logout handler initialized by aHandler later
+	}
+	 
+	/**
+	* SingletonHolder is loaded on the first execution of Singleton.getInstance() 
+	* or the first access to SingletonHolder.INSTANCE, not before.
+	*/
+	private static class ClientHolder { 
+		private static final Client INSTANCE = new Client();
+	}
+	 
+	public static Client getInstance() {
+		return ClientHolder.INSTANCE;
+	}
 
-		   // Private constructor prevents instantiation from other classes
-		   private Client() {
-			   rsa = new RSASoftware();
-			   rsaHard = new RSAHardware();
-			   pHandler = new PrivilegeHandler();
-			   aHandler = new AuthHandler();
-			   qHandler = new QueryHandler();
-			  // sc = new SoftCard();
-			  
-			   //logout handler initialized by aHandler later
-		   }
-		 
-		   /**
-		    * SingletonHolder is loaded on the first execution of Singleton.getInstance() 
-		    * or the first access to SingletonHolder.INSTANCE, not before.
-		    */
-		   private static class ClientHolder { 
-		     private static final Client INSTANCE = new Client();
-		   }
-		 
-		   public static Client getInstance() {
-		     return ClientHolder.INSTANCE;
-		   }
-
-	//private byte[] signedLogoutMsg = null;
-		   
-	//public SoftCard  sc = null;
 	private Timer t = null;
 	private MainFrame mf;
 	private String id = null;
@@ -70,7 +65,6 @@ public class Client {
 	private String password = null;
 	private RSASoftware rsa = null;
 	private RSAHardware rsaHard = null;
-	private JCard card;
 	private SecretKeySpec skeySpec;
 	private AuthHandler aHandler = null;
 	private LogoutHandler lHandler = null;
@@ -87,7 +81,6 @@ public class Client {
 		lHandler = new LogoutHandler(a);
 	}
 	public void reset(){
-		
 		this.id = null;
 		this.name = null;
 		this.password = null;
@@ -96,13 +89,10 @@ public class Client {
 		pHandler = new PrivilegeHandler();
 		aHandler = new AuthHandler();
 		qHandler = new QueryHandler();
-				
 		Connector.getInstance().setConnected(false);
-		
-		this.card = null;
 		this.skeySpec = null;
 		this.mf.logoutPanel(true);
-		Logger.println("Logged out and Reseted all");
+		Logger.println(this.getClass().getName(),"Logged out and reseted");
 	}
 	
 	public boolean isConnected(){
@@ -134,29 +124,20 @@ public class Client {
 	
 	public void re_login()
 	{	
-		
 		new LoginDialog();
 	}
 	public void reload(){
-		Logger.println("in reload, going to resetTimer to after_auth");
-		//this.t.cancel();
+		Logger.println(this.getClass().getName(),"Relogin finished and reloading");
 		mf.restorePanel();
-		//Logger.println("######After resotre, going to reinvoke timer");
-		//this.t = new Timer();
-		Logger.println("6");
-		//this.t.schedule(new Task( Task.AFTER_AUTH), new Date(), Task.PERIOD);
 		resetTimer(Task.AFTER_AUTH);
 	}
 
-
 	public String[][] sendQuery(String type, String[] table, String[] field,
 			String whereClause, String[] values) {
-		// TODO Auto-generated method stub
 		return qHandler.sendQuery(type, table, field, whereClause, values);
 	}
 
 	public boolean logout() {
-		// TODO Auto-generated method stub
 		return lHandler.logout();
 	}
 	public MainFrame getMf() {
@@ -170,14 +151,9 @@ public class Client {
 	}
 	public void card_unplug()
 	{
-		Logger.println("8 " + Thread.currentThread().getName() );
-		//t = Client.getInstance().getT();
 		t.cancel();
-		t.purge();
-		//t = null;
 		t = new Timer();
 		t.schedule(new Task(Task.WAIT_REAUTH), new Date(),Task.PERIOD);
-		//Logger.println("@@@@");
 	}
 
 	public RSAHardware getRSAHard(){
@@ -200,6 +176,15 @@ public class Client {
 			t.cancel();
 		t = new Timer();
 		t.schedule(new Task(mode),new Date(),Task.PERIOD);
+	}
+	public boolean isRead(){
+		return pHandler.isRead();
+	}
+	public boolean isWrite(){
+		return pHandler.isWrite();
+	}
+	public boolean isAdd(){
+		return pHandler.isAdd();
 	}
 }
 

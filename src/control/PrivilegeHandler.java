@@ -2,41 +2,42 @@ package control;
 
 public class PrivilegeHandler extends Handler {
 	
-	private static int NUM_OF_PRIL = 3;
-	//0 = read, 1 = write, 2 = add
-	
-	String[] stringPrivileges;
-	String[] privileges;
-	
-	public String[] getStringPrivileges(){
-		return stringPrivileges;
+	private boolean read = false;
+	private boolean write = false;
+	private boolean add = false;
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+
+	public boolean isWrite() {
+		return write;
+	}
+
+	public void setWrite(boolean write) {
+		this.write = write;
+	}
+
+	public boolean isAdd() {
+		return add;
+	}
+
+	public void setAdd(boolean add) {
+		this.add = add;
 	}
 	
-	public String[] getPrivileges(){
-		return privileges;
-	}
-	
-	public void setStringPrivilege(String[] pri){
-		this.stringPrivileges = new String[NUM_OF_PRIL];
-		if ( pri[0].equals("true"))
-			this.stringPrivileges[0] = "Read";
-		if ( pri[1].equals("true"))
-			this.stringPrivileges[1] = "Write";
-		if ( pri[2].equals("true"))
-			this.stringPrivileges[2] = "Add";
-		
-		for(int i = 0 ; i < stringPrivileges.length; i++)
-			Logger.println("Privilege: "+stringPrivileges[i]);
-	}
 	public void setPrivilege(String[] pri){
-		this.privileges = new String[NUM_OF_PRIL];
-		for( int i = 1; i < pri.length; i++){
-			//Logger.println(pri[i]);
-			this.privileges[i-1] = pri[i];
-		}
-
+		//pri[0] is the ID
+		if ( pri[1].equals("true"))
+			setRead(true);
+		if ( pri[2].equals("true"))
+			setWrite(true);
+		if ( pri[3].equals("true"))
+			setAdd(true);
 	}
 
-
-	
 }

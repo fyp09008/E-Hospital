@@ -22,20 +22,13 @@ public class Dialogs extends JDialog {
 	}
 
 	public Dialogs() {
-		//use it finally!!!!
 		super(Client.getInstance().getMf(),true);
-		//super();
-		//use later, comment when debugging
-		//Client.getInstance().getMf().addPopUP(this);
+		Client.getInstance().getMf().addPopUP(this);
 		this.addWindowListener(new CloseAction());
-		// TODO Auto-generated constructor stub
 	}
 	class CloseAction implements WindowListener{
-		
-		//MainFrame mf = null;
+
 		public CloseAction(){
-			//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-			//this.mf = mf;	
 		}
 		public void windowClosing(WindowEvent we){
 			Client.getInstance().getMf().popup = new ArrayList<Component>();
