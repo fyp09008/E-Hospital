@@ -184,7 +184,7 @@ public class ShowInfoPanel extends Panels {
 		this.getInfo().setText("Modification is made, Please select again");
 	}
 	private JButton getEditButton(){
-		ImageIcon icon = createImageIcon("icons/edit-icon.png",
+		ImageIcon icon = createImageIcon("icons/edit.png",
         "a pretty but meaningless splat");
 		editBtn = new JButton("Personal Info",icon);
 		editBtn.setVerticalTextPosition(AbstractButton.BOTTOM);

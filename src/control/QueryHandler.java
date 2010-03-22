@@ -44,8 +44,8 @@ public class QueryHandler extends Handler {
 				for(int i = 0; i < table.length; i++) {
 					query = i == table.length -1 ? query +table[i] : query + table[i] + ",";
 				}
-						
-				query = query + " where " + whereClause;
+				if ( whereClause !=null)
+					query = query + " where " + whereClause;
 
 				break;
 			}

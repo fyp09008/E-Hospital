@@ -25,6 +25,7 @@ public class Dialogs extends JDialog {
 		super(Client.getInstance().getMf(),true);
 		Client.getInstance().getMf().addPopUP(this);
 		this.addWindowListener(new CloseAction());
+		this.setLocationRelativeTo(Client.getInstance().getMf());
 	}
 	class CloseAction implements WindowListener{
 
