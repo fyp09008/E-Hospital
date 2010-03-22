@@ -14,7 +14,7 @@ public class DriverRMI {
 		// TODO Auto-generated method stub
 		Registry re = LocateRegistry.getRegistry(args[0]);
 		remote.obj.AuthHandler ah = (remote.obj.AuthHandler)re.lookup("AuthHandler");
-		System.out.println()
+		System.out.println("auth handler bounds");
 		remote.obj.DataHandler dh = (remote.obj.DataHandler)re.lookup("DataHandler");
 	}
 
