@@ -51,14 +51,14 @@ public class MainFrame extends JFrame {
 	private JMenuItem add;
 	private JMenuItem exit;
 	private JMenuItem logout;
-	//private JMenuItem note;
-	private BottomPanel bottom;
+	private JMenuItem note;
+	//public BottomPanel bottom;
 	public JMenu quitMenu = null;
 	public final static int VIEW_ALL = 0;
 	public final static int SEARCH = 1;
 	public final static int ADD = 2;
 	private final static int LOGOUT = 3;
-	//public final static int NOTE = 4;
+	public final static int NOTE = 4;
 	public Keyboard keyboard = null;
 	private ButtonActions ba;
 	public ArrayList<Component> popup = null;
@@ -150,6 +150,7 @@ public class MainFrame extends JFrame {
 			mainPanel.setLayout(new GridLayout());
 			mainPanel.setPreferredSize(new Dimension(1024, 590));
 			jContentPane.add(mainPanel,BorderLayout.CENTER);
+	
 			jContentPane.invalidate();
 			jContentPane.validate();
 		}
@@ -195,6 +196,7 @@ public class MainFrame extends JFrame {
 		//String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
 		funcMenu.setEnabled(true);
 		logout.setEnabled(true);
+		note.setEnabled(true);
 		exit.setEnabled(false);
 		if ( Client.getInstance().isRead()){
 			enableButton(0);
@@ -251,6 +253,7 @@ public class MainFrame extends JFrame {
 		add.setEnabled(false);
 		search.setEnabled(false);
 		logout.setEnabled(false);
+		note.setEnabled(false);
 		exit.setEnabled(true);
 		mainPanel = new Panels();
 		jContentPane.remove(1);
@@ -338,9 +341,9 @@ public class MainFrame extends JFrame {
 				Client.getInstance().getMf().changePanel(VIEW_ALL);
 			else if ( e.getActionCommand().equals(Integer.toString(SEARCH)))
 				Client.getInstance().getMf().changePanel(SEARCH);
-			//else if (e.getActionCommand().equals(Integer.toString(NOTE))){
-				//new AddNoteDialog(Client.getInstance().getID());
-			//}
+			else if (e.getActionCommand().equals(Integer.toString(NOTE))){
+				new AddNoteDialog(Client.getInstance().getID());
+			}
 			else
 				new AddPatientDialog();
 		}
@@ -427,7 +430,7 @@ public class MainFrame extends JFrame {
 
 		for ( int i = 0 ; i < popup.size(); i++){
 			if( popup.get(i) != null){
-				System.out.println("resume");
+				//System.out.println("resume");
 				popup.get(i).setVisible(true);
 				if ( popup.get(i).getClass().getName().equals("javax.swing.JOptionPane")){
 					((JOptionPane)popup.get(i)).getRootFrame().setVisible(true);
@@ -451,7 +454,7 @@ public class MainFrame extends JFrame {
 			jContentPane.add(getUpperPanel(), BorderLayout.NORTH,0);
 			jContentPane.add(getMainPanel(), BorderLayout.CENTER,1);
 			//bottom = new BottomPanel();
-			//jContentPane.add(bottom,BorderLayout.SOUTH,2);
+			//jContentPane.add(bottom,BorderLayout.EAST);
 			//jContentPane.add(new LoginPanel(), BorderLayout.CENTER);
 		}
 		return jContentPane;
@@ -535,11 +538,11 @@ public class MainFrame extends JFrame {
 	
 			funcMenu.add(getQuitMenu());
 			
-			//note = new JMenuItem("Add Note");
-			//note.setEnabled(true);
-			//note.setActionCommand(Integer.toString(NOTE));
-			//note.addActionListener(ba);
-			//funcMenu.add(note);
+			note = new JMenuItem("Add Note");
+			note.setEnabled(false);
+			note.setActionCommand(Integer.toString(NOTE));
+			note.addActionListener(ba);
+			funcMenu.add(note);
 		}
 		
 		return funcMenu;

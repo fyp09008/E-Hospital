@@ -102,16 +102,20 @@ public class AddTreatmentDialog extends Dialogs {
 					String[] values = {"null",atd.getID(),Client.getInstance().getID(),"'"+getTextArea().getText()+"'","CURDATE()"};
 					String[][] result = Client.getInstance().sendQuery("INSERT", table, field, null, values);
 					if(result[0][0].equals("true")){
-						JOptionPane m = new JOptionPane();
-						Client.getInstance().getMf().addPopUP(o);
-						m.showMessageDialog(null, "Record modification succeed!");
-						if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
-							Client.getInstance().getMf().refreshMyPatient(atd.getID());
-						if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
-							Client.getInstance().getMf().refreshSearchPanel("ID", atd.getID());
-						}
 						Client.getInstance().getMf().popup = new ArrayList<Component>();
 						atd.dispose();
+						JOptionPane m = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(o);
+						int ans1 = 1;
+						ans1 = m.showConfirmDialog(null, "Record modification succeed! Refresh?");
+						if ( ans1 == 0){
+							if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
+								Client.getInstance().getMf().refreshMyPatient(atd.getID());
+							if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
+								Client.getInstance().getMf().refreshSearchPanel("ID", atd.getID());
+							}
+						}
+
 					}else {
 						JOptionPane m = new JOptionPane();
 						Client.getInstance().getMf().addPopUP(o);

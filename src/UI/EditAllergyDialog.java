@@ -123,16 +123,20 @@ public class EditAllergyDialog extends Dialogs {
 					boolean add = aap.submit();
 					boolean remove = rap.submit();
 					if(add && remove){
-						JOptionPane m = new JOptionPane();
-						Client.getInstance().getMf().addPopUP(o);
-						m.showMessageDialog(null, "Record modification succeed!");
-						if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
-							Client.getInstance().getMf().refreshMyPatient(ead.getID());
-						if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
-							Client.getInstance().getMf().refreshSearchPanel("ID", ead.getID());
-						}
 						Client.getInstance().getMf().popup = new ArrayList<Component>();
 						ead.dispose();
+						JOptionPane m = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(o);
+						int ans1 = -1;
+						ans1 = m.showConfirmDialog(null, "Record modification succeed! Refresh?");
+						if ( ans1 == 0){
+							if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
+								Client.getInstance().getMf().refreshMyPatient(ead.getID());
+							if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
+								Client.getInstance().getMf().refreshSearchPanel("ID", ead.getID());
+							}
+						}
+
 					}else {
 						JOptionPane m = new JOptionPane();
 						Client.getInstance().getMf().addPopUP(o);
