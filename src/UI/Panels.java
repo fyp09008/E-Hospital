@@ -1,5 +1,6 @@
 package UI;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,8 +15,12 @@ public class Panels extends JPanel implements Cloneable{
 	public Panels() {
 		// TODO Auto-generated constructor stub
 		super();
+		//share();
 	}
-
+	public void share(){
+		this.setLayout(new BorderLayout());
+		//this.add(new JLabel("fuck"),BorderLayout.SOUTH);
+	}
 	public Object clone(){
 		return this;
 	}

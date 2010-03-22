@@ -1,5 +1,6 @@
 package UI;
 
+
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Component;
@@ -12,7 +13,7 @@ import java.awt.event.WindowListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.StringTokenizer;
+import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -39,11 +40,12 @@ import UI.MainFrame.CloseAction;
  *
  */
 
-public class EditInfoDialog extends Dialogs {
-	
+public class AddPatientDialog extends Dialogs {
+
 	private JComboBox yearCombo;
 	private JComboBox monthCombo;
 	private JComboBox dayCombo;
+	
 	private JLabel idLab = null;
 	private JTextField idFld = null;
 	private JLabel nameLab = null;
@@ -55,6 +57,7 @@ public class EditInfoDialog extends Dialogs {
 	private JLabel contactLab = null;
 	private JTextField contactFld = null;
 	private JLabel dobLab = null;
+	//private JTextField dobFld = null;
 	private JPanel dobFld = null;
 	private JLabel picLab = null;
 	private JComboBox picFld = null;
@@ -74,133 +77,62 @@ public class EditInfoDialog extends Dialogs {
 	private JLabel remarkLab = null;
 	private JTextArea remark  = null;
 	private JScrollPane scroll = null;
-	private String[][] result = null;
-	private ShowInfoPanel sip = null;
-	private int panelToRefresh; 
+
 	/**
 	 * 
 	 */
-	public EditInfoDialog() {
+	public AddPatientDialog() {
 		super();
 		initialize();
 	}
-	/**
-	 *  
-	 * @param x 
-	 */
-	public EditInfoDialog(String[][] result,
-			String x, int panel){
-		super();
-		this.result = result;
-		this.setID(x);
-		this.fit();
-		panelToRefresh = panel;
-		initialize();
-	}
+
 	/**
 	 * @param jp
 	 * 
 	 * @param x 
 	 */
-	public void fit(){
-		this.getIdFld().setText(this.getID());
-		this.getNameFld().setText(result[0][0]);
-		if ( result[0][1].equals("M"))
-			this.getGenderBox().setSelectedIndex(0);
-		else this.getGenderBox().setSelectedIndex(1);
-		this.getAddrFld().setText(result[0][2]);
-		this.getContactFld().setText(result[0][3]);
-		this.getDobFld(result[0][4]);
-		//PIC combox fit in getPicFld
-		//this.getPicFld().setText(result[0][5]);
-		this.getRemark().setText(result[0][6]);
-	}
 
 
-	private JPanel getDobFld(String date) {
-		String dob[] = new String[3];
-		StringTokenizer st = new StringTokenizer(date,"-");
-		int count = 0;
-		while ( st.hasMoreTokens()){
-			String temp = st.nextToken();
-
-			if ( count > 0 && temp.substring(0,1).equals("0"))
-				temp = temp.substring(1,2);
-			dob[count] = temp;
-			count++;
-		}
-		if (dobFld == null) {
-			dobFld = new JPanel();
-			dobFld.setLayout(new GridLayout(1,3));
-			Vector<String> years = new Vector<String>();
-			Vector<String> months = new Vector<String>();
-			Vector<String> days = new Vector<String>();
-			java.util.Calendar calendar = java.util.Calendar.getInstance();
-			int j = calendar.get(java.util.Calendar.YEAR);
-			int pos = 0;
-			for(int i = 1900; i < j+1; i++){
-				years.add(Integer.toString(i));
-				if ( Integer.toString(i).equals(dob[0]))
-				pos = i-1;
-			}
-			yearCombo = new JComboBox(years);
-			yearCombo.setSelectedIndex(pos-1900+1);
-			pos = 0;
-			for(int i = 1; i < 13; i++){
-				months.add(Integer.toString(i));
-				if ( Integer.toString(i).equals(dob[1]))
-					pos = i-1;
-			}
-			monthCombo = new JComboBox(months);
-			monthCombo.setSelectedIndex(pos);
-			pos = 0;
-			for(int i = 1; i < 32; i++){
-				days.add(Integer.toString(i));
-				if ( Integer.toString(i).equals(dob[2]))
-					pos = i-1;
-			}
-			dayCombo = new JComboBox(days);
-			dayCombo.setSelectedIndex(pos);
-			pos = 0;
-			dobFld.add(yearCombo);
-			dobFld.add(monthCombo);
-			dobFld.add(dayCombo);
-		}
-		return dobFld;
-	}
-	private JPanel getDobFld() {
-		return dobFld;
-	}/**
+	/**
 	 * This method initializes this
 	 * 
 	 */
 	private void initialize() {
 
 		this.setSize(new Dimension(320, 500));
-		this.setTitle(this.getID() + "'s Personal Information");
+		this.setTitle("Add new patient");
 
 		this.setLayout(new BorderLayout());
 		//add
-		
       	this.add(getUpPanel(),BorderLayout.CENTER);
       	this.add(getBtnPanel(),BorderLayout.SOUTH);
       	this.setVisible(true);
       	
         
 	}
-	/**
-	 * @return 
-	 * 
-	 */
+	private JPanel getBtnPanel(){
+		if (btnPanel == null){
+			btnPanel = new JPanel();
+			btnPanel.setLayout(new GridLayout(1,2));
+			btnPanel.add(getDoneBtn());
+			btnPanel.add(getCancelBtn());
+			btnPanel.setVisible(true);
+		}
+		return btnPanel;
+	}
 	private JPanel getRePanel(){
 		if (rePanel == null){
 			rePanel = new JPanel();
-			rePanel.setLayout(new GridLayout(1,2));
-			rePanel.setPreferredSize(new Dimension(600,100));
+			GridLayout gl = new GridLayout(1,2);
+			rePanel.setLayout(gl);
+			rePanel.setPreferredSize(new Dimension(600,200));
+			gl.setHgap(0);
+			gl.setVgap(0);
 			remarkLab = new JLabel("Remark");
 			rePanel.add(remarkLab);
 			remarkLab.setHorizontalAlignment(SwingConstants.CENTER);
-			scroll = new JScrollPane(remark);
+
+			scroll = new JScrollPane(getRemark());
 			rePanel.add(scroll);
 			rePanel.setVisible(true);
 		}
@@ -209,30 +141,19 @@ public class EditInfoDialog extends Dialogs {
 	private JTextArea getRemark(){
 		if ( remark == null){
 			remark = new JTextArea();
+			remark.setEnabled(true);
 			remark.setLineWrap(true);
 		}
 		return remark;
 		
 	}
-	/**
-	 * @return
-	 * 
-	 */
+
 	private JPanel getUpPanel(){
 		if (upPanel == null){
 			upPanel = new JPanel();
-			//upPanel.setLayout(new BorderLayout());
-			GridLayout gl = new GridLayout(2,1);
-
-			upPanel.setLayout(gl);
-			
-			// upPanel.add(getFieldPanel(),BorderLayout.CENTER);
-	        //upPanel.add(getRePanel(),BorderLayout.SOUTH);	
-			
-			upPanel.add(getFieldPanel());
-			upPanel.add(getRePanel());
-			gl.setHgap(0);
-			gl.setVgap(0);
+			upPanel.setLayout(new BorderLayout());
+	        upPanel.add(getFieldPanel(),BorderLayout.CENTER);
+	        upPanel.add(getRePanel(),BorderLayout.SOUTH);	
 		}
 		return upPanel;
 	}
@@ -266,16 +187,7 @@ public class EditInfoDialog extends Dialogs {
 		}
 		return lastBtn;
 	}
-	private JPanel getBtnPanel(){
-		if (btnPanel == null){
-			btnPanel = new JPanel();
-			btnPanel.setLayout(new GridLayout(1,2));
-			btnPanel.add(getDoneBtn());
-			btnPanel.add(getCancelBtn());
-			btnPanel.setVisible(true);
-		}
-		return btnPanel;
-	}
+
 	private JPanel getLastPanel() {
 		if (lastPanel == null) {
 			lastPanel = new JPanel();
@@ -285,7 +197,30 @@ public class EditInfoDialog extends Dialogs {
 		}
 		return lastPanel;
 	}
-	
+	private JPanel getDobFld() {
+		if (dobFld == null) {
+			dobFld = new JPanel();
+			dobFld.setLayout(new GridLayout(1,3));
+			Vector<String> years = new Vector<String>();
+			Vector<String> months = new Vector<String>();
+			Vector<String> days = new Vector<String>();
+			java.util.Calendar calendar = java.util.Calendar.getInstance();
+			int j = calendar.get(java.util.Calendar.YEAR);
+			for(int i = 1900; i < j; i++)
+				years.add(Integer.toString(i));
+			for(int i = 1; i < 13; i++)
+				months.add(Integer.toString(i));
+			for(int i = 1; i < 32; i++)
+				days.add(Integer.toString(i));
+			yearCombo = new JComboBox(years);
+			monthCombo = new JComboBox(months);
+			dayCombo = new JComboBox(days);
+			dobFld.add(yearCombo);
+			dobFld.add(monthCombo);
+			dobFld.add(dayCombo);
+		}
+		return dobFld;
+	}
 
 	/**
 	 * This method initializes idFld	
@@ -295,13 +230,11 @@ public class EditInfoDialog extends Dialogs {
 	private JPanel getFieldPanel(){
 		if (fieldPanel == null){
 			fieldPanel = new JPanel();
-			fieldPanel.setLayout(new GridLayout(7,2));
+			fieldPanel.setLayout(new GridLayout(6,2));
 			nameLab = new JLabel();
 	        nameLab.setText("Name:");
 	        nameLab.setHorizontalAlignment(SwingConstants.CENTER);
-	        idLab = new JLabel();
-	        idLab.setText("Patient ID:");
-	        idLab.setHorizontalAlignment(SwingConstants.CENTER);
+
 	        genderLab = new JLabel();
 	        genderLab.setText("Gender:");
 	        genderLab.setHorizontalAlignment(SwingConstants.CENTER);
@@ -324,8 +257,7 @@ public class EditInfoDialog extends Dialogs {
 	        reLab.setText("Remarks:");
 	        lastLab.setHorizontalAlignment(SwingConstants.CENTER);
 	        
-	        fieldPanel.add(idLab, idLab.getName());
-	        fieldPanel.add(getIdFld(), getIdFld().getName());
+	   
 	        fieldPanel.add(nameLab, nameLab.getName());
 	        fieldPanel.add(getNameFld(), getNameFld().getName());
 	        fieldPanel.add(genderLab, genderLab.getName());
@@ -365,13 +297,12 @@ public class EditInfoDialog extends Dialogs {
 		if (picFld == null) {
 			String table[] = {"user"};
 			String field[] = {"uid"};
-			String allIDs[][] = Client.getInstance().sendQuery("SELECT", table, field, null, null);
+			String result[][] = Client.getInstance().sendQuery("SELECT", table, field, null, null);
 			Vector<String> ids = new Vector<String>();
 			int index = 0;
-			System.out.println("***"+result[0][5]);
-			for(int i =0;i< allIDs.length; i++){
-				ids.add(allIDs[i][0]);
-				if(allIDs[i][0].equals(result[0][5]))
+			for(int i =0;i< result.length; i++){
+				ids.add(result[i][0]);
+				if(result[i][0].equals(Client.getInstance().getID()))
 					index=i;
 			}
 			picFld = new JComboBox(ids);
@@ -387,10 +318,6 @@ public class EditInfoDialog extends Dialogs {
 		return addrFld;
 	}
 
-
-
-
-
 	/**
 	 * This method initializes nameFld	
 	 * 	
@@ -402,6 +329,16 @@ public class EditInfoDialog extends Dialogs {
 		}
 		return nameFld;
 	}
+	public String getDob() {
+		String month = (String)monthCombo.getSelectedItem();
+		if ( month.length() == 1)
+			month = "0"+month;
+		String day = (String)dayCombo.getSelectedItem();
+		if ( day.length() == 1)
+			day = "0"+day;
+		System.out.println((String)yearCombo.getSelectedItem()+ "-" + month + "-" + day);
+		return (String)yearCombo.getSelectedItem()+ "-" + month + "-" + day;
+	};
 	/**
 	 * This method initializes genderBox	
 	 * 	
@@ -444,8 +381,8 @@ public class EditInfoDialog extends Dialogs {
 		return true;
 	}
 	class CancelAction implements ActionListener  {
-		private EditInfoDialog frame = null;
-		public CancelAction(EditInfoDialog f){
+		private AddPatientDialog frame = null;
+		public CancelAction(AddPatientDialog f){
 			super();
 			frame = f;
 		}
@@ -455,8 +392,8 @@ public class EditInfoDialog extends Dialogs {
 		}
 	};
 	class DoneAction implements ActionListener  {
-		private EditInfoDialog frame = null;
-		public DoneAction(EditInfoDialog f){
+		private AddPatientDialog frame = null;
+		public DoneAction(AddPatientDialog f){
 			super();
 			frame = f;
 		}
@@ -464,61 +401,53 @@ public class EditInfoDialog extends Dialogs {
 			if (!checkInput()){
 				return;
 			}
+			String result[][] = new String[1][8];
 			JOptionPane o = new JOptionPane();
 			Client.getInstance().getMf().addPopUP(o);
 			int ans = o.showConfirmDialog(null, "Sure?");
+			
 			if ( ans == 0){
-				result[0][0] = frame.getNameFld().getText();
+				result[0][0] = "null";
+				result[0][1] = "'"+frame.getNameFld().getText()+"'";
 				
 				if ( frame.getGenderBox().getSelectedIndex() == 0)
-					result[0][1] = "M";
+					result[0][2] = "'M'";
 				else 
-					result[0][1] = "F";
+					result[0][2] = "'F'";
 				
-				result[0][2] = frame.getAddrFld().getText();
-				result[0][3] = frame.getContactFld().getText();
-				result[0][4] = frame.getDob();
-				result[0][5] = frame.getPicFld().getSelectedItem().toString();
-				result[0][6] = frame.getRemark().getText();
+				result[0][3] = "'"+frame.getAddrFld().getText()+"'";
+				result[0][4] = "'"+frame.getContactFld().getText()+"'";
+				
+				result[0][5] = "'"+frame.getDob() + "'";
+				result[0][6] = "'"+frame.getPicFld().getSelectedItem().toString()+"'";
+				result[0][7] = "'"+frame.getRemark().getText()+"'";
 				String[] tables = {"Patient_personal"};
-				String[] fields = {"name","gender","address","contact_no","birthday",
+				String[] fields = {"pid","name","gender","address","contact_no","birthday",
 					"pic","description"};
 				
-				String[][] result2 = Client.getInstance().getMf().sendQuery("UPDATE", tables, fields, "pid = " + frame.getID(), result[0]);
+				String[][] result2 = Client.getInstance().getMf().sendQuery("INSERT", tables, fields, null, result[0]);
 				if ( result2[0][0].equals("true")){
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);
-					m.showMessageDialog(null, "Record modification succeed!");
+					m.showMessageDialog(null, "New patient added!");
 					//refresh to specific panel
-					if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
-						Client.getInstance().getMf().refreshMyPatient(frame.getID());
-					if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
-						Client.getInstance().getMf().refreshSearchPanel("ID", frame.getID());
-					}
+					//id??!?!
+					Client.getInstance().getMf().changePanel(Client.getInstance().getMf().VIEW_ALL);
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					frame.dispose();
 				}else {
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
-					m.showMessageDialog(null, "Record modification failed!");
+					m.showMessageDialog(null, "New patient cannot be added");
 				}
 				
 			}
 			// TODO Auto-generated Event stub actionPerformed()
 		}
-	}
-	public String getDob() {
-		String month = (String)monthCombo.getSelectedItem();
-		if ( month.length() == 1)
-			month = "0"+month;
-		String day = (String)dayCombo.getSelectedItem();
-		if ( day.length() == 1)
-			day = "0"+day;
-		System.out.println((String)yearCombo.getSelectedItem()+ "-" + month + "-" + day);
-		return (String)yearCombo.getSelectedItem()+ "-" + month + "-" + day;
 	};
 	
 	
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"
+

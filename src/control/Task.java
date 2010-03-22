@@ -80,6 +80,7 @@ public class Task extends TimerTask{
 	            	case AFTER_AUTH:{
 	    	            if ( Client.getInstance().getMf().keyboard != null)
 	    	            	Client.getInstance().getMf().keyboard.dispose();
+	    	            //System.out.println("haha");
 	            		break;}
 	            	case WAIT_REAUTH:{
 	            		ld = new LoginDialog();

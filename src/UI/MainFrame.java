@@ -26,6 +26,8 @@ import javax.swing.BoxLayout;
 import java.awt.GridLayout;
 import javax.swing.JLabel;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,20 +43,26 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.ComponentOrientation;
+import java.io.File;
 
 public class MainFrame extends JFrame {
 	private JMenuItem viewAll;
 	private JMenuItem search;
 	private JMenuItem add;
-	private final static int VIEW_ALL = 0;
-	private final static int SEARCH = 1;
-	private final static int ADD = 2;
+	private JMenuItem exit;
+	private JMenuItem logout;
+	//private JMenuItem note;
+	private BottomPanel bottom;
+	public JMenu quitMenu = null;
+	public final static int VIEW_ALL = 0;
+	public final static int SEARCH = 1;
+	public final static int ADD = 2;
 	private final static int LOGOUT = 3;
+	//public final static int NOTE = 4;
 	public Keyboard keyboard = null;
 	private ButtonActions ba;
 	public ArrayList<Component> popup = null;
 	private static final long serialVersionUID = 1L;
-	//private Client client = null;
 	private JPanel jContentPane = null;
 	private Vector<JPanel> panels = null;  //  @jve:decl-index=0:
 	private JPanel upperPanel = null;
@@ -118,7 +126,6 @@ public class MainFrame extends JFrame {
 	 * 2 - add patient, X
 	 */
 	public void changePanel(int no){
-		//System.out.println("Changepanel");
 			prePanel = (Panels)mainPanel.clone();
 			mainPanel = new Panels();
 			switch(no){
@@ -128,13 +135,16 @@ public class MainFrame extends JFrame {
 				//funcMenu.setSelected(false);
 				funcMenu.setEnabled(false);
 				funcMenu.setPopupMenuVisible(false);
+				quitMenu.setPopupMenuVisible(false);
 				this.disableAllBtns();
 				mainPanel.add(new LockPanel()); 
 				Client.getInstance().card_unplug(); 	
 				break;
 			}
-			case 0: { mainPanel.add(new MyPatientPanel()); break;}
-			case 1: { mainPanel.add(new SearchPatientPanel()); break;}
+			case VIEW_ALL: { mainPanel.add(new MyPatientPanel()); break;}
+			case SEARCH: { mainPanel.add(new SearchPatientPanel()); break;}
+			case ADD: {
+				}
 			}
 			jContentPane.remove(1);
 			mainPanel.setLayout(new GridLayout());
@@ -184,6 +194,8 @@ public class MainFrame extends JFrame {
 	public void checkPrivilege(){
 		//String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
 		funcMenu.setEnabled(true);
+		logout.setEnabled(true);
+		exit.setEnabled(false);
 		if ( Client.getInstance().isRead()){
 			enableButton(0);
 			enableButton(1);
@@ -235,6 +247,11 @@ public class MainFrame extends JFrame {
 		prePanel = null;
 		//disable all buttons before authentication
 		disableAllBtns();
+		viewAll.setEnabled(false);
+		add.setEnabled(false);
+		search.setEnabled(false);
+		logout.setEnabled(false);
+		exit.setEnabled(true);
 		mainPanel = new Panels();
 		jContentPane.remove(1);
 		mainPanel.setLayout(new GridLayout());
@@ -272,7 +289,7 @@ public class MainFrame extends JFrame {
 		JButton button;
 		
 		//0-view my patient button
-		ImageIcon icon = createImageIcon("icons/a.png",
+		ImageIcon icon = createImageIcon("icons/all.png",
 		"view my patients");
 		button = new JButton(icon);
 		button.setActionCommand(Integer.toString(VIEW_ALL));
@@ -288,7 +305,7 @@ public class MainFrame extends JFrame {
 		buttons.add(button);
 		
 		//2-add patient
-		icon = createImageIcon("icons/add-user.png",
+		icon = createImageIcon("icons/add.png",
         "add patient");
 		button = new JButton(icon);
 		button.setActionCommand(Integer.toString(ADD));
@@ -321,8 +338,11 @@ public class MainFrame extends JFrame {
 				Client.getInstance().getMf().changePanel(VIEW_ALL);
 			else if ( e.getActionCommand().equals(Integer.toString(SEARCH)))
 				Client.getInstance().getMf().changePanel(SEARCH);
+			//else if (e.getActionCommand().equals(Integer.toString(NOTE))){
+				//new AddNoteDialog(Client.getInstance().getID());
+			//}
 			else
-				Client.getInstance().getMf().changePanel(ADD);
+				new AddPatientDialog();
 		}
 	}
 	
@@ -430,6 +450,8 @@ public class MainFrame extends JFrame {
 			jContentPane.setPreferredSize(new Dimension(200, 700));
 			jContentPane.add(getUpperPanel(), BorderLayout.NORTH,0);
 			jContentPane.add(getMainPanel(), BorderLayout.CENTER,1);
+			//bottom = new BottomPanel();
+			//jContentPane.add(bottom,BorderLayout.SOUTH,2);
 			//jContentPane.add(new LoginPanel(), BorderLayout.CENTER);
 		}
 		return jContentPane;
@@ -459,35 +481,78 @@ public class MainFrame extends JFrame {
 			menuBar = new JMenuBar();
 			menuBar.setPreferredSize(new Dimension(20, 20));
 			menuBar.add(getFuncMenu());
+			
 		}
 		return menuBar;
+	}
+
+	private JMenuItem getExitMenu() {
+		if ( exit == null){
+			exit = new JMenuItem("Exit");
+			exit.setEnabled(true);
+			exit.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0) {
+					System.exit(0);
+				}	
+			});
+		}
+		return exit;
+	}
+
+	private JMenuItem getLogoutMenu() {
+		if ( logout == null){
+			logout = new JMenuItem("Logout");
+			logout.addActionListener(ba);
+			logout.setActionCommand(Integer.toString(LOGOUT));
+			logout.setEnabled(false);
+		}
+		return logout;
 	}
 
 	private JMenu getFuncMenu() {
 		if (funcMenu == null) {
 			funcMenu = new JMenu();
-			funcMenu.setEnabled(false);
+			funcMenu.setEnabled(true);
 			funcMenu.setText("Functions");
 			viewAll = new JMenuItem("My Patients");
+			viewAll.setEnabled(false);
 			viewAll.setActionCommand(Integer.toString(VIEW_ALL));
 			viewAll.addActionListener(ba);
 			funcMenu.add(viewAll);
 			
 			search = new JMenuItem("Search Patient");
+			search.setEnabled(false);
 			search.setActionCommand(Integer.toString(SEARCH));
 			search.addActionListener(ba);
 			funcMenu.add(search);
 			
 			add = new JMenuItem("Add Patient");
+			add.setEnabled(false);
 			add.setActionCommand(Integer.toString(ADD));
 			add.addActionListener(ba);
 			funcMenu.add(add);
 	
+			funcMenu.add(getQuitMenu());
+			
+			//note = new JMenuItem("Add Note");
+			//note.setEnabled(true);
+			//note.setActionCommand(Integer.toString(NOTE));
+			//note.addActionListener(ba);
+			//funcMenu.add(note);
 		}
 		
 		return funcMenu;
 	}
 
+
+	private JMenu getQuitMenu() {
+		if ( quitMenu == null){
+			quitMenu = new JMenu("Quit");
+			quitMenu.add(getLogoutMenu());
+			quitMenu.add(getExitMenu());
+		}
+		return quitMenu;
+	}
 
 	public Panels getMainPanel() {
 		if (mainPanel == null) {
