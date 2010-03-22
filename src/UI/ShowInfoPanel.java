@@ -3,6 +3,7 @@ import control.*;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 
@@ -196,9 +197,9 @@ public class ShowInfoPanel extends Panels {
 		return editBtn;
 	}
 	private JButton getAllgeryButton(){
-		//ImageIcon icon = createImageIcon("edit-icon.png",
-        //"a pretty but meaningless splat");
-		allgeryBtn = new JButton("Edit allergy");
+		ImageIcon icon = createImageIcon("icons/edit.png",
+        "a pretty but meaningless splat");
+		allgeryBtn = new JButton("Edit allergy",icon);
 		allgeryBtn.setVerticalTextPosition(AbstractButton.BOTTOM);
 		allgeryBtn.setHorizontalTextPosition(AbstractButton.CENTER);
 		allgeryBtn.setPreferredSize(new Dimension(59, 80));
@@ -208,9 +209,9 @@ public class ShowInfoPanel extends Panels {
 		return allgeryBtn;
 	}
 	private JButton getTreatmentButton(){
-		//ImageIcon icon = createImageIcon("edit-icon.png",
-        //"a pretty but meaningless splat");
-		treatmentBtn = new JButton("Add Treatment");
+		ImageIcon icon = createImageIcon("icons/edit.png",
+        "a pretty but meaningless splat");
+		treatmentBtn = new JButton("Add Treatment",icon);
 		treatmentBtn.setActionCommand("treatment");
 		treatmentBtn.addActionListener(bc);
 		treatmentBtn.setVerticalTextPosition(AbstractButton.BOTTOM);

@@ -468,7 +468,7 @@ public class MainFrame extends JFrame {
 	private JMenuBar getBar(){
 		if (menuBar == null) {
 			menuBar = new JMenuBar();
-			menuBar.setPreferredSize(new Dimension(20, 20));
+			menuBar.setPreferredSize(new Dimension(20, 25));
 			menuBar.add(getFuncMenu());
 			
 		}
@@ -501,6 +501,7 @@ public class MainFrame extends JFrame {
 	private JMenu getFuncMenu() {
 		if (funcMenu == null) {
 			funcMenu = new JMenu();
+			
 			funcMenu.setEnabled(true);
 			funcMenu.setText("Functions");
 			viewAll = new JMenuItem("My Patients");

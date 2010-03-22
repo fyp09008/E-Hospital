@@ -378,6 +378,54 @@ public class AddPatientDialog extends Dialogs {
 			o.showMessageDialog(null, "Contact number must be 8-digits");
 			return false;
 		}
+		try{
+			Integer.parseInt(this.getContactFld().getText());
+		}catch (NumberFormatException e){
+			JOptionPane o = new JOptionPane();
+			Client.getInstance().getMf().addPopUP(o);
+			o.showMessageDialog(null, "Contact number must be numeric");
+			return false;
+		}
+		java.util.Calendar calendar = java.util.Calendar.getInstance();
+		int year = calendar.get(java.util.Calendar.YEAR);
+		int month = calendar.get(java.util.Calendar.MONTH)+1;
+		int day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
+		//System.out.println(year + " " + month + " " + day);
+		if ( yearCombo.getSelectedItem().equals(Integer.toString(year))){
+			if ( Integer.parseInt((String)monthCombo.getSelectedItem()) > month){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null, "Wrong date");
+				return false;
+			}
+			else if ( Integer.parseInt((String)monthCombo.getSelectedItem()) == month
+					&& Integer.parseInt((String)dayCombo.getSelectedItem()) > day ){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null, "Wrong date");
+				return false;	
+			}
+		}
+		 
+		if (	Integer.parseInt((String)monthCombo.getSelectedItem()) == 4 ||
+				Integer.parseInt((String)monthCombo.getSelectedItem()) == 6 ||
+				Integer.parseInt((String)monthCombo.getSelectedItem()) == 9 ||
+				Integer.parseInt((String)monthCombo.getSelectedItem()) == 11){
+			if (Integer.parseInt((String)dayCombo.getSelectedItem()) > 30 ){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null, "Wrong date");
+				return false;	
+			}
+		}
+		else if ( Integer.parseInt((String)monthCombo.getSelectedItem()) == 2){
+			if (Integer.parseInt((String)dayCombo.getSelectedItem()) > 28 ){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null, "Wrong date");
+				return false;	
+			}
+		}
 		return true;
 	}
 	class CancelAction implements ActionListener  {
