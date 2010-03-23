@@ -129,22 +129,22 @@ public class MainFrame extends JFrame {
 			prePanel = (Panels)mainPanel.clone();
 			mainPanel = new Panels();
 			switch(no){
-			case -1: {mainPanel.add(new WelcomePanel(this)); break;} //welcome page
-			//lock screen
-			case -2: {
-				//funcMenu.setSelected(false);
-				funcMenu.setEnabled(false);
-				funcMenu.setPopupMenuVisible(false);
-				quitMenu.setPopupMenuVisible(false);
-				this.disableAllBtns();
-				mainPanel.add(new LockPanel()); 
-				Client.getInstance().card_unplug(); 	
-				break;
-			}
-			case VIEW_ALL: { mainPanel.add(new MyPatientPanel()); break;}
-			case SEARCH: { mainPanel.add(new SearchPatientPanel()); break;}
-			case ADD: {
+				case -1: {mainPanel.add(new WelcomePanel(this)); break;} //welcome page
+				//lock screen
+				case -2: {
+					//funcMenu.setSelected(false);
+					funcMenu.setEnabled(false);
+					funcMenu.setPopupMenuVisible(false);
+					quitMenu.setPopupMenuVisible(false);
+					this.disableAllBtns();
+					mainPanel.add(new LockPanel()); 
+					Client.getInstance().card_unplug(); 	
+					break;
 				}
+				case VIEW_ALL: { mainPanel.add(new MyPatientPanel()); break;}
+				case SEARCH: { mainPanel.add(new SearchPatientPanel()); break;}
+				case ADD: {break;}
+				case NOTE: {break;}
 			}
 			jContentPane.remove(1);
 			mainPanel.setLayout(new GridLayout());
@@ -198,6 +198,7 @@ public class MainFrame extends JFrame {
 		logout.setEnabled(true);
 		note.setEnabled(true);
 		exit.setEnabled(false);
+		
 		if ( Client.getInstance().isRead()){
 			enableButton(0);
 			enableButton(1);
@@ -208,6 +209,7 @@ public class MainFrame extends JFrame {
 			enableButton(2);
 			add.setEnabled(true);
 		}
+		enableButton(buttons.size()-2);
 		enableButton(buttons.size()-1);
 	}
 	public boolean authenticate(String name, String password){
@@ -315,6 +317,12 @@ public class MainFrame extends JFrame {
 		button.addActionListener(ba);
 		buttons.add(button);
 		
+		icon = createImageIcon("icons/note.png",
+        "note");
+		button = new JButton(icon);
+		button.setActionCommand(Integer.toString(NOTE));
+		button.addActionListener(ba);
+		buttons.add(button);
 		
 		icon = createImageIcon("icons/logout.png",
         "logout");
@@ -535,14 +543,16 @@ public class MainFrame extends JFrame {
 			add.setActionCommand(Integer.toString(ADD));
 			add.addActionListener(ba);
 			funcMenu.add(add);
-	
-			funcMenu.add(getQuitMenu());
-			
+
 			note = new JMenuItem("Add Note");
 			note.setEnabled(false);
 			note.setActionCommand(Integer.toString(NOTE));
 			note.addActionListener(ba);
 			funcMenu.add(note);
+			
+			funcMenu.add(getQuitMenu());
+			
+
 		}
 		
 		return funcMenu;
