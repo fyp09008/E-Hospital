@@ -2,6 +2,7 @@ package UI;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -76,12 +77,11 @@ public class AddNoteDialog extends Dialogs {
 
 
 	public void initialize(){
-		//Client. = Client.getInstance().getRSAHard();
-		actions = new Actions(this);
-		//f = new File("notes/" + getID()+".txt");
 
-		
+		actions = new Actions(this);
+
 		// TODO Auto-generated method stub
+		
 		this.setTitle("Your private note");
 		this.setSize(400,300);
 		this.setLayout(new BorderLayout());
@@ -99,29 +99,46 @@ public class AddNoteDialog extends Dialogs {
 		if ( text == null){
 			text = new JTextArea();
 			try {
-				
-				String temp = null;
-				Client.getInstance().getT().cancel();
-				fr = new BufferedReader(new InputStreamReader(new FileInputStream("notes/"+getID()+".txt")));
-				//FileInputStream fs = new FileInputStream("notes/"+getID()+".txt");
-				//byte[] b = new byte[10000];
-				//fs.read(b);
-				if(Client.getInstance().getRSAHard().initJavaCard("285921800006") != -1){
-						temp = fr.readLine();
-						
-						byte[] a = Client.getInstance().getRSAHard().decrypt(temp.getBytes(), temp.getBytes().length);
-					
+				File file = new File("notes");
+				if ( !file.exists() || !file.isDirectory())
+					file.mkdir();
+				file = new File("notes/"+getID()+".txt");
+				if ( !file.exists() || !file.isFile())
+					file.createNewFile();
+				//fr = new BufferedReader(new InputStreamReader(new FileInputStream("notes/"+getID()+".txt")));
+				FileInputStream fs = new FileInputStream("notes/"+getID()+".txt");
+				File ff = new File("notes/"+getID()+".txt");
+				if ( ff.length() != 0){
+					byte[] b  = new byte[(int)ff.length()];
+					fs.read(b);
+					Client.getInstance().getT().cancel();
+					if(Client.getInstance().getRSAHard().initJavaCard("285921800006") != -1){
+						byte[] a = Client.getInstance().getRSAHard().decrypt(b, b.length);
+						//Client.getInstance().resetTimer(Task.AFTER_AUTH);
+						String pp = new String(a);
+						text.setText(pp);
+						//Client.getInstance().resetTimer(Task.AFTER_AUTH);
+					}
+					else{
+						//Client.getInstance().resetTimer(Task.AFTER_AUTH);
+						JOptionPane o = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(o);
+						o.showMessageDialog(null,"Card is dead");
+						this.dispose();
+					}
+					Client.getInstance().resetTimer(Task.AFTER_AUTH);
+					fs.close();
 				}
-				else
-					System.out.println("card dead");
-				Client.getInstance().resetTimer(Task.AFTER_AUTH);
-				fr.close();
+
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().resetTimer(Task.AFTER_AUTH);
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"New directory created");
 			}
 		}
 		//}
+		
 		return text;
 	}
 	class Actions implements ActionListener{
@@ -131,27 +148,48 @@ public class AddNoteDialog extends Dialogs {
 		}
 		public void actionPerformed(ActionEvent ae) {
 			if ( ae.getActionCommand().equals("DONE")){
-				JOptionPane o = new JOptionPane();
-				Client.getInstance().getMf().addPopUP(o);
-				int ans = o.showConfirmDialog(null, "Sure?");
+				JOptionPane oo = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(oo);
+				int ans = oo.showConfirmDialog(null, "Sure?");
+				
 				if ( ans == 0){
-					//File f = new File("notes/" + getID()+".txt");
+					Client.getInstance().getT().cancel();
 					try {
 						Client.getInstance().getT().cancel();
-						if( Client.getInstance().getRSAHard().initJavaCard("285921800006") == -1)
-							System.out.println("fuck");
-						else{
-						ps = new PrintStream(new FileOutputStream("notes/"+getID()+".txt"),true);
-						ps.println(
-								Client.getInstance().getRSAHard().encrypt
-								(text.getText().getBytes(), text.getText().getBytes().length).toString()
-										);
-						ps.close();
+						if( Client.getInstance().getRSAHard().initJavaCard("285921800006") == -1){
+							Client.getInstance().resetTimer(Task.AFTER_AUTH);
+							Client.getInstance().getMf().popup = new ArrayList<Component>();
+							and.dispose();
+							JOptionPane o = new JOptionPane();
+							Client.getInstance().getMf().addPopUP(o);
+							o.showMessageDialog(null,"Card is dead");
+							
 						}
-						Client.getInstance().resetTimer(Task.AFTER_AUTH);
+						else{
+							ps = new PrintStream(new FileOutputStream("notes/"+getID()+".txt"),false);
+							byte b[] = Client.getInstance().getRSAHard().encrypt
+								(text.getText().getBytes(), text.getText().getBytes().length);
+							Client.getInstance().resetTimer(Task.AFTER_AUTH);
+							ps.write(b);
+							ps.close();
+							Client.getInstance().getMf().popup = new ArrayList<Component>();
+							and.dispose();
+							JOptionPane o = new JOptionPane();
+							Client.getInstance().getMf().addPopUP(o);
+							o.showMessageDialog(null,"Private note saved");
+							
+						}
+						
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Client.getInstance().resetTimer(Task.AFTER_AUTH);
+						Client.getInstance().getMf().popup = new ArrayList<Component>();
+						and.dispose();
+						
+						JOptionPane o = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(o);
+						o.showMessageDialog(null,"Card is dead");
+					
 					}
 				}
 

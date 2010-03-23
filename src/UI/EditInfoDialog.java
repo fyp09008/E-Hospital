@@ -536,17 +536,21 @@ public class EditInfoDialog extends Dialogs {
 				
 				String[][] result2 = Client.getInstance().getMf().sendQuery("UPDATE", tables, fields, "pid = " + frame.getID(), result[0]);
 				if ( result2[0][0].equals("true")){
-					JOptionPane m = new JOptionPane();
-					Client.getInstance().getMf().addPopUP(o);
-					m.showMessageDialog(null, "Record modification succeed!");
-					//refresh to specific panel
-					if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
-						Client.getInstance().getMf().refreshMyPatient(frame.getID());
-					if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
-						Client.getInstance().getMf().refreshSearchPanel("ID", frame.getID());
-					}
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					frame.dispose();
+					JOptionPane m = new JOptionPane();
+					Client.getInstance().getMf().addPopUP(o);
+					int ans1 = -1;
+					ans1 = m.showConfirmDialog(null, "Record modification succeed! Refresh?");
+					//refresh to specific panel
+					if ( ans1 == 0){
+						if ( panelToRefresh == MainFrame.MY_PATIENT_LIST)
+							Client.getInstance().getMf().refreshMyPatient(frame.getID());
+						if ( panelToRefresh == MainFrame.SEARCH_PATIENTS){
+							Client.getInstance().getMf().refreshSearchPanel("ID", frame.getID());
+						}
+
+					}
 				}else {
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);

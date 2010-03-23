@@ -55,7 +55,7 @@ public class MyPatientPanel extends Panels {
 	 */
 	private void initialize() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setSize(1024, 690);		
+        this.setSize(1024, 680);		
         this.add(getUpPanel(), null);
         //System.out.println("Finsh");
         //this.add(getGoPanel(),null);
