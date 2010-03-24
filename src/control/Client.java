@@ -38,6 +38,7 @@ public class Client {
 	
 	// Private constructor prevents instantiation from other classes
 	private Client() {
+		log = new Logger();
 		rsa = new RSASoftware();
 		rsaHard = new RSAHardware();
 		pHandler = new PrivilegeHandler();
@@ -53,11 +54,13 @@ public class Client {
 	private static class ClientHolder { 
 		private static final Client INSTANCE = new Client();
 	}
-	 
+	public Logger getLogger(){
+		return log;
+	}
 	public static Client getInstance() {
 		return ClientHolder.INSTANCE;
 	}
-
+	private Logger log;
 	private Timer t = null;
 	private MainFrame mf;
 	private String id = null;
@@ -92,7 +95,7 @@ public class Client {
 		Connector.getInstance().setConnected(false);
 		this.skeySpec = null;
 		this.mf.logoutPanel(true);
-		Logger.println(this.getClass().getName(),"Logged out and reseted");
+		log.debug(this.getClass().getName(),"Logged out and reseted");
 	}
 	
 	public boolean isConnected(){
@@ -127,7 +130,7 @@ public class Client {
 		new LoginDialog();
 	}
 	public void reload(){
-		Logger.println(this.getClass().getName(),"Relogin finished and reloading");
+		log.debug(this.getClass().getName(),"Relogin finished and reloading");
 		mf.restorePanel();
 		resetTimer(Task.AFTER_AUTH);
 	}

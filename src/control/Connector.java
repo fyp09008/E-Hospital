@@ -52,21 +52,21 @@ public class Connector {
 	
 	public boolean connect() {
 		try {
-			Logger.println(this.getClass().getName(),"Connecting...");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Connecting...");
 			s = new Socket(server,port);
-			Logger.println(this.getClass().getName(),"Connected to server");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Connected to server");
 			out = new ObjectOutputStream(s.getOutputStream());
 			in = new ObjectInputStream(s.getInputStream());
 			isConnected = true;
-			Logger.println(this.getClass().getName(),"Server/Client I/O initialized");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Server/Client I/O initialized");
 			return true;
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
-			Logger.println(this.getClass().getName(),"Unknown host");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Unknown host");
 			return false;
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
-			Logger.println(this.getClass().getName(),"IO Exception");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"IO Exception");
 			return false;
 		}
 	}

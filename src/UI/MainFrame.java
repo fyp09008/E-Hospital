@@ -1,3 +1,4 @@
+//author chris
 package UI;
 
 import control.*;
@@ -29,7 +30,9 @@ import javax.swing.JLabel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.Vector;
@@ -52,7 +55,7 @@ public class MainFrame extends JFrame {
 	private JMenuItem exit;
 	private JMenuItem logout;
 	private JMenuItem note;
-	//public BottomPanel bottom;
+	public BottomPanel bottom;
 	public JMenu quitMenu = null;
 	public final static int VIEW_ALL = 0;
 	public final static int SEARCH = 1;
@@ -104,17 +107,21 @@ public class MainFrame extends JFrame {
 	public void restorePanel(){
 			//this.enableAllBtns();
 			this.checkPrivilege();
-
+			Calendar calendar = Calendar.getInstance();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			Client.getInstance().getMf().getBottomPanel().setStatus("Logged at: "+
+					dateFormat.format(calendar.getTime()));
 			prePanel.revalidate();
 			prePanel.getComponent(0).validate();
 			mainPanel = new Panels();
 			mainPanel.setLayout(new GridLayout());
 			mainPanel.setPreferredSize(new Dimension(1024, 590));
 			mainPanel.add(prePanel.getComponent(0));
-			jContentPane.remove(1);
+			jContentPane.remove(2);
 			jContentPane.add(mainPanel,BorderLayout.CENTER);
 			jContentPane.invalidate();
 			jContentPane.validate();
+			
 	}
 	 /**
 	  * This method changes current panel and store
@@ -129,7 +136,21 @@ public class MainFrame extends JFrame {
 			prePanel = (Panels)mainPanel.clone();
 			mainPanel = new Panels();
 			switch(no){
-				case -1: {mainPanel.add(new WelcomePanel(this)); break;} //welcome page
+				case -1: {
+					mainPanel.add(new WelcomePanel(this)); 
+					Client.getInstance().getMf().getBottomPanel().setPersonal(Client.getInstance().getName()
+							+ " (" + Client.getInstance().getID() +")" );
+					String privil = "";
+					privil += Client.getInstance().isRead()?"Read ":"";
+					privil += Client.getInstance().isWrite()?"Write ":"";
+					privil += Client.getInstance().isAdd()?"Add ":"";
+					Client.getInstance().getMf().getBottomPanel().setPrivilege(privil);
+					Calendar calendar = Calendar.getInstance();
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					Client.getInstance().getMf().getBottomPanel().setStatus("Logged at: "+
+							dateFormat.format(calendar.getTime()));
+					break;
+				} //welcome page
 				//lock screen
 				case -2: {
 					//funcMenu.setSelected(false);
@@ -138,6 +159,10 @@ public class MainFrame extends JFrame {
 					quitMenu.setPopupMenuVisible(false);
 					this.disableAllBtns();
 					mainPanel.add(new LockPanel()); 
+					Calendar calendar = Calendar.getInstance();
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					Client.getInstance().getMf().getBottomPanel().setStatus("Card unplugged at: " +
+							dateFormat.format(calendar.getTime()));
 					Client.getInstance().card_unplug(); 	
 					break;
 				}
@@ -146,7 +171,7 @@ public class MainFrame extends JFrame {
 				case ADD: {break;}
 				case NOTE: {break;}
 			}
-			jContentPane.remove(1);
+			jContentPane.remove(2);
 			mainPanel.setLayout(new GridLayout());
 			mainPanel.setPreferredSize(new Dimension(1024, 590));
 			jContentPane.add(mainPanel,BorderLayout.CENTER);
@@ -160,7 +185,7 @@ public class MainFrame extends JFrame {
 		MyPatientPanel mpp = new MyPatientPanel();
 		mpp.refresh(param);
 		mainPanel.add(mpp);
-		jContentPane.remove(1);
+		jContentPane.remove(2);
 		mainPanel.setLayout(new GridLayout());
 		mainPanel.setPreferredSize(new Dimension(1024, 590));
 		jContentPane.add(mainPanel,BorderLayout.CENTER);
@@ -172,7 +197,7 @@ public class MainFrame extends JFrame {
 		mainPanel = new Panels();
 		SearchPatientPanel spp = new SearchPatientPanel();
 		mainPanel.add(spp);
-		jContentPane.remove(1);
+		jContentPane.remove(2);
 		mainPanel.setLayout(new GridLayout());
 		mainPanel.setPreferredSize(new Dimension(1024, 590));
 		jContentPane.add(mainPanel,BorderLayout.CENTER);
@@ -248,6 +273,7 @@ public class MainFrame extends JFrame {
 	 * and delete prePanel
 	 */
 	public void logoutPanel(boolean open){
+
 		prePanel = null;
 		//disable all buttons before authentication
 		disableAllBtns();
@@ -258,12 +284,16 @@ public class MainFrame extends JFrame {
 		note.setEnabled(false);
 		exit.setEnabled(true);
 		mainPanel = new Panels();
-		jContentPane.remove(1);
+		jContentPane.remove(2);
 		mainPanel.setLayout(new GridLayout());
 		mainPanel.setPreferredSize(new Dimension(1024, 590));
 		loginPanel = new LoginPanel();
-		if (open)
+		if (open){
+			Client.getInstance().getMf().getBottomPanel().setStatus("Logged out");
+			Client.getInstance().getMf().getBottomPanel().setPersonal("");
+			Client.getInstance().getMf().getBottomPanel().setPrivilege("");
 			loginPanel.enableAll();
+		}
 		mainPanel.add(loginPanel);
 		jContentPane.add(mainPanel,BorderLayout.CENTER);
 		jContentPane.invalidate();
@@ -460,19 +490,14 @@ public class MainFrame extends JFrame {
 			jContentPane.setLayout(new BorderLayout());
 			jContentPane.setPreferredSize(new Dimension(200, 700));
 			jContentPane.add(getUpperPanel(), BorderLayout.NORTH,0);
-			jContentPane.add(getMainPanel(), BorderLayout.CENTER,1);
+			jContentPane.add(getBottomPanel(),BorderLayout.SOUTH,1);
+			jContentPane.add(getMainPanel(), BorderLayout.CENTER,2);
 			//bottom = new BottomPanel();
-			//jContentPane.add(bottom,BorderLayout.EAST);
+			
 			//jContentPane.add(new LoginPanel(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
-
-	/**
-	 * This method initializes upperPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */
 	private JPanel getUpperPanel() {
 		if (upperPanel == null) {
 			GridLayout gridLayout = new GridLayout();
@@ -485,6 +510,22 @@ public class MainFrame extends JFrame {
 			}
 		}
 		return upperPanel;
+	}
+	/**
+	 * This method initializes upperPanel	
+	 * 	
+	 * @return javax.swing.JPanel	
+	 */
+	private BottomPanel getBottomPanel() {
+		if (bottom == null) {
+			//GridLayout gridLayout = new GridLayout();
+			//gridLayout.setRows(1);
+			bottom = new BottomPanel();
+			//upperPanel.setLayout(gridLayout);
+			
+
+		}
+		return bottom;
 	}
 
 	private JMenuBar getBar(){

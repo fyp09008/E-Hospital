@@ -94,7 +94,7 @@ public class QueryHandler extends Handler {
 				return null;	
 		}
 
-		Logger.println(this.getClass().getName(),query);
+		Client.getInstance().getLogger().debug(this.getClass().getName(),query);
 		if(Client.getInstance().isConnected()) {
 			QueryRequestMessage qmsg = null;
 			switch(TYPE){
@@ -108,9 +108,14 @@ public class QueryHandler extends Handler {
 					break;
 				}
 			}
-			qmsg.query = encryptAES(query.getBytes());
 			
+			Client.getInstance().getLogger().printPlain(this.getClass().getName(), "Plain Query", 
+				query.getBytes(), query);
+			qmsg.query = encryptAES(query.getBytes());
 			qmsg.username = Client.getInstance().getName();
+			String encryptedQueryString = new String(qmsg.query);
+			Client.getInstance().getLogger().printCipher(this.getClass().getName(), "Plain Query", 
+					qmsg.query, encryptedQueryString);
 			Connector.getInstance().write(((Object) encryptPAES(objToBytes(qmsg))));
 			Object reqmsg = bytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
 			if ( reqmsg instanceof QueryResponseMessage){
