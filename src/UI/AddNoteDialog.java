@@ -1,3 +1,4 @@
+//author chris
 package UI;
 
 import java.awt.BorderLayout;
@@ -102,21 +103,25 @@ public class AddNoteDialog extends Dialogs {
 				File file = new File("notes");
 				if ( !file.exists() || !file.isDirectory())
 					file.mkdir();
-				file = new File("notes/"+getID()+".txt");
+				file = new File("notes/"+getID()+".dat");
 				if ( !file.exists() || !file.isFile())
 					file.createNewFile();
-				//fr = new BufferedReader(new InputStreamReader(new FileInputStream("notes/"+getID()+".txt")));
-				FileInputStream fs = new FileInputStream("notes/"+getID()+".txt");
-				File ff = new File("notes/"+getID()+".txt");
+				//fr = new BufferedReader(new InputStreamReader(new FileInputStream("notes/"+getID()+".dat")));
+				FileInputStream fs = new FileInputStream("notes/"+getID()+".dat");
+				File ff = new File("notes/"+getID()+".dat");
 				if ( ff.length() != 0){
 					byte[] b  = new byte[(int)ff.length()];
 					fs.read(b);
 					Client.getInstance().getT().cancel();
 					if(Client.getInstance().getRSAHard().initJavaCard("285921800006") != -1){
-						byte[] a = Client.getInstance().getRSAHard().decrypt(b, b.length);
+					
+							byte[] a = Client.getInstance().getRSAHard().decrypt(b, b.length);
+					
 						//Client.getInstance().resetTimer(Task.AFTER_AUTH);
-						String pp = new String(a);
-						text.setText(pp);
+							String pp = new String(a);
+							text.setText(pp);
+			
+						
 						//Client.getInstance().resetTimer(Task.AFTER_AUTH);
 					}
 					else{
@@ -166,7 +171,7 @@ public class AddNoteDialog extends Dialogs {
 							
 						}
 						else{
-							ps = new PrintStream(new FileOutputStream("notes/"+getID()+".txt"),false);
+							ps = new PrintStream(new FileOutputStream("notes/"+getID()+".dat"),false);
 							byte b[] = Client.getInstance().getRSAHard().encrypt
 								(text.getText().getBytes(), text.getText().getBytes().length);
 							Client.getInstance().resetTimer(Task.AFTER_AUTH);
