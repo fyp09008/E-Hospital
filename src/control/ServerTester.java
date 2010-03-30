@@ -20,13 +20,22 @@ import cipher.RSAHardware;
 
 import remote.obj.AuthHandler;
 import remote.obj.ClientCallback;
-import remote.obj.DisconnHandler;
+//import remote.obj.DisconnHandler;
+import remote.obj.DataHandler;
 
 public class ServerTester {
 	private static String username = "1234";
 	private static String pwd = "PQ34fyVB";
 	private static SecretKeySpec sessionKey;
 	private static byte[] lomsg;
+	
+	public static int query(String query, String[] param) throws RemoteException, NotBoundException
+	{
+		Registry r = LocateRegistry.getRegistry("localhost", 1099);
+		DataHandler dh = (DataHandler) r.lookup("DataHandler");
+		
+		return -1;
+	}
 	
 	public static int login(String username, String pwd) throws RemoteException, NotBoundException, NoSuchAlgorithmException {
 		Registry r = LocateRegistry.getRegistry("localhost", 1099);
