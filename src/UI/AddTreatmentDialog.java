@@ -5,6 +5,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -100,8 +103,21 @@ public class AddTreatmentDialog extends Dialogs {
 				if ( ans == 0){
 					String[] table = {"treatment"};
 					String[] field = {"id","pid","pic","description","date_of_issue"};
-					String[] values = {"null",atd.getID(),Client.getInstance().getID(),"'"+getTextArea().getText()+"'","CURDATE()"};
-					String[][] result = Client.getInstance().sendQuery("INSERT", table, field, null, values);
+					String[] values = {atd.getID(),Client.getInstance().getID(),"'"+getTextArea().getText()+"'","CURDATE()"};
+//					String[][] result = Client.getInstance().sendQuery("INSERT", table, field, null, values);
+					String[][] result = null;
+					try {
+						result = Client.getInstance().sendQuery("INSERT INTO treatment (pid, pic, description, date_of_issue) VALUES (?,?,?,?);", values);
+					} catch (RemoteException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NotBoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if(result[0][0].equals("true")){
 						Client.getInstance().getMf().popup = new ArrayList<Component>();
 						atd.dispose();

@@ -129,8 +129,13 @@ public class QueryHandler extends Handler {
 			String encryptedQueryString = new String(qmsg.query);
 			Client.getInstance().getLogger().printCipher(this.getClass().getName(), "Plain Query", 
 					qmsg.query, encryptedQueryString);
-			Connector.getInstance().write(((Object) encryptPAES(objToBytes(qmsg))));
-			Object reqmsg = bytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
+			//Connector.getInstance().write(((Object) encryptPAES(objToBytes(qmsg))));
+			//Object reqmsg = bytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
+			
+			
+			Object reqmsg = new Object();
+			
+			
 			if ( reqmsg instanceof QueryResponseMessage){
 				QueryResponseMessage qrm = (QueryResponseMessage)reqmsg;
 				byte[] rawResultSet = decryptAES(qrm.resultSet);

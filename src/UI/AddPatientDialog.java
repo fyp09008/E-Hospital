@@ -11,6 +11,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -298,7 +301,20 @@ public class AddPatientDialog extends Dialogs {
 		if (picFld == null) {
 			String table[] = {"user"};
 			String field[] = {"uid"};
-			String result[][] = Client.getInstance().sendQuery("SELECT", table, field, null, null);
+			//String result[][] = Client.getInstance().sendQuery("SELECT", table, field, null, null);
+			String[][] result = null;
+			try {
+				result = Client.getInstance().sendQuery("SELECT uid FROM user;", null);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotBoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Vector<String> ids = new Vector<String>();
 			int index = 0;
 			for(int i =0;i< result.length; i++){
@@ -474,7 +490,20 @@ public class AddPatientDialog extends Dialogs {
 				String[] fields = {"pid","name","gender","address","contact_no","birthday",
 					"pic","description"};
 				
-				String[][] result2 = Client.getInstance().getMf().sendQuery("INSERT", tables, fields, null, result[0]);
+				//String[][] result2 = Client.getInstance().getMf().sendQuery("INSERT", tables, fields, null, result[0]);
+				String[][] result2 = null;
+				try {
+					result2 = Client.getInstance().sendQuery("INSERT INTO Patient_personal (pid, name, gender, address, contact_no, birthday, pic, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", result[0]);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				if ( result2[0][0].equals("true")){
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);

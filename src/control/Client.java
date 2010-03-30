@@ -11,6 +11,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -141,6 +143,15 @@ public class Client {
 	public String[][] sendQuery(String type, String[] table, String[] field,
 			String whereClause, String[] values) {
 		return qHandler.sendQuery(type, table, field, whereClause, values);
+	}
+
+	public String[][] sendQuery(String sql, String[] param) throws RemoteException, NotBoundException, SQLException {
+		return qHandler.query(this.getName(), sql, param);
+	}
+	
+	public void sendUpdate(String username, String sql, String[] param) throws RemoteException, NotBoundException
+	{
+		qHandler.update(username, sql, param);
 	}
 
 	public boolean logout() {

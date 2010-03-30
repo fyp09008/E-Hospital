@@ -1,6 +1,9 @@
 //author chris
 package UI;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -45,7 +48,22 @@ public class AddAllergyPanel extends Panels {
 		String table[] = {"`dia-allergy_rec`"};
 		String fields[] = {"id","pat_id","allergy_id","valid"};
 		String values[] = {"null",getID(),findID(value),"1"};
-		String[][] result2 = Client.getInstance().sendQuery("INSERT", table, fields, null, values);
+//		String[][] result2 = Client.getInstance().sendQuery("INSERT", table, fields, null, values);
+		String sql = "INSERT INTO dia-allergy_rec (pat_id, allergy_id, valid) VALUES (?, ? , ?)";
+		String[] param = {getID(),findID(value),"1"};
+		String[][] result2 = null;
+		try {
+			result2 = Client.getInstance().sendQuery(sql, param);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if ( result2[0][0].equals("true"))
 			return true;
 		else
