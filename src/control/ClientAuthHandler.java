@@ -119,7 +119,7 @@ public class ClientAuthHandler extends Handler{
 		    try {
 		    	//Connector connector = Connector.getInstance();
 				//connector.write((Object) encryptPAES(objToBytes(reqMsg)));
-		    	byte[] encryptedPKeyName = encryptPAES(this.objToBytes(name));
+		    	byte[] encryptedPKeyName = encryptPAES(name.getBytes());
 		    	byte[] encryptedSKey = ah.authenticate(encryptedPKeyName, encryptPAES(hashedPw));
 				
 			    logger.debug(this.getClass().getName(),"Authentication message sent");
