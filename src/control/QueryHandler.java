@@ -3,9 +3,22 @@ package control;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import remote.obj.DataHandler;
 
 import message.QueryRequestMessage;
 import message.QueryResponseMessage;
@@ -157,6 +170,25 @@ public class QueryHandler extends Handler {
 		return rs;
 	}
 	
+	// Note that the server side DataHandler does not implement the decrypt and encryption of program key yet
+	public String[][] query(String username, String query, String[] param) throws RemoteException, NotBoundException, SQLException
+	{
+		Registry r = LocateRegistry.getRegistry("localhost", 1099);
+		DataHandler dh = (DataHandler) r.lookup("DataHandler");
+		byte[] q = encryptPAES(encryptAES(query.getBytes()));
+		byte[] p = encryptPAES(encryptAES(Utility.objToBytes(param)));
+		return RSparse((ResultSet) Utility.BytesToObj(decryptAES(decryptPAES(dh.query(username, q, p)))));
+	}
+
+	public void update(String username, String query, String[] param) throws RemoteException, NotBoundException
+	{
+		Registry r = LocateRegistry.getRegistry("localhost", 1099);
+		DataHandler dh = (DataHandler) r.lookup("DataHandler");
+		byte[] q = encryptPAES(encryptAES(query.getBytes()));
+		byte[] p = encryptPAES(encryptAES(Utility.objToBytes(param)));
+		dh.update(username, q, p);
+	}
+
 	/*By pizza*/
 	public static String[][] RSparse(ResultSet result) throws SQLException
 	{

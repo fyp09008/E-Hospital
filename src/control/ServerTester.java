@@ -8,6 +8,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -24,17 +25,71 @@ import remote.obj.ClientCallback;
 import remote.obj.DataHandler;
 
 public class ServerTester {
-	private static String username = "1234";
-	private static String pwd = "PQ34fyVB";
+	private static String username = "mcfung";
+	private static String pwd = "859sLAcI";
 	private static SecretKeySpec sessionKey;
 	private static byte[] lomsg;
 	
-	public static int query(String query, String[] param) throws RemoteException, NotBoundException
+	public static ResultSet query(String query, String[] param) throws RemoteException, NotBoundException
 	{
 		Registry r = LocateRegistry.getRegistry("localhost", 1099);
 		DataHandler dh = (DataHandler) r.lookup("DataHandler");
-		
-		return -1;
+		try {
+			Cipher c = Cipher.getInstance("aes");
+			c.init(Cipher.ENCRYPT_MODE, sessionKey);
+			byte[] q = c.doFinal(query.getBytes());
+			byte[] p = c.doFinal(Utility.objToBytes(param));
+			c = Cipher.getInstance("aes");
+			c.init(Cipher.DECRYPT_MODE, sessionKey);
+			return (ResultSet) Utility.BytesToObj(c.doFinal(dh.query(username, q, p)));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static void update(String query, String[] param) throws RemoteException, NotBoundException
+	{
+		Registry r = LocateRegistry.getRegistry("localhost", 1099);
+		DataHandler dh = (DataHandler) r.lookup("DataHandler");
+		try {
+			Cipher c = Cipher.getInstance("aes");
+			c.init(Cipher.ENCRYPT_MODE, sessionKey);
+			byte[] q = c.doFinal(query.getBytes());
+			byte[] p = c.doFinal(Utility.objToBytes(param));
+			dh.update(username, q, p);
+//			c = Cipher.getInstance("aes");
+//			c.init(Cipher.DECRYPT_MODE, sessionKey);
+//			return (ResultSet) Utility.BytesToObj(c.doFinal(dh.query(username, q, p)));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static int login(String username, String pwd) throws RemoteException, NotBoundException, NoSuchAlgorithmException {
@@ -110,9 +165,12 @@ public class ServerTester {
 		ClientCallback ccb = new ClientCallbackImpl();
 		reg.bind("ClientCallback", ccb);
 		login(username, pwd);
-		System.out.println(Thread.currentThread().getName()+"Waiting for logout");
-		Thread.sleep(10000);
-		System.out.println(Thread.currentThread().getName()+"Waiting for logout");
+//		String SQL = "INSERT INTO allergy (name, description) VALUES (?, ?);";
+//		String[] p = {"Fuck!!! -- ", "Pet Allergy"};
+//		update(SQL, p);
+//		System.out.println(Thread.currentThread().getName()+"Waiting for logout");
+//		Thread.sleep(10000);
+//		System.out.println(Thread.currentThread().getName()+"Waiting for logout");
 		if (logout(username, lomsg) != 0) {
 			System.out.println("logout failed");
 		} else {
