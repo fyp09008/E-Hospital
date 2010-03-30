@@ -42,7 +42,7 @@ public class Client {
 		rsa = new RSASoftware();
 		rsaHard = new RSAHardware();
 		pHandler = new PrivilegeHandler();
-		aHandler = new AuthHandler();
+		aHandler = new ClientAuthHandler();
 		qHandler = new QueryHandler();
 		//logout handler initialized by aHandler later
 	}
@@ -69,7 +69,7 @@ public class Client {
 	private RSASoftware rsa = null;
 	private RSAHardware rsaHard = null;
 	private SecretKeySpec skeySpec;
-	private AuthHandler aHandler = null;
+	private ClientAuthHandler aHandler = null;
 	private LogoutHandler lHandler = null;
 	private PrivilegeHandler pHandler = null;
 	private QueryHandler qHandler = null;	
@@ -79,6 +79,9 @@ public class Client {
 	}
 	public boolean authenticate(){
 		return aHandler.authenicate();
+	}
+	public ClientAuthHandler getClientAHanlder(){
+		return aHandler;
 	}
 	public void initLogoutHandler(byte[] a){
 		lHandler = new LogoutHandler(a);
@@ -90,7 +93,7 @@ public class Client {
 		rsa = new RSASoftware();
 		rsaHard = new RSAHardware();
 		pHandler = new PrivilegeHandler();
-		aHandler = new AuthHandler();
+		aHandler = new ClientAuthHandler();
 		qHandler = new QueryHandler();
 		Connector.getInstance().setConnected(false);
 		this.skeySpec = null;

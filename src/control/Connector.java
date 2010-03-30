@@ -5,6 +5,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 import javax.swing.JOptionPane;
 
@@ -14,10 +17,11 @@ public class Connector {
 	private int port = 8899;
 	private String server = "localhost";
 	
-	private Socket s;
-	private ObjectOutputStream out;
-	private ObjectInputStream in;
+	//private Socket s;
+	//private ObjectOutputStream out;
+	//private ObjectInputStream in;
 	private boolean isConnected = false;
+	private Registry r;
 	
 	private Connector() {}
 	
@@ -28,7 +32,7 @@ public class Connector {
 	public static Connector getInstance() {
 	     return ConnectorHolder.INSTANCE;
 	}
-	   
+	/*   
 	public boolean write(Object m) {
 		try {
 			out.writeObject(m);
@@ -38,7 +42,8 @@ public class Connector {
 		}
 		return false;
 	}
-	
+	*/
+	/*
 	public Object read() {
 		try {
 			return in.readObject();
@@ -49,22 +54,25 @@ public class Connector {
 		}
 		return null;
 	}
-	
+	*/
 	public boolean connect() {
 		try {
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Connecting...");
-			s = new Socket(server,port);
+			//s = new Socket(server,port);
+			r = LocateRegistry.getRegistry("localhost", 1099);
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Connected to server");
-			out = new ObjectOutputStream(s.getOutputStream());
-			in = new ObjectInputStream(s.getInputStream());
+			//out = new ObjectOutputStream(s.getOutputStream());
+			//in = new ObjectInputStream(s.getInputStream());
 			isConnected = true;
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Server/Client I/O initialized");
 			return true;
+			/*
 		} catch (UnknownHostException e) {
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Unknown host");
 			return false;
-		} catch (IOException e) {
+			*/
+		} catch (RemoteException e) {
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"IO Exception");
 			return false;
@@ -79,14 +87,17 @@ public class Connector {
 	public void setConnected(boolean isConnected) {
 		this.isConnected = isConnected;
 	}
-
+	public Registry getRegistry(){
+		return r;
+	}
 	public void disconnect() {
 	    try {
-			out.close();
-			in.close();
-			s.close();
+			r = null;
+	    	//out.close();
+			//in.close();
+			//s.close();
 			isConnected = false;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
