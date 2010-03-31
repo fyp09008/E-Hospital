@@ -8,6 +8,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -54,7 +57,21 @@ public class EditAllergyDialog extends Dialogs {
 		String[] fields = {"allergy_id","name","description"};
 		String where = "allergy.id = `dia-allergy_rec`.allergy_id and `dia-allergy_rec`.valid = 1 and" +
 				"`dia-allergy_rec`.pat_id = " + getID() + " ORDER BY name";
-		String[][] result = Client.getInstance().sendQuery("SELECT", tables, fields, where , null);
+//		String[][] result = Client.getInstance().sendQuery("SELECT", tables, fields, where , null);
+		String[] p = {getID()};
+		String[][] result = null;
+		try {
+			result = Client.getInstance().sendQuery("SELECT allergy_id, name, description FROM allergy, dia-allergy_rec WHERE allergy.id = `dia-allergy_rec`.allergy_id and `dia-allergy_rec`.valid = 1 and `dia-allergy_rec`.pat_id=? ORDER BY name", p);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		for(int i = 0;i < result.length; i++){
 			allergyID.add(result[i][0]);
@@ -65,7 +82,21 @@ public class EditAllergyDialog extends Dialogs {
 		String[] field = {"id, name, description"};
 		String whereClause = "id not in (select allergy_id from `dia-allergy_rec` " +
 				"where pat_id = '"+getID()+"' and valid = '1') ORDER BY name";
-		String[][] result2 = Client.getInstance().sendQuery("SELECT", table, field, whereClause, null);
+//		String[][] result2 = Client.getInstance().sendQuery("SELECT", table, field, whereClause, null);
+		String[][] result2 = null;
+		String[] p1 = {getID()};
+		try {
+			result2 = Client.getInstance().sendQuery("SELECT id, name, description FROM allergy WHERE id NOT IN (SELECT allergy_id FROM dia-allergy_rec WHERE pat_id=? AND valid='1') ORDER BY name;", p1);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for(int i =0;i < result2.length;i++){
 			noAllergyID.add(result2[i][0]);
 			noAllergyName.add(result2[i][1]);

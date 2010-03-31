@@ -54,6 +54,7 @@ public class RemoveAllergyPanel extends Panels {
 		String where = "`dia-allergy_rec`.allergy_id IN (" + ids + " )";
 		String[] value = {"0"};
 		String result2[][] = Client.getInstance().sendQuery("UPDATE", table, field, where, value );
+		
 		if ( result2[0][0].equals("true"))
 			return true;
 		else

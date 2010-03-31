@@ -132,7 +132,9 @@ public class QueryHandler extends Handler {
 			//Connector.getInstance().write(((Object) encryptPAES(objToBytes(qmsg))));
 			//Object reqmsg = bytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
 			
-			
+			/**
+			 *  This is added to make the program compilable..
+			 */
 			Object reqmsg = new Object();
 			
 			

@@ -20,6 +20,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
+
 import javax.swing.JOptionPane;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -89,8 +93,22 @@ public class ShowInfoPanel extends Panels {
 		String[] fields = {"name","gender","address","contact_no",
 				"birthday","pic","description"};
 		//this.getInfo().append(this.pid);
-		result = Client.getInstance().sendQuery("SELECT", tables, 
-				fields, "pid = '" + pid + "'", null);	
+//		result = Client.getInstance().sendQuery("SELECT", tables, 
+//				fields, "pid = '" + pid + "'", null);
+		String[] param = {pid};
+		try {
+			result = Client.getInstance().sendQuery("SELECT name, gender, address, contact_no, birthday, pic" +
+					"description FROM Patient_personal WHERE pid=?;", param);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if ( result != null){
 			insertText(star+" Personal "+star+br+br,BOLD_BLACK);
 			insertText("Name: ",ITALIC_GRAY);
@@ -112,9 +130,24 @@ public class ShowInfoPanel extends Panels {
 		//deal with allergy
 		String[] allergyTable = {"allergy","`dia-allergy_rec`"};
 		String[] allergyFields = {"name,description"};
-		String[][] allergyResult = Client.getInstance().sendQuery("SELECT", allergyTable, 
-				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id and `dia-allergy_rec`.valid = 1"
-				+ " AND `dia-allergy_rec`.`pat_id` = "+pid, null);
+//		String[][] allergyResult = Client.getInstance().sendQuery("SELECT", allergyTable, 
+//				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id and `dia-allergy_rec`.valid = 1"
+//				+ " AND `dia-allergy_rec`.`pat_id` = "+pid, null);
+		String[] p = {pid};
+		String[][] allergyResult = null;
+		try {
+			allergyResult = Client.getInstance().sendQuery("SELECT name, description FROM allergy, dia-allergy_rec WHERE " +
+					"dia-allergy_rec.allergy_id=allergy.id AND dia-allergy_rec.valid=1 AND dia-allergy_rec.pat_id=?;", param);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//System.out.println(allergyResult.length);
 		if ( ! (allergyResult.length == 0)){
 			insertText(br+star+" Allergies "+star+br+br,BOLD_BLACK);
@@ -129,8 +162,22 @@ public class ShowInfoPanel extends Panels {
 		
 		String[] treatmentTable = {"treatment"};
 		String[] treatmentFields = {"pic","date_of_issue","description"};
-		String[][] treatmentResult = Client.getInstance().sendQuery("SELECT", treatmentTable, 
-				treatmentFields, "pid = "+pid, null);
+//		String[][] treatmentResult = Client.getInstance().sendQuery("SELECT", treatmentTable,
+//		treatmentFields, "pid = "+pid, null);
+		String[] p2 = {pid};
+		String[][] treatmentResult = null;
+		try {
+			treatmentResult = Client.getInstance().sendQuery("SELECT pic, date_of_issue, description FROM treatment WHERE pid=?;", p2);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if ( ! (treatmentResult.length == 0)){
 			insertText(br+star+" Treatments "+star+br+br,BOLD_BLACK);
 			for ( int i = 0;  i < treatmentResult.length; i++){

@@ -9,6 +9,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -187,15 +190,33 @@ public class SearchPatientPanel extends Panels {
 		getShowInfo().fetchInfo();
 	}
 	public String[][] doSearch(String mode, String param){
-		
+
+		try {
 		String[] tables = {"Patient_personal"};
 		String[] fields = {"pid","name"};
+		String[] p = {param};
 		if ( mode.equals("ID"))
-			return Client.getInstance().sendQuery("SELECT", tables, 
-				fields, "pid = '" + param + "'", null);
+			return Client.getInstance().sendQuery("SELECT pid, name FROM Patient_personal" +
+					" WHERE pid=?", p);
 		else
-			return Client.getInstance().sendQuery("SELECT", tables, 
-					fields, "name LIKE '%" + param + "%'", null);
+		{
+			String[] p2 = {"%"+param+"%"};
+//			return Client.getInstance().sendQuery("SELECT", tables, 
+//					fields, "name LIKE '%" + param + "%'", null);
+			return Client.getInstance().sendQuery("SELECT pid, name FROM Patient_personal" +
+					" WHERE name LIKE ?", p2);
+		}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	/*public String[][] doSearchName(String name){
 		String[] tables = {"Patient_personal"};

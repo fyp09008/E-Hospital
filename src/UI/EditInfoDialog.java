@@ -10,6 +10,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -366,7 +369,20 @@ public class EditInfoDialog extends Dialogs {
 		if (picFld == null) {
 			String table[] = {"user"};
 			String field[] = {"uid"};
-			String allIDs[][] = Client.getInstance().sendQuery("SELECT", table, field, null, null);
+//			String allIDs[][] = Client.getInstance().sendQuery("SELECT", table, field, null, null);
+			String[][] allIDs = null;
+			try {
+				allIDs = Client.getInstance().sendQuery("SELECT uid FROM user;", null);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotBoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Vector<String> ids = new Vector<String>();
 			int index = 0;
 			System.out.println("***"+result[0][5]);
