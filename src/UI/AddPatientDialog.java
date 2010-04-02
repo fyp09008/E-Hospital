@@ -472,39 +472,37 @@ public class AddPatientDialog extends Dialogs {
 			int ans = o.showConfirmDialog(null, "Sure?");
 			
 			if ( ans == 0){
-				result[0][0] = "null";
-				result[0][1] = "'"+frame.getNameFld().getText()+"'";
+				result[0][0] = "DEFAULT";
+				result[0][1] = frame.getNameFld().getText();
 				
 				if ( frame.getGenderBox().getSelectedIndex() == 0)
-					result[0][2] = "'M'";
+					result[0][2] = "M";
 				else 
-					result[0][2] = "'F'";
+					result[0][2] = "F";
 				
-				result[0][3] = "'"+frame.getAddrFld().getText()+"'";
-				result[0][4] = "'"+frame.getContactFld().getText()+"'";
+				result[0][3] = frame.getAddrFld().getText();
+				result[0][4] = frame.getContactFld().getText();
 				
-				result[0][5] = "'"+frame.getDob() + "'";
-				result[0][6] = "'"+frame.getPicFld().getSelectedItem().toString()+"'";
-				result[0][7] = "'"+frame.getRemark().getText()+"'";
+				result[0][5] = frame.getDob();
+				result[0][6] = frame.getPicFld().getSelectedItem().toString();
+				result[0][7] = frame.getRemark().getText();
+				String[] param = {result[0][1], result[0][2], result[0][3], result[0][4], result[0][5], result[0][6], result[0][7]};
 				String[] tables = {"Patient_personal"};
 				String[] fields = {"pid","name","gender","address","contact_no","birthday",
 					"pic","description"};
 				
 				//String[][] result2 = Client.getInstance().getMf().sendQuery("INSERT", tables, fields, null, result[0]);
-				String[][] result2 = null;
+				boolean result2 = false;
 				try {
-					result2 = Client.getInstance().sendQuery("INSERT INTO Patient_personal (pid, name, gender, address, contact_no, birthday, pic, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", result[0]);
+					result2 = Client.getInstance().sendUpdate("INSERT INTO Patient_personal (name, gender, address, contact_no, birthday, pic, description) VALUES (?, ?, ?, ?, ?, ?, ?);", param);
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (NotBoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
-				if ( result2[0][0].equals("true")){
+				if ( result2){
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(o);
 					m.showMessageDialog(null, "New patient added!");

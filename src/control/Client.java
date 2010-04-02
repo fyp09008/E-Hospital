@@ -149,9 +149,9 @@ public class Client {
 		return qHandler.query(this.getName(), sql, param);
 	}
 	
-	public void sendUpdate(String username, String sql, String[] param) throws RemoteException, NotBoundException
+	public boolean sendUpdate(String sql, String[] param) throws RemoteException, NotBoundException
 	{
-		qHandler.update(username, sql, param);
+		return qHandler.update(this.getName(), sql, param);
 	}
 
 	public boolean logout() {

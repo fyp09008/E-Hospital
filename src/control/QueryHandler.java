@@ -187,13 +187,13 @@ public class QueryHandler extends Handler {
 		return RSparse((ResultSet) Utility.BytesToObj(decryptAES(decryptPAES(dh.query(username, q, p)))));
 	}
 
-	public void update(String username, String query, String[] param) throws RemoteException, NotBoundException
+	public boolean update(String username, String query, String[] param) throws RemoteException, NotBoundException
 	{
 		Registry r = LocateRegistry.getRegistry("localhost", 1099);
 		DataHandler dh = (DataHandler) r.lookup("DataHandler");
 		byte[] q = encryptPAES(encryptAES(query.getBytes()));
 		byte[] p = encryptPAES(encryptAES(Utility.objToBytes(param)));
-		dh.update(username, q, p);
+		return dh.update(username, q, p);
 	}
 
 	/*By pizza*/

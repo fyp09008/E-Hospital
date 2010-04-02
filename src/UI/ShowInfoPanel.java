@@ -97,7 +97,7 @@ public class ShowInfoPanel extends Panels {
 //				fields, "pid = '" + pid + "'", null);
 		String[] param = {pid};
 		try {
-			result = Client.getInstance().sendQuery("SELECT name, gender, address, contact_no, birthday, pic" +
+			result = Client.getInstance().sendQuery("SELECT name, gender, address, contact_no, birthday, pic, " +
 					"description FROM Patient_personal WHERE pid=?;", param);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -136,8 +136,8 @@ public class ShowInfoPanel extends Panels {
 		String[] p = {pid};
 		String[][] allergyResult = null;
 		try {
-			allergyResult = Client.getInstance().sendQuery("SELECT name, description FROM allergy, dia-allergy_rec WHERE " +
-					"dia-allergy_rec.allergy_id=allergy.id AND dia-allergy_rec.valid=1 AND dia-allergy_rec.pat_id=?;", param);
+			allergyResult = Client.getInstance().sendQuery("SELECT name, description FROM allergy, `dia-allergy_rec` WHERE " +
+					"allergy_id=`allergy`.id AND valid=1 AND pat_id=?;", param);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -102,21 +102,22 @@ public class ServerTester {
 			JOptionPane.showMessageDialog(null, "Java Card cannot be initialized");
 		}
 		a = rsaHard.sign(a, a.length);
-		byte[] b = ah.authenticate(username, a);
-		if (b != null) {
-			System.out.println("auth succeed");
-			if (rsaHard.initJavaCard("285921800006") == -1) {
-				JOptionPane.showMessageDialog(null, "Java Card cannot be initialized");
-				return 2;
-			}
-			b = rsaHard.decrypt(b, b.length);
-			sessionKey = new SecretKeySpec(b, "aes");
-			lomsg = ah.getLoMsg(username);
-			return 0;
-		} else {
-			System.out.print("shit");
-			return 4;
-		}
+//		byte[] b = ah.authenticate(username, a);
+//		if (b != null) {
+//			System.out.println("auth succeed");
+//			if (rsaHard.initJavaCard("285921800006") == -1) {
+//				JOptionPane.showMessageDialog(null, "Java Card cannot be initialized");
+//				return 2;
+//			}
+//			b = rsaHard.decrypt(b, b.length);
+//			sessionKey = new SecretKeySpec(b, "aes");
+//			lomsg = ah.getLoMsg(username);
+//			return 0;
+//		} else {
+//			System.out.print("shit");
+//			return 4;
+//		}
+		return 0;
 		
 	}
 	
@@ -135,10 +136,10 @@ public class ServerTester {
 				return 2;
 			}
 			lomsg = rsaHard.sign(lomsg, lomsg.length);
-			if (ah.logout(username, lomsg)) {
-				System.out.println("DIU OK!");
-				return 0;
-			}
+//			if (ah.logout(username, lomsg)) {
+//				System.out.println("DIU OK!");
+//				return 0;
+//			}
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

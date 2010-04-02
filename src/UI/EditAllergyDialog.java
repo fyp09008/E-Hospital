@@ -61,7 +61,7 @@ public class EditAllergyDialog extends Dialogs {
 		String[] p = {getID()};
 		String[][] result = null;
 		try {
-			result = Client.getInstance().sendQuery("SELECT allergy_id, name, description FROM allergy, dia-allergy_rec WHERE allergy.id = `dia-allergy_rec`.allergy_id and `dia-allergy_rec`.valid = 1 and `dia-allergy_rec`.pat_id=? ORDER BY name", p);
+			result = Client.getInstance().sendQuery("SELECT allergy_id, name, description FROM allergy, `dia-allergy_rec` WHERE allergy.id = `dia-allergy_rec`.allergy_id and `dia-allergy_rec`.valid = 1 and `dia-allergy_rec`.pat_id=? ORDER BY name", p);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,7 +86,7 @@ public class EditAllergyDialog extends Dialogs {
 		String[][] result2 = null;
 		String[] p1 = {getID()};
 		try {
-			result2 = Client.getInstance().sendQuery("SELECT id, name, description FROM allergy WHERE id NOT IN (SELECT allergy_id FROM dia-allergy_rec WHERE pat_id=? AND valid='1') ORDER BY name;", p1);
+			result2 = Client.getInstance().sendQuery("SELECT id, name, description FROM allergy WHERE id NOT IN (SELECT allergy_id FROM `dia-allergy_rec` WHERE pat_id=? AND valid='1') ORDER BY name;", p1);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

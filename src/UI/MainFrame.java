@@ -326,7 +326,7 @@ public class MainFrame extends JFrame {
 		//0-view my patient button
 		ImageIcon icon = createImageIcon("icons/all.png",
 		"view my patients");
-		button = new JButton(icon);
+		button = new JButton("view my patients", icon);
 		button.setActionCommand(Integer.toString(VIEW_ALL));
 		button.addActionListener(ba);
 		buttons.add(button);
@@ -334,7 +334,7 @@ public class MainFrame extends JFrame {
 		//1-search patient
 		icon = createImageIcon("icons/search.png",
         "search");
-		button = new JButton(icon);
+		button = new JButton("search", icon);
 		button.setActionCommand(Integer.toString(SEARCH));
 		button.addActionListener(ba);
 		buttons.add(button);
@@ -342,21 +342,21 @@ public class MainFrame extends JFrame {
 		//2-add patient
 		icon = createImageIcon("icons/add.png",
         "add patient");
-		button = new JButton(icon);
+		button = new JButton("add", icon);
 		button.setActionCommand(Integer.toString(ADD));
 		button.addActionListener(ba);
 		buttons.add(button);
 		
 		icon = createImageIcon("icons/note.png",
         "note");
-		button = new JButton(icon);
+		button = new JButton("note", icon);
 		button.setActionCommand(Integer.toString(NOTE));
 		button.addActionListener(ba);
 		buttons.add(button);
 		
 		icon = createImageIcon("icons/logout.png",
         "logout");
-		button = new JButton(icon);
+		button = new JButton("logout", icon);
 		button.setActionCommand(Integer.toString(LOGOUT));
 		button.addActionListener(ba);
 		buttons.add(button);

@@ -550,9 +550,22 @@ public class EditInfoDialog extends Dialogs {
 				String[] tables = {"Patient_personal"};
 				String[] fields = {"name","gender","address","contact_no","birthday",
 					"pic","description"};
-				
-				String[][] result2 = Client.getInstance().getMf().sendQuery("UPDATE", tables, fields, "pid = " + frame.getID(), result[0]);
-				if ( result2[0][0].equals("true")){
+				String[] param = {result[0][0], result[0][1], result[0][2], 
+						result[0][3], result[0][4], result[0][5], 
+						result[0][6], frame.getID()};
+//				String[][] result2 = Client.getInstance().getMf().sendQuery("UPDATE", tables, fields, "pid = " + frame.getID(), result[0]);
+				boolean edit = false;
+				try {
+					edit = Client.getInstance().sendUpdate("UPDATE Patient_personal SET name=?, gender=?, address=?, contact_no=?, birthday=?, pic=?" +
+							", description=? WHERE pid=?;", param);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (NotBoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if (edit){
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					frame.dispose();
 					JOptionPane m = new JOptionPane();
