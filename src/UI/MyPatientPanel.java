@@ -22,7 +22,11 @@ import javax.swing.event.ListSelectionListener;
 
 
 import java.awt.Font;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import control.*;
 public class MyPatientPanel extends Panels {
 	
@@ -147,6 +151,7 @@ public class MyPatientPanel extends Panels {
 		 * 6 = Y-etc
 		 */
 		tables = new JTable[TABLENUM];
+		/*
 		String[] field = {"pid","name"};
 		String[] table = {"Patient_personal"};
 		String[] where = new String[TABLENUM];
@@ -161,25 +166,52 @@ public class MyPatientPanel extends Panels {
 		where[4] = allWhere + " AND " + "name rlike '^[qrst]' ORDER BY name";
 		where[5] = allWhere + " AND " + "name rlike '^[uvwx]' ORDER BY name";
 		where[6] = allWhere + " AND " + "name rlike '^[^abcdefghijklmnopqrstuvwx]' ORDER BY name";
-		
+		*/
 		//end of making where clauses
-		
+		String[][] param = new String[TABLENUM][2];
+		param[0][1] = "^[abcd]";
+		param[1][1] = "^[efgh]";
+		param[2][1] = "^[ijkl]";
+		param[3][1] = "^[mnop]";
+		param[4][1] = "^[qrst]";
+		param[5][1] = "^[uvwx]";
+		param[6][1] = "^[^abcdefghijklmnopqrstuvwx]";
+	
 		String[] column = {"ID","Name"};
 		listSelectionModel = new ListSelectionModel[TABLENUM];
 		//System.out.println("before send query");
+		//String p[] = {"1","^[abcd]"};
 		for ( int i = 0; i < TABLENUM; i++){
-			String temp[][] = Client.getInstance().getMf().sendQuery("SELECT", table, field, where[i],null);
+			param[i][0] = Client.getInstance().getID();
+			String temp[][] = null;
+			try {
+				temp = Client.getInstance().sendQuery("SELECT patient_personal.pid, name from patient_personal, treatment" +
+						" where patient_personal.pic = ?  AND name RLIKE ? GROUP BY name",param[i]);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NotBoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//if ( temp != null)
-			tables[i] = new JTable(temp,column);
+			if ( temp != null){
+				tables[i] = new JTable(temp,column);
 			//else{
 				//String[][] temp2 = {{"temp","temp"}};
 				//tables[i] = new JTable(temp2,column);
 			//}
 			//System.out.println("after sql");
-			tables[i].setRowSelectionAllowed(true);
-			listSelectionModel[i] = tables[i].getSelectionModel();
-			listSelectionModel[i].addListSelectionListener(new SharedListSelectionHandler(tables[i]));
-	        tables[i].setSelectionModel(listSelectionModel[i]);
+				tables[i].setRowSelectionAllowed(true);
+				listSelectionModel[i] = tables[i].getSelectionModel();
+				listSelectionModel[i].addListSelectionListener(new SharedListSelectionHandler(tables[i]));
+				tables[i].setSelectionModel(listSelectionModel[i]);
+			}
+			else
+				System.out.println("all null");
 		}
 
 		
