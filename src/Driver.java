@@ -22,7 +22,7 @@ public class Driver {
 		try {
 			ProKeyGen pkg = new ProKeyGen("common.jar");
 			Registry reg = LocateRegistry.getRegistry(serverPath);
-			ProgramAuthHandler pah = (ProgramAuthHandler)reg.lookup(serverPath);
+			ProgramAuthHandler pah = (ProgramAuthHandler)reg.lookup("ProgramAuthHandler");
 			return pah.authProgram(pkg.getNo(), pkg.getProgramKey().getEncoded());
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(new JFrame(), "The common.jar is not found. Please don't rename the program.");
@@ -33,7 +33,7 @@ public class Driver {
 			e.printStackTrace();
 			return 8;
 		} catch (NotBoundException e) {
-			JOptionPane.showMessageDialog(new JFrame(), "The server is unreachable. Please check your network connection.");
+			JOptionPane.showMessageDialog(new JFrame(), "The server is unreachable or is not started yet. Please check your network connection.");
 			e.printStackTrace();
 			return 16;
 		}
