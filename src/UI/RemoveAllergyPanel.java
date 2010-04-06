@@ -37,21 +37,21 @@ public class RemoveAllergyPanel extends Panels {
 		initialize();
 	}
 	public boolean submit(){
-//		String ids = null;
-//		for(int i = 0; i < boxes.size(); i++){
-//			if (  boxes.get(i).isSelected()){
-//				if ( ids == null){
-//					ids = new String(allergyID.get(i));
-//				}
-//				else{
-//					ids = ids + ", " + allergyID.get(i);
-//				}
-//			}
-//		}
-//		if ( ids == null){
-//			System.out.println("no remove");
-//			return true;
-//		}
+		String ids = null;
+		for(int i = 0; i < boxes.size(); i++){
+			if (  boxes.get(i).isSelected()){
+				if ( ids == null){
+					ids = new String(allergyID.get(i));
+				}
+				else{
+					ids = ids + ", " + allergyID.get(i);
+				}
+			}
+		}
+		if ( ids == null){
+			System.out.println("no remove");
+			return true;
+		}
 //		String[] table = {"`dia-allergy_rec`"};
 //		String[] field = {"valid"};
 //		String where = "`dia-allergy_rec`.allergy_id IN (" + ids + " )";
