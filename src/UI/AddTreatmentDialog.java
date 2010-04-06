@@ -103,22 +103,20 @@ public class AddTreatmentDialog extends Dialogs {
 				if ( ans == 0){
 					String[] table = {"treatment"};
 					String[] field = {"id","pid","pic","description","date_of_issue"};
-					String[] values = {atd.getID(),Client.getInstance().getID(),"'"+getTextArea().getText()+"'","CURDATE()"};
+					String[] values = {atd.getID(),Client.getInstance().getID(),"'"+getTextArea().getText()+"'"};
 //					String[][] result = Client.getInstance().sendQuery("INSERT", table, field, null, values);
-					String[][] result = null;
+					boolean result = false;
 					try {
-						result = Client.getInstance().sendQuery("INSERT INTO treatment (pid, pic, description, date_of_issue) VALUES (?,?,?,?);", values);
+						System.out.println(values);
+						result = Client.getInstance().sendUpdate("INSERT INTO treatment (pid, pic, description, date_of_issue) VALUES (?,?,?,CURDATE());", values);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (NotBoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
-					if(result[0][0].equals("true")){
+					if(result){
 						Client.getInstance().getMf().popup = new ArrayList<Component>();
 						atd.dispose();
 						JOptionPane m = new JOptionPane();

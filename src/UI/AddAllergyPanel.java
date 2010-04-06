@@ -49,25 +49,20 @@ public class AddAllergyPanel extends Panels {
 		String fields[] = {"id","pat_id","allergy_id","valid"};
 		String values[] = {"null",getID(),findID(value),"1"};
 //		String[][] result2 = Client.getInstance().sendQuery("INSERT", table, fields, null, values);
-		String sql = "INSERT INTO dia-allergy_rec (pat_id, allergy_id, valid) VALUES (?, ? , ?)";
+		String sql = "INSERT INTO `dia-allergy_rec` (pat_id, allergy_id, valid) VALUES (?, ? , ?)";
 		String[] param = {getID(),findID(value),"1"};
-		String[][] result2 = null;
+		boolean result2 = false;
 		try {
-			result2 = Client.getInstance().sendQuery(sql, param);
+			result2 = Client.getInstance().sendUpdate(sql, param);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		if ( result2[0][0].equals("true"))
-			return true;
-		else
-			return false;
+		
+		return result2;
 			
 	}
 	private void initialize(){
