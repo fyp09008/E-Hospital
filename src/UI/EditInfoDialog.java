@@ -180,7 +180,7 @@ public class EditInfoDialog extends Dialogs {
 	 */
 	private void initialize() {
 
-		this.setSize(new Dimension(320, 500));
+		this.setSize(new Dimension(380, 480));
 		this.setTitle(this.getID() + "'s Personal Information");
 
 		this.setLayout(new BorderLayout());
@@ -229,8 +229,8 @@ public class EditInfoDialog extends Dialogs {
 			GridLayout gl = new GridLayout(2,1);
 
 			upPanel.setLayout(gl);
-			
-			// upPanel.add(getFieldPanel(),BorderLayout.CENTER);
+			//upPanel.setLayout(new BorderLayout());
+			///upPanel.add(getFieldPanel(),BorderLayout.CENTER);
 	        //upPanel.add(getRePanel(),BorderLayout.SOUTH);	
 			
 			upPanel.add(getFieldPanel());
@@ -342,7 +342,7 @@ public class EditInfoDialog extends Dialogs {
 	        fieldPanel.add(getDobFld(),getDobFld().getName());
 	        fieldPanel.add(picLab,picLab.getName());
 	        fieldPanel.add(getPicFld(),getPicFld().getName());
-
+	       // fieldPanel.setPreferredSize(new Dimension(50,50));
 		}
 		return fieldPanel;
 	}

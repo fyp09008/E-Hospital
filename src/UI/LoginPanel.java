@@ -94,7 +94,7 @@ public class LoginPanel extends Panels  {
 		if (namePanel == null) {
 			nameLab = new JLabel();
 			nameLab.setVerticalAlignment(SwingConstants.CENTER);
-			nameLab.setText("Name");
+			nameLab.setText("   Name    ");
 			nameLab.setHorizontalTextPosition(SwingConstants.CENTER);
 			nameLab.setEnabled(true);
 			nameLab.setHorizontalAlignment(SwingConstants.CENTER);
@@ -141,7 +141,7 @@ public class LoginPanel extends Panels  {
 		if (pwPanel == null) {
 			pwLab = new JLabel();
 			pwLab.setVerticalAlignment(SwingConstants.CENTER);
-			pwLab.setText("Password");
+			pwLab.setText("Password ");
 			pwPanel = new JPanel();
 			pwPanel.setLayout(new BorderLayout());
 			pwPanel.setPreferredSize(new Dimension(400, 30));

@@ -104,6 +104,7 @@ public class EditAllergyDialog extends Dialogs {
 		}
 	}
 	protected void initialize(){
+		this.setTitle("Edit Allergy Records for patient "+getID());
 		this.setLayout(new BorderLayout());
 		this.setLocationRelativeTo(Client.getInstance().getMf());
 		aap = new AddAllergyPanel(getID(),noAllergyID,noAllergyName,noDescription);
@@ -124,7 +125,7 @@ public class EditAllergyDialog extends Dialogs {
 		getBtnPanel().add(done);
 		getBtnPanel().add(cancel);
 		
-		this.setSize(300,300);
+		this.setSize(350,300);
 		this.setVisible(true);
 	}
 	private JPanel getBigPanel(){

@@ -103,7 +103,7 @@ public class AddTreatmentDialog extends Dialogs {
 				if ( ans == 0){
 					String[] table = {"treatment"};
 					String[] field = {"id","pid","pic","description","date_of_issue"};
-					String[] values = {atd.getID(),Client.getInstance().getID(),"'"+getTextArea().getText()+"'"};
+					String[] values = {atd.getID(),Client.getInstance().getID(),getTextArea().getText()};
 //					String[][] result = Client.getInstance().sendQuery("INSERT", table, field, null, values);
 					boolean result = false;
 					try {

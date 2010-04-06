@@ -36,6 +36,7 @@ public class Keyboard extends JDialog {
 	public Keyboard(LoginPanel lp){
 		super(Client.getInstance().getMf(),true);
 		//mode = mode;
+		this.setTitle("Virtual Keyboard");
 		this.addWindowListener(new CloseAction());
 		login = lp;
 		initialize();	

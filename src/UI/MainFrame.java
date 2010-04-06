@@ -444,7 +444,7 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(getBar());
 		
 		this.setContentPane(getJContentPane());
-		this.setTitle("Secure Medicial System - fyp09008");
+		this.setTitle("Secure Medical System - FYP09008");
 		this.setVisible(true);
 
 		logoutPanel(false);
