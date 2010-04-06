@@ -84,6 +84,8 @@ public class ClientAuthHandler extends Handler{
 			byte[] hashedPw = null;
 			try {
 				md = MessageDigest.getInstance("md5");
+				//****
+				client.getT().cancel();
 				logger.debug(this.getClass().getName(),"Before initializing jc");
 				RSAHardware rsaHard = client.getRSAHard();
 				if (rsaHard.initJavaCard("285921800099") == -1){
