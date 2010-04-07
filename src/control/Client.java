@@ -169,6 +169,7 @@ public class Client {
 	}
 	public void card_unplug()
 	{
+		this.aHandler.unplugCard();
 		t.cancel();
 		t = new Timer();
 		t.schedule(new Task(Task.WAIT_REAUTH), new Date(),Task.PERIOD);

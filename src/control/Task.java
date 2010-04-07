@@ -1,7 +1,7 @@
 package control;
 
 import UI.LoginDialog;
-import UI.NewSessionDialog;
+
 
 import com.ibm.jc.JCTerminal;
 import com.ibm.jc.JCard;
@@ -18,7 +18,6 @@ import hku.hk.cs.javacard.*;
 
 public class Task extends TimerTask{
 	public LoginDialog  ld;
-	public NewSessionDialog nsd;
 	public static final int PRE_AUTH = 0;
 	public static final int AFTER_AUTH = 1;
 	public static final int WAIT_REAUTH = 2;
@@ -64,13 +63,7 @@ public class Task extends TimerTask{
 	            		}
 	            		break;
 	            	}
-	            	case WAIT_SESSION:{
-	            		if ( nsd != null){
-	            			nsd.dispose();
-	            			nsd = null;
-	            		}
-	            		break;
-	            	}
+
 	            }
       	};
 
@@ -89,20 +82,19 @@ public class Task extends TimerTask{
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
-	    	            if ( Client.getInstance().getMf().keyboard != null)
+	    	            if ( Client.getInstance().getMf().keyboard != null){
+	    	            	//if ( ! (Client.getInstance().getMf().keyboard instanceof SessionKeyboard))
 	    	            	Client.getInstance().getMf().keyboard.dispose();
+	    	            }
 	    	            //System.out.println("haha");
 	            		break;}
 	            	case WAIT_REAUTH:{
+	            		System.out.println("yau card in wait reauth");
 	            		ld = new LoginDialog();
 	            		//Client.getInstance().re_login();
 	            		break;
 	            	}
-	            	case WAIT_SESSION:{
-	            		nsd = new NewSessionDialog();
-	            		//Client.getInstance().re_login();
-	            		break;
-	            	}
+	
 	            }
 			}
 	         else {
@@ -115,6 +107,7 @@ public class Task extends TimerTask{
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
+	            		System.out.println("no card in after auth");
 	            		Client.getInstance().getMf().changePanel(-2);
 	            		break;
 	            	}
@@ -125,13 +118,7 @@ public class Task extends TimerTask{
 	            		}
 	            		break;
 	            	}
-	            	case WAIT_SESSION:{
-	            		if ( nsd != null){
-	            			nsd.dispose();
-	            			nsd = null;
-	            		}
-	            		break;
-	            	}
+	
 	            }
 	       }
 	       

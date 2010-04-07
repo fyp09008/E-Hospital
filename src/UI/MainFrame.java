@@ -6,6 +6,7 @@ import control.*;
 import java.awt.BorderLayout;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -62,7 +63,7 @@ public class MainFrame extends JFrame {
 	public final static int ADD = 2;
 	private final static int LOGOUT = 3;
 	public final static int NOTE = 4;
-	public Keyboard keyboard = null;
+	public JDialog keyboard = null;
 	private ButtonActions ba;
 	public ArrayList<Component> popup = null;
 	private static final long serialVersionUID = 1L;
@@ -133,9 +134,9 @@ public class MainFrame extends JFrame {
 	 * 2 - add patient, X
 	 */
 	public void changePanel(int no){
-			if ( no != -3 ){
+			if (!(mainPanel.getComponent(0).getClass().toString().equals("class UI.SessionLoginPanel")))			
 				prePanel = (Panels)mainPanel.clone();
-			}
+			
 			mainPanel = new Panels();
 			switch(no){
 				case -1: {
@@ -174,6 +175,10 @@ public class MainFrame extends JFrame {
 					quitMenu.setPopupMenuVisible(false);
 					this.disableAllBtns();
 					mainPanel.add(new SessionLoginPanel()); 
+					Calendar calendar = Calendar.getInstance();
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					Client.getInstance().getMf().getBottomPanel().setStatus("Session ended at: " +
+							dateFormat.format(calendar.getTime()));
 					break;
 				}
 				case VIEW_ALL: { mainPanel.add(new MyPatientPanel()); break;}

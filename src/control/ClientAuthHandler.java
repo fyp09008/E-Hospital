@@ -44,6 +44,15 @@ public class ClientAuthHandler extends Handler{
 	public AuthHandler getRemoteAuthHandler(){
 		return ah;
 	}
+	public void unplugCard(){
+		byte[] encryptedPKeyName = encryptPAES(Client.getInstance().getName().getBytes());
+		try {
+			ah.unplugCard(encryptedPKeyName);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public boolean authenicate() {
 		//first time connection
 		Connector connector = Connector.getInstance();
