@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 
 import javax.swing.JOptionPane;
 
@@ -16,7 +17,7 @@ public class Connector {
 	
 	private int port = 8899;
 	private String server = "localhost";
-	
+	public static Registry reg;
 	//private Socket s;
 	//private ObjectOutputStream out;
 	//private ObjectInputStream in;
@@ -55,6 +56,25 @@ public class Connector {
 		return null;
 	}
 	*/
+	public void initCallback(){
+		try{
+			try {
+				reg = LocateRegistry.createRegistry(7788);
+			} catch (ExportException e) {
+				reg = LocateRegistry.getRegistry(7788);
+			}
+			
+	            String name = "ClientCallback";
+	            remote.obj.ClientCallback engine = new ClientCallbackImpl();
+	            reg.rebind(name, engine);			            	
+	            
+	            System.out.println("ClientCallbackImpl bound");
+	            
+	        } catch (Exception e) {
+            System.err.println("ClientCallbackImpl exception:");
+            e.printStackTrace();
+        }
+	}
 	public boolean connect() {
 		try {
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Connecting...");
@@ -65,6 +85,7 @@ public class Connector {
 			//in = new ObjectInputStream(s.getInputStream());
 			isConnected = true;
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Server/Client I/O initialized");
+			initCallback();
 			return true;
 			/*
 		} catch (UnknownHostException e) {

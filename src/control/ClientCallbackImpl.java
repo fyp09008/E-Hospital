@@ -3,6 +3,8 @@ package control;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import UI.LoginDialog;
+
 import remote.obj.ClientCallback;
 
 public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCallback {
@@ -21,6 +23,8 @@ public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCal
 	public void timeout() throws RemoteException {
 		// TODO Auto-generated method stub
 		System.out.println(Thread.currentThread().getName()+" Timeout Success");
+		Client.getInstance().getMf().changePanel(-2);
+		new LoginDialog();
 	}
 
 }

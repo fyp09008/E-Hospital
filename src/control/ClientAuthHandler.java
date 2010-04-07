@@ -10,6 +10,9 @@ import java.io.ObjectOutputStream;
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
@@ -30,11 +33,13 @@ import message.ServerAuthResponseMessage;
 import cipher.RSAHardware;
 import cipher.RSASoftware;
 
+
 public class ClientAuthHandler extends Handler{
 	
 	private String name = null;
 	private String password = null;
 	private AuthHandler ah = null;
+	
 	
 	public AuthHandler getRemoteAuthHandler(){
 		return ah;
@@ -123,7 +128,10 @@ public class ClientAuthHandler extends Handler{
 			} catch (NoSuchAlgorithmException e1) {
 				e1.printStackTrace();
 			}
+		
 			
+
+		        
 		    try {
 		    	//Connector connector = Connector.getInstance();
 				//connector.write((Object) encryptPAES(objToBytes(reqMsg)));
@@ -210,6 +218,10 @@ public class ClientAuthHandler extends Handler{
 			    	//erase the password in memory as soon as possible
 			    	this.password=null;
 			    	client.resetTimer(Task.AFTER_AUTH);
+			    	
+			    	//callback
+			    	
+
 			    	return true;
 			    
 			    //case: authentication failed
