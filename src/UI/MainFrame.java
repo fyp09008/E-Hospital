@@ -133,7 +133,9 @@ public class MainFrame extends JFrame {
 	 * 2 - add patient, X
 	 */
 	public void changePanel(int no){
-			prePanel = (Panels)mainPanel.clone();
+			if ( no != -3 ){
+				prePanel = (Panels)mainPanel.clone();
+			}
 			mainPanel = new Panels();
 			switch(no){
 				case -1: {
@@ -164,6 +166,14 @@ public class MainFrame extends JFrame {
 					Client.getInstance().getMf().getBottomPanel().setStatus("Card unplugged at: " +
 							dateFormat.format(calendar.getTime()));
 					Client.getInstance().card_unplug(); 	
+					break;
+				}
+				case -3:{
+					funcMenu.setEnabled(false);
+					funcMenu.setPopupMenuVisible(false);
+					quitMenu.setPopupMenuVisible(false);
+					this.disableAllBtns();
+					mainPanel.add(new SessionLoginPanel()); 
 					break;
 				}
 				case VIEW_ALL: { mainPanel.add(new MyPatientPanel()); break;}

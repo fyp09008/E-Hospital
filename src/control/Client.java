@@ -138,6 +138,7 @@ public class Client {
 		log.debug(this.getClass().getName(),"Relogin finished and reloading");
 		mf.restorePanel();
 		resetTimer(Task.AFTER_AUTH);
+		System.out.println("in reload");
 	}
 
 	public String[][] sendQuery(String type, String[] table, String[] field,
@@ -171,6 +172,12 @@ public class Client {
 		t.cancel();
 		t = new Timer();
 		t.schedule(new Task(Task.WAIT_REAUTH), new Date(),Task.PERIOD);
+	}
+	public void session_end()
+	{
+		t.cancel();
+		t = new Timer();
+		t.schedule(new Task(Task.WAIT_SESSION), new Date(),Task.PERIOD);
 	}
 
 	public RSAHardware getRSAHard(){

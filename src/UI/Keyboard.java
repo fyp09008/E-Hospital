@@ -41,6 +41,9 @@ public class Keyboard extends JDialog {
 		login = lp;
 		initialize();	
 	}
+	public Keyboard(){
+		super(Client.getInstance().getMf(),true);
+	}
 	private void initialize() {
 		Client.getInstance().getMf().keyboard = this;
 		BorderLayout bl = new BorderLayout();

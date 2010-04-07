@@ -1,6 +1,7 @@
 package control;
 
 import UI.LoginDialog;
+import UI.NewSessionDialog;
 
 import com.ibm.jc.JCTerminal;
 import com.ibm.jc.JCard;
@@ -17,9 +18,11 @@ import hku.hk.cs.javacard.*;
 
 public class Task extends TimerTask{
 	public LoginDialog  ld;
+	public NewSessionDialog nsd;
 	public static final int PRE_AUTH = 0;
 	public static final int AFTER_AUTH = 1;
 	public static final int WAIT_REAUTH = 2;
+	public static final int WAIT_SESSION = 3;
 	private Timer t;
 	//private MainFrame mf;
 	private int mode;
@@ -53,10 +56,18 @@ public class Task extends TimerTask{
 	            		Client.getInstance().getMf().changePanel(-2);
 	            		break;
 	            	}
+	
 	            	case WAIT_REAUTH:{
 	            		if ( ld != null){
 	            			ld.dispose();
 	            			ld = null;
+	            		}
+	            		break;
+	            	}
+	            	case WAIT_SESSION:{
+	            		if ( nsd != null){
+	            			nsd.dispose();
+	            			nsd = null;
 	            		}
 	            		break;
 	            	}
@@ -87,6 +98,11 @@ public class Task extends TimerTask{
 	            		//Client.getInstance().re_login();
 	            		break;
 	            	}
+	            	case WAIT_SESSION:{
+	            		nsd = new NewSessionDialog();
+	            		//Client.getInstance().re_login();
+	            		break;
+	            	}
 	            }
 			}
 	         else {
@@ -106,6 +122,13 @@ public class Task extends TimerTask{
 	            		if ( ld != null){
 	            			ld.dispose();
 	            			ld = null;
+	            		}
+	            		break;
+	            	}
+	            	case WAIT_SESSION:{
+	            		if ( nsd != null){
+	            			nsd.dispose();
+	            			nsd = null;
 	            		}
 	            		break;
 	            	}
