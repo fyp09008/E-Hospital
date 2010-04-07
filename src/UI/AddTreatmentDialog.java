@@ -107,7 +107,7 @@ public class AddTreatmentDialog extends Dialogs {
 //					String[][] result = Client.getInstance().sendQuery("INSERT", table, field, null, values);
 					boolean result = false;
 					try {
-						System.out.println(values);
+						//System.out.println(values);
 						result = Client.getInstance().sendUpdate("INSERT INTO treatment (pid, pic, description, date_of_issue) VALUES (?,?,?,CURDATE());", values);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block

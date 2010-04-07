@@ -465,14 +465,14 @@ public class MainFrame extends JFrame {
 		}
 	}
 	public void resumePopUp(){
-
 		for ( int i = 0 ; i < popup.size(); i++){
 			if( popup.get(i) != null){
-				//System.out.println("resume");
+				System.out.println(popup.get(i));
 				popup.get(i).setVisible(true);
-				if ( popup.get(i).getClass().getName().equals("javax.swing.JOptionPane")){
-					((JOptionPane)popup.get(i)).getRootFrame().setVisible(true);
-				}
+				
+				//if ( popup.get(i).getClass().getName().equals("javax.swing.JOptionPane")){
+				//	((JOptionPane)popup.get(i)).getRootFrame().setVisible(true);
+				//}
 			}
 		}
 		//popup = new ArrayList<Component>();

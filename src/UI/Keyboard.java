@@ -60,7 +60,7 @@ public class Keyboard extends JDialog {
 					Client.getInstance().getMf().checkPrivilege();
 					Client.getInstance().getMf().changePanel(-1);
 				}
-				else {}
+
 				
 			}});
 		this.add(loginButton,BorderLayout.SOUTH);

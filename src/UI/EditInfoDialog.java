@@ -385,7 +385,7 @@ public class EditInfoDialog extends Dialogs {
 			}
 			Vector<String> ids = new Vector<String>();
 			int index = 0;
-			System.out.println("***"+result[0][5]);
+			//System.out.println("***"+result[0][5]);
 			for(int i =0;i< allIDs.length; i++){
 				ids.add(allIDs[i][0]);
 				if(allIDs[i][0].equals(result[0][5]))

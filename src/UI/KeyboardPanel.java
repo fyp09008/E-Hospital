@@ -62,13 +62,16 @@ public class KeyboardPanel extends JPanel {
 				if (Client.getInstance().authenticate()){
 					Client.getInstance().getT().cancel();
 					Client.getInstance().reload();
+					relogin.dispose();
+					Client.getInstance().getMf().resumePopUp();
 				}
 				else{
 					Client.getInstance().reset();
 					Client.getInstance().resetTimer(Task.PRE_AUTH);
+					relogin.dispose();
+					//Client.getInstance().getMf().resumePopUp();
 				}
-				relogin.dispose();
-				Client.getInstance().getMf().resumePopUp();
+
 				
 			}
 		});

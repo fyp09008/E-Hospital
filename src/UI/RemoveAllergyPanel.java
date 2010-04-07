@@ -37,7 +37,7 @@ public class RemoveAllergyPanel extends Panels {
 		initialize();
 	}
 	public boolean submit(){
-		String ids = null;
+	/*	String ids = null;
 		for(int i = 0; i < boxes.size(); i++){
 			if (  boxes.get(i).isSelected()){
 				if ( ids == null){
@@ -49,9 +49,8 @@ public class RemoveAllergyPanel extends Panels {
 			}
 		}
 		if ( ids == null){
-			System.out.println("no remove");
 			return true;
-		}
+		}*/
 //		String[] table = {"`dia-allergy_rec`"};
 //		String[] field = {"valid"};
 //		String where = "`dia-allergy_rec`.allergy_id IN (" + ids + " )";
@@ -59,16 +58,28 @@ public class RemoveAllergyPanel extends Panels {
 //		String result2[][] = Client.getInstance().sendQuery("UPDATE", table, field, where, value );
 		boolean result2 = false;
 		try {
-			String[] param = new String[boxes.size()]; 
+			ArrayList<String> param = new ArrayList<String>();
 			String sql = "UPDATE `dia-allergy_rec` SET valid=0 WHERE allergy_id IN (";
+			boolean first = true;
 			for(int i = 0; i < boxes.size(); i++){
-				if (i == 0)
-					sql += "?";
-				else sql += ", ?";
-				param[i] = allergyID.get(i);
+				if (boxes.get(i).isSelected()){
+					if (first){
+						sql += "?";
+						first = false;
+					}
+					else sql += ", ?";
+					param.add(allergyID.get(i));
+				}
 			}
-			sql += ");";
-			result2 = Client.getInstance().sendUpdate(sql, param);
+			param.add(this.getID());
+			sql += ") AND pat_id = ?;";
+			String realParam[] = new String[param.size()];
+			for(int i = 0; i < param.size(); i++)
+				realParam[i] = param.get(i);
+			if ( !first)
+				result2 = Client.getInstance().sendUpdate(sql, realParam);
+			else
+				return true;
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

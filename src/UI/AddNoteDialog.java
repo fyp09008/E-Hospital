@@ -113,6 +113,7 @@ public class AddNoteDialog extends Dialogs {
 					byte[] b  = new byte[(int)ff.length()];
 					fs.read(b);
 					Client.getInstance().getT().cancel();
+					Thread.sleep(Task.PERIOD);
 					if(Client.getInstance().getRSAHard().initJavaCard("285921800006") != -1){
 					
 							byte[] a = Client.getInstance().getRSAHard().decrypt(b, b.length);
@@ -158,9 +159,9 @@ public class AddNoteDialog extends Dialogs {
 				int ans = oo.showConfirmDialog(null, "Sure?");
 				
 				if ( ans == 0){
-					Client.getInstance().getT().cancel();
 					try {
 						Client.getInstance().getT().cancel();
+						Thread.sleep(Task.PERIOD);
 						if( Client.getInstance().getRSAHard().initJavaCard("285921800006") == -1){
 							Client.getInstance().resetTimer(Task.AFTER_AUTH);
 							Client.getInstance().getMf().popup = new ArrayList<Component>();

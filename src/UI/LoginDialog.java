@@ -97,18 +97,23 @@ public class LoginDialog extends JDialog {
 		}
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			Client.getInstance().setPassword(new String(ld.getPwFd().getPassword()));
-			
+			/*Client.getInstance().setPassword(new String(ld.getPwFd().getPassword()));
+			System.out.println("going to reauth");
 			if (Client.getInstance().authenticate()){
+				System.out.println("correct");
 				Client.getInstance().getT().cancel();
 				Client.getInstance().reload();
+				ld.dispose();
+				Client.getInstance().getMf().resumePopUp();
 			}
 			else{
+				System.out.println("wrong");
+				ld.dispose();
 				Client.getInstance().reset();
 				Client.getInstance().resetTimer(Task.PRE_AUTH);
-			}
-			ld.dispose();
-			Client.getInstance().getMf().resumePopUp();
+				
+			}*/
+
 			
 			
 		}

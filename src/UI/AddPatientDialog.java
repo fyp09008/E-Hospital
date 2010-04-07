@@ -353,7 +353,7 @@ public class AddPatientDialog extends Dialogs {
 		String day = (String)dayCombo.getSelectedItem();
 		if ( day.length() == 1)
 			day = "0"+day;
-		System.out.println((String)yearCombo.getSelectedItem()+ "-" + month + "-" + day);
+		//System.out.println((String)yearCombo.getSelectedItem()+ "-" + month + "-" + day);
 		return (String)yearCombo.getSelectedItem()+ "-" + month + "-" + day;
 	};
 	/**

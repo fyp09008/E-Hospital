@@ -316,7 +316,6 @@ public class ShowInfoPanel extends Panels {
 		private ShowInfoPanel info = null;
 		public ButtonAction(ShowInfoPanel f){
 			super();
-			System.out.println("in constructor");
 			info = f;
 		}
 		public void actionPerformed(java.awt.event.ActionEvent e) {
