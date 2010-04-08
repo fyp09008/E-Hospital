@@ -63,6 +63,7 @@ public class MainFrame extends JFrame {
 	public final static int ADD = 2;
 	private final static int LOGOUT = 3;
 	public final static int NOTE = 4;
+	public final static int AUTH_OTHER = 5;
 	public JDialog keyboard = null;
 	private ButtonActions ba;
 	public ArrayList<Component> popup = null;
@@ -183,8 +184,10 @@ public class MainFrame extends JFrame {
 				}
 				case VIEW_ALL: { mainPanel.add(new MyPatientPanel()); break;}
 				case SEARCH: { mainPanel.add(new SearchPatientPanel()); break;}
+				case AUTH_OTHER: {mainPanel.add(new AuthPeoplePanel()); break;}
 				case ADD: {break;}
 				case NOTE: {break;}
+				
 			}
 			jContentPane.remove(2);
 			mainPanel.setLayout(new GridLayout());
@@ -249,6 +252,7 @@ public class MainFrame extends JFrame {
 			enableButton(2);
 			add.setEnabled(true);
 		}
+		enableButton(buttons.size()-3);
 		enableButton(buttons.size()-2);
 		enableButton(buttons.size()-1);
 	}
@@ -369,6 +373,13 @@ public class MainFrame extends JFrame {
 		button.addActionListener(ba);
 		buttons.add(button);
 		
+		//icon = createImageIcon("icons/logout.png",
+        //"logout");
+		button = new JButton("auth other");
+		button.setActionCommand(Integer.toString(AUTH_OTHER));
+		button.addActionListener(ba);
+		buttons.add(button);
+		
 		icon = createImageIcon("icons/logout.png",
         "logout");
 		button = new JButton("logout", icon);
@@ -396,6 +407,9 @@ public class MainFrame extends JFrame {
 				Client.getInstance().getMf().changePanel(SEARCH);
 			else if (e.getActionCommand().equals(Integer.toString(NOTE))){
 				new AddNoteDialog(Client.getInstance().getID());
+			}
+			else if (e.getActionCommand().equals(Integer.toString(AUTH_OTHER))){
+				Client.getInstance().getMf().changePanel(AUTH_OTHER);
 			}
 			else
 				new AddPatientDialog();
