@@ -569,7 +569,7 @@ public class EditInfoDialog extends Dialogs {
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					frame.dispose();
 					JOptionPane m = new JOptionPane();
-					Client.getInstance().getMf().addPopUP(o);
+					Client.getInstance().getMf().addPopUP(m);
 					int ans1 = -1;
 					ans1 = m.showConfirmDialog(null, "Record modification succeed! Refresh?");
 					//refresh to specific panel
@@ -583,7 +583,7 @@ public class EditInfoDialog extends Dialogs {
 					}
 				}else {
 					JOptionPane m = new JOptionPane();
-					Client.getInstance().getMf().addPopUP(o);
+					Client.getInstance().getMf().addPopUP(m);
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
 					m.showMessageDialog(null, "Record modification failed!");
 				}

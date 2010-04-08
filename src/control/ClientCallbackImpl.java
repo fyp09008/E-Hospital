@@ -22,8 +22,8 @@ public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCal
 	@Override
 	public void timeout() throws RemoteException {
 
-		if ( Client.getInstance().isConnected())
-			Client.getInstance().getMf().changePanel(-3);
+		//if ( Client.getInstance().isConnected())
+			//Client.getInstance().getMf().changePanel(-3);
 	}
 
 }
