@@ -22,10 +22,11 @@ public class ClientCallbackImpl extends UnicastRemoteObject implements ClientCal
 	@Override
 	public void timeout() throws RemoteException {
 		// TODO Auto-generated method stub
-		System.out.println(Thread.currentThread().getName()+" Timeout Success");
+		//System.out.println(Thread.currentThread().getName()+" Timeout Success");
 		//Client.getInstance().getMf().changePanel(-3);
 		//Client.getInstance().resetTimer(Task.WAIT_REAUTH);
-		Client.getInstance().getMf().changePanel(-3);
+		if ( Client.getInstance().isConnected())
+			Client.getInstance().getMf().changePanel(-3);
 	}
 
 }
