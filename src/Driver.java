@@ -47,6 +47,7 @@ public class Driver {
 		else 
 			serverPath = "localhost";
 		if (selfAuth(serverPath) != 0) {
+			JOptionPane.showMessageDialog(new JFrame(), "The program is not the same.");
 			System.exit(1);
 		}
 		
