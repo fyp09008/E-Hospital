@@ -378,12 +378,16 @@ public class MainFrame extends JFrame {
 		
 		//icon = createImageIcon("icons/logout.png",
         //"logout");
-		button = new JButton("auth other");
+		icon = createImageIcon("icons/auth.png",
+        "password");
+		button = new JButton("auth other",icon);
 		button.setActionCommand(Integer.toString(AUTH_OTHER));
 		button.addActionListener(ba);
 		buttons.add(button);
 		
-		button = new JButton("change pw");
+		icon = createImageIcon("icons/password.png",
+        "password");
+		button = new JButton("change pw",icon);
 		button.setActionCommand(Integer.toString(CHANGE_PW));
 		button.addActionListener(ba);
 		buttons.add(button);

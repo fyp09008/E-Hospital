@@ -52,15 +52,12 @@ public class ChangePwKeyboard extends JPanel {
 		this.setLayout(bl);
 		this.add(new AlphaPad(),BorderLayout.CENTER);
 		this.add(new NumberPad(),BorderLayout.EAST);
-		loginButton = new JButton("Login");
+		loginButton = new JButton("Change Password");
 		loginButton.setPreferredSize(new Dimension(40,20));
 		loginButton.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(new String(relogin.getPwFd(0).getPassword()));
-				System.out.println(new String(relogin.getPwFd(1).getPassword()));
-				System.out.println(new String(relogin.getPwFd(2).getPassword()));
 				if(!(new String(relogin.getPwFd(1).getPassword()).equals(
 						new String(relogin.getPwFd(2).getPassword())))){
 					JOptionPane m = new JOptionPane();
@@ -68,7 +65,18 @@ public class ChangePwKeyboard extends JPanel {
 					//Client.getInstance().getMf().popup = new ArrayList<Component>();
 					m.showMessageDialog(null, "New Passwords Not Match!");
 				}else{
-					
+					boolean result = Client.getInstance().changePassword(new String(relogin.getPwFd(0).getPassword()),
+							new String(relogin.getPwFd(1).getPassword()));
+					if ( result){
+						JOptionPane m = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(m);
+						m.showMessageDialog(null, "Password Changed!");
+					}
+					else{
+						JOptionPane m = new JOptionPane();
+						Client.getInstance().getMf().addPopUP(m);
+						m.showMessageDialog(null, "Password NOT Changed!");
+					}
 				}
 			}
 		});

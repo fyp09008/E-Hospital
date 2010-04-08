@@ -137,10 +137,7 @@ public class ClientAuthHandler extends Handler{
 			} catch (NoSuchAlgorithmException e1) {
 				e1.printStackTrace();
 			}
-		
-			
 
-		        
 		    try {
 		    	//Connector connector = Connector.getInstance();
 				//connector.write((Object) encryptPAES(objToBytes(reqMsg)));
@@ -254,6 +251,72 @@ public class ClientAuthHandler extends Handler{
 		}
 		else 
 			return false;
+	}
+	public boolean changePassword(String name2, String oldPW, String newPW) {
+		try {
+			ah = (AuthHandler)Connector.getInstance().getRegistry().lookup("AuthHandler");
+		} catch (AccessException e2) {
+			JOptionPane.showMessageDialog(null, "Server Unavailable");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Access Exception");
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (RemoteException e2) {
+			JOptionPane.showMessageDialog(null, "Server Unavailable");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Exception");
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (NotBoundException e2) {
+			JOptionPane.showMessageDialog(null, "Server Unavailable");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Not Bound Exception");
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		MessageDigest md = null;
+		byte[] hashedOldPw = null;
+		byte[] hashedNewPw = null;
+		try {
+			md = MessageDigest.getInstance("md5");
+			Client.getInstance().getT().cancel();
+			try {
+				Thread.sleep(Task.PERIOD);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			RSAHardware rsaHard = Client.getInstance().getRSAHard();
+			if (rsaHard.initJavaCard("285921800099") == -1){
+				JOptionPane.showMessageDialog(null, "Java Card cannot be initialized");
+				Connector.getInstance().disconnect();
+				Client.getInstance().resetTimer(Task.AFTER_AUTH);
+				return false;
+			}
+			//logger.debug(this.getClass().getName(),"After initializing jc");
+			//logger.printPlain(this.getClass().getName(), 
+					//"Unsigned password",this.password.getBytes(),this.password);		
+			hashedOldPw = rsaHard.sign(md.digest(oldPW.getBytes()), 
+					md.digest(oldPW.getBytes()).length);
+			hashedNewPw = rsaHard.sign(md.digest(newPW.getBytes()), 
+					md.digest(newPW.getBytes()).length);
+			Client.getInstance().resetTimer(Task.AFTER_AUTH);
+		}catch (NoSuchAlgorithmException e1) {
+			Client.getInstance().resetTimer(Task.AFTER_AUTH);
+			e1.printStackTrace();
+		}
+	    try {
+
+	    	byte[] encryptedPKeyName = encryptPAES(name.getBytes());
+	    	byte[] result = ah.changePassword(encryptedPKeyName, encryptPAES(hashedOldPw),encryptPAES(hashedNewPw));
+	    	Boolean b = (Boolean)this.bytesToObj((decryptPAES(result)));
+	    	//Client.getInstance().resetTimer(Task.AFTER_AUTH);
+	    	if (b)
+	    		return true;
+	    	else 
+	    		return false;
+		 
+	    } catch (Exception e){
+	    	//Client.getInstance().resetTimer(Task.AFTER_AUTH);
+			return false;
+		}
+		    	
 	}
 	
 }
