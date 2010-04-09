@@ -218,5 +218,6 @@ public class Client {
 		return this.aHandler.changePassword(this.getName(),string,string2);
 	}
 
+
 }
 

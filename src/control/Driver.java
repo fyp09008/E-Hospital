@@ -1,3 +1,4 @@
+package control;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -18,7 +19,7 @@ import UI.*;
 import control.*;
 
 public class Driver {
-	
+	public static String serverPath;
 	public static int selfAuth(String serverPath) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -47,7 +48,7 @@ public class Driver {
 	}
 	
 	public static void main(String[] argv){
-		String serverPath = null;
+		serverPath = null;
 		if(argv.length != 0) 
 			serverPath = argv[0];
 		else 
