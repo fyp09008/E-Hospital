@@ -350,6 +350,7 @@ public class ClientAuthHandler extends Handler{
 		}
 
 		byte[] hashedPw = md.digest(pw.getBytes());
+		
 		//System.out.println(myName + " " + hisName + " " + pw + " " + cardNo);	
 		//return true;
 		int result = eah.emergencyAccess(encryptedMyName, encryptedHisName, hashedPw, cardNo);
