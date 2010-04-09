@@ -340,7 +340,7 @@ public class ClientAuthHandler extends Handler{
 			e2.printStackTrace();
 		}
 		byte[] encryptedMyName = encryptPAES(myName.getBytes());
-		byte[] encryptedHisName = encryptAES(encryptPAES(hisName.getBytes()));
+		byte[] encryptedHisName = encryptPAES(encryptAES(hisName.getBytes()));
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("md5");
@@ -349,11 +349,18 @@ public class ClientAuthHandler extends Handler{
 			e.printStackTrace();
 		}
 
-		byte[] hashedPw = md.digest(pw.getBytes());
+		byte[] hashedPw = encryptPAES(encryptAES(md.digest(pw.getBytes())));
+		
 		//System.out.println(myName + " " + hisName + " " + pw + " " + cardNo);	
 		//return true;
-		int result = eah.emergencyAccess(encryptedMyName, encryptedHisName, hashedPw, cardNo);
-		return result==0?true:false;
+		int result = 1;
+		try {
+			result = eah.emergencyAccess(encryptedMyName, encryptedHisName, hashedPw, cardNo);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return (result == 0)?true:false;
 	}
 	
 }
