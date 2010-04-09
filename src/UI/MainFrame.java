@@ -64,6 +64,7 @@ public class MainFrame extends JFrame {
 	private final static int LOGOUT = 3;
 	public final static int NOTE = 4;
 	public final static int AUTH_OTHER = 5;
+	public final static int CHANGE_PW = 6;
 	public JDialog keyboard = null;
 	private ButtonActions ba;
 	public ArrayList<Component> popup = null;
@@ -185,6 +186,7 @@ public class MainFrame extends JFrame {
 				case VIEW_ALL: { mainPanel.add(new MyPatientPanel()); break;}
 				case SEARCH: { mainPanel.add(new SearchPatientPanel()); break;}
 				case AUTH_OTHER: {mainPanel.add(new AuthPeoplePanel()); break;}
+				case CHANGE_PW: {mainPanel.add(new ChangePwPanel()); break;}
 				case ADD: {break;}
 				case NOTE: {break;}
 				
@@ -252,6 +254,7 @@ public class MainFrame extends JFrame {
 			enableButton(2);
 			add.setEnabled(true);
 		}
+		enableButton(buttons.size()-4);
 		enableButton(buttons.size()-3);
 		enableButton(buttons.size()-2);
 		enableButton(buttons.size()-1);
@@ -375,8 +378,17 @@ public class MainFrame extends JFrame {
 		
 		//icon = createImageIcon("icons/logout.png",
         //"logout");
-		button = new JButton("auth other");
+		icon = createImageIcon("icons/auth.png",
+        "password");
+		button = new JButton("auth other",icon);
 		button.setActionCommand(Integer.toString(AUTH_OTHER));
+		button.addActionListener(ba);
+		buttons.add(button);
+		
+		icon = createImageIcon("icons/password.png",
+        "password");
+		button = new JButton("change pw",icon);
+		button.setActionCommand(Integer.toString(CHANGE_PW));
 		button.addActionListener(ba);
 		buttons.add(button);
 		
@@ -410,6 +422,9 @@ public class MainFrame extends JFrame {
 			}
 			else if (e.getActionCommand().equals(Integer.toString(AUTH_OTHER))){
 				Client.getInstance().getMf().changePanel(AUTH_OTHER);
+			}
+			else if (e.getActionCommand().equals(Integer.toString(CHANGE_PW))){
+				Client.getInstance().getMf().changePanel(CHANGE_PW);
 			}
 			else
 				new AddPatientDialog();

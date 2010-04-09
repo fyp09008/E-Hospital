@@ -8,6 +8,7 @@ import java.util.Timer;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 import remote.obj.ProgramAuthHandler;
 
@@ -19,6 +20,11 @@ import control.*;
 public class Driver {
 	
 	public static int selfAuth(String serverPath) {
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 		try {
 			ProKeyGen pkg = new ProKeyGen("common.jar");
 			Registry reg = LocateRegistry.getRegistry(serverPath);

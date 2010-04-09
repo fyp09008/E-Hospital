@@ -211,6 +211,9 @@ public class Client {
 	public boolean isAdd(){
 		return pHandler.isAdd();
 	}
+	public boolean changePassword(String string, String string2) {
+		return this.aHandler.changePassword(this.getName(),string,string2);
+	}
 
 }
 
