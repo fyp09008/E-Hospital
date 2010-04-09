@@ -51,15 +51,10 @@ public class AuthOtherKeyboardPanel extends JPanel {
 		this.setLayout(bl);
 		this.add(new AlphaPad(),BorderLayout.CENTER);
 		this.add(new NumberPad(),BorderLayout.EAST);
-		loginButton = new JButton("Login");
+		loginButton = new JButton("AuthOther");
 		loginButton.setPreferredSize(new Dimension(40,20));
-		loginButton.addActionListener(new ActionListener(){
+		loginButton.addActionListener(new AuthAction());
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
 		
 		this.add(loginButton,BorderLayout.SOUTH);
 		this.setVisible(true);
@@ -222,6 +217,15 @@ class AlphaPad extends JPanel {
 			return secondCol;
 		}
 	}
+	class AuthAction implements ActionListener{
+		
+		public void actionPerformed(ActionEvent e) {
+			int cardNo = Integer.parseInt(((String)relogin.combo.getSelectedItem()));
+			Client.getInstance().authOther(relogin.getNameFd().getText(),
+					new String(relogin.getPwFd().getPassword()), cardNo);
+		}
+		
+	}
 	class VirtualButton extends JButton {
 		String label;
 		public VirtualButton(int i){
@@ -250,11 +254,8 @@ class AlphaPad extends JPanel {
 			label = label.toUpperCase();
 			this.setText(label);
 		}
-	
-	
-	
-		class ButtonAction implements ActionListener{
 
+		class ButtonAction implements ActionListener{
 			public void actionPerformed(ActionEvent arg0) {
 				relogin.getPwFd().setText(new String(relogin.getPwFd().getPassword())+label);
 			}

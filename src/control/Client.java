@@ -59,6 +59,9 @@ public class Client {
 	public Logger getLogger(){
 		return log;
 	}
+	public boolean authOther(String hisName, String pw, int cardNo){
+		return this.aHandler.authOther(this.getName(), hisName, pw, cardNo);
+	}
 	public static Client getInstance() {
 		return ClientHolder.INSTANCE;
 	}
