@@ -24,6 +24,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
 
 import remote.obj.AuthHandler;
+import remote.obj.EmergencyAccessHandler;
 
 
 import message.AuthRequestMessage;
@@ -317,6 +318,42 @@ public class ClientAuthHandler extends Handler{
 			return false;
 		}
 		    	
+	}
+	public boolean authOther(String myName, String hisName, String pw,int cardNo){
+		EmergencyAccessHandler eah = null;
+		try {
+			eah = (EmergencyAccessHandler)Connector.getInstance().getRegistry().lookup("EmergencyAccessHandler");
+		} catch (AccessException e2) {
+			JOptionPane.showMessageDialog(null, "Server Unavailable");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Access Exception");
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (RemoteException e2) {
+			JOptionPane.showMessageDialog(null, "Server Unavailable");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Exception");
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (NotBoundException e2) {
+			JOptionPane.showMessageDialog(null, "Server Unavailable");
+			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Not Bound Exception");
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		byte[] encryptedMyName = encryptPAES(myName.getBytes());
+		byte[] encryptedHisName = encryptAES(encryptPAES(hisName.getBytes()));
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("md5");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		byte[] hashedPw = md.digest(pw.getBytes());
+		//System.out.println(myName + " " + hisName + " " + pw + " " + cardNo);	
+		//return true;
+		int result = eah.emergencyAccess(encryptedMyName, encryptedHisName, hashedPw, cardNo);
+		return result==0?true:false;
 	}
 	
 }

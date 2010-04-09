@@ -6,6 +6,7 @@ import control.*;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -30,6 +31,7 @@ import java.awt.Dimension;
 import javax.swing.JPasswordField;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
+import java.util.Vector;
 
 public class AuthPeoplePanel extends Panels  {
 	//public Keyboard keyboard;
@@ -42,6 +44,7 @@ public class AuthPeoplePanel extends Panels  {
 	private JTextField nameFd = null;
 	private JPasswordField pwFd = null;
 	public JButton loginBtn = null;
+	public JComboBox combo = null;
 	//private Client client = null;
 	//private MainFrame mf = null;
 	public boolean openKeyboard = true;
@@ -91,11 +94,23 @@ public class AuthPeoplePanel extends Panels  {
 	 * 	
 	 * @return javax.swing.JPanel	
 	 */
+	private JComboBox getComboBox(){
+
+		if ( combo == null){
+			Vector<String> v = new Vector<String>();
+			for(int i = 0;i < 10; i++){
+				v.add(Integer.toString(i));
+			}
+			combo = new JComboBox(v);
+		}
+		return combo;
+		
+	}
 	private JPanel getNamePanel() {
 		if (namePanel == null) {
 			nameLab = new JLabel();
 			nameLab.setVerticalAlignment(SwingConstants.CENTER);
-			nameLab.setText("   Name    ");
+			nameLab.setText("Name:Card No.");
 			nameLab.setHorizontalTextPosition(SwingConstants.CENTER);
 			nameLab.setEnabled(true);
 			nameLab.setHorizontalAlignment(SwingConstants.CENTER);
@@ -104,6 +119,7 @@ public class AuthPeoplePanel extends Panels  {
 			namePanel.setPreferredSize(new Dimension(400, 30));
 			namePanel.add(nameLab, BorderLayout.BEFORE_LINE_BEGINS);
 			namePanel.add(getNameFd(), BorderLayout.CENTER);
+			namePanel.add(getComboBox(),BorderLayout.EAST);
 		}
 		return namePanel;
 	}
