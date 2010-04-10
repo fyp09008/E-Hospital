@@ -16,6 +16,7 @@ import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
@@ -221,8 +222,19 @@ class AlphaPad extends JPanel {
 		
 		public void actionPerformed(ActionEvent e) {
 			int cardNo = Integer.parseInt(((String)relogin.combo.getSelectedItem()));
-			Client.getInstance().authOther(relogin.getNameFd().getText(),
+			boolean result = Client.getInstance().authOther(relogin.getNameFd().getText(),
 					new String(relogin.getPwFd().getPassword()), cardNo);
+			if ( result){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"User: " + relogin.getNameFd().getText() 
+						+ "\n Temp Card: " + relogin.combo + "\n Valid for 24 Hours");
+			}
+			else{
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"Unable to authorize " + relogin.getNameFd().getText());
+			}
 		}
 		
 	}
