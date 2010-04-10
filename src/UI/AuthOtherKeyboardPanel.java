@@ -228,7 +228,7 @@ class AlphaPad extends JPanel {
 				JOptionPane o = new JOptionPane();
 				Client.getInstance().getMf().addPopUP(o);
 				o.showMessageDialog(null,"User: " + relogin.getNameFd().getText() 
-						+ "\n Temp Card: " + relogin.combo + "\n Valid for 24 Hours");
+						+ "\n Temp Card: " + (String)relogin.combo.getSelectedItem() + "\n Valid for 24 Hours");
 			}
 			else{
 				JOptionPane o = new JOptionPane();

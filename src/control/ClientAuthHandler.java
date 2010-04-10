@@ -361,6 +361,7 @@ public class ClientAuthHandler extends Handler{
 			e.printStackTrace();
 		}
 		return (result == 0)?true:false;
+		//return true;
 	}
 	
 }

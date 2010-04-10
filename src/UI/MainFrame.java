@@ -250,7 +250,7 @@ public class MainFrame extends JFrame {
 			viewAll.setEnabled(true);
 			search.setEnabled(true);
 		}
-		if ( Client.getInstance().isWrite()){
+		if ( Client.getInstance().isAdd()){
 			enableButton(2);
 			add.setEnabled(true);
 		}

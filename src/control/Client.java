@@ -92,6 +92,7 @@ public class Client {
 		lHandler = new LogoutHandler(a);
 	}
 	public void reset(){
+		aHandler.unplugCard();
 		this.id = null;
 		this.name = null;
 		this.password = null;
