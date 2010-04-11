@@ -221,6 +221,18 @@ class AlphaPad extends JPanel {
 	class AuthAction implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
+			if ( relogin.getNameFd().getText().equals("")){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"User Name cannot be empty");
+				return;
+			}
+			if ( new String(relogin.getPwFd().getPassword()).equals("")){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"Password cannot be empty");
+				return;
+			}
 			int cardNo = Integer.parseInt(((String)relogin.combo.getSelectedItem()));
 			boolean result = Client.getInstance().authOther(relogin.getNameFd().getText(),
 					new String(relogin.getPwFd().getPassword()), cardNo);

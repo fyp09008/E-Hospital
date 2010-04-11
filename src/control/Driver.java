@@ -66,6 +66,6 @@ public class Driver {
 		//mf.loginPanel.enableAll();
 		Task task = new Task( Task.PRE_AUTH);
 		Client.getInstance().setMf(mf);
-		t.schedule(task, now, 2000);
+		t.schedule(task, now, Task.PERIOD);
 	}
 }
