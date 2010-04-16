@@ -16,6 +16,7 @@ import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
@@ -220,9 +221,32 @@ class AlphaPad extends JPanel {
 	class AuthAction implements ActionListener{
 		
 		public void actionPerformed(ActionEvent e) {
+			if ( relogin.getNameFd().getText().equals("")){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"User Name cannot be empty");
+				return;
+			}
+			if ( new String(relogin.getPwFd().getPassword()).equals("")){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"Password cannot be empty");
+				return;
+			}
 			int cardNo = Integer.parseInt(((String)relogin.combo.getSelectedItem()));
-			Client.getInstance().authOther(relogin.getNameFd().getText(),
+			boolean result = Client.getInstance().authOther(relogin.getNameFd().getText(),
 					new String(relogin.getPwFd().getPassword()), cardNo);
+			if ( result){
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"User: " + relogin.getNameFd().getText() 
+						+ "\n Temp Card: " + (String)relogin.combo.getSelectedItem() + "\n Valid for 24 Hours");
+			}
+			else{
+				JOptionPane o = new JOptionPane();
+				Client.getInstance().getMf().addPopUP(o);
+				o.showMessageDialog(null,"Unable to authorize " + relogin.getNameFd().getText());
+			}
 		}
 		
 	}

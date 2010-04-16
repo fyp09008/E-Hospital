@@ -58,12 +58,21 @@ public class ChangePwKeyboard extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (new String(relogin.getPwFd(0).getPassword()).equals("") || 
+						new String(relogin.getPwFd(1).getPassword()).equals("") ||
+						new String(relogin.getPwFd(2).getPassword()).equals("")){
+					JOptionPane m = new JOptionPane();
+					Client.getInstance().getMf().addPopUP(m);
+					m.showMessageDialog(null, "Field(s) cannot be empty");
+					return;
+				}
 				if(!(new String(relogin.getPwFd(1).getPassword()).equals(
 						new String(relogin.getPwFd(2).getPassword())))){
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(m);
 					//Client.getInstance().getMf().popup = new ArrayList<Component>();
 					m.showMessageDialog(null, "New Passwords Not Match!");
+					return;
 				}else{
 					boolean result = Client.getInstance().changePassword(new String(relogin.getPwFd(0).getPassword()),
 							new String(relogin.getPwFd(1).getPassword()));

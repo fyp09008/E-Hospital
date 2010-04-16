@@ -1,3 +1,4 @@
+package control;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -23,7 +24,7 @@ import control.*;
  *
  */
 public class Driver {
-	
+	public static String serverPath;
 	/**
 	 * To submit itself - "common.jar" into the server to authenticate.
 	 * any bit changes in "common.jar" will result failure
@@ -59,13 +60,7 @@ public class Driver {
 	 * @param argv
 	 */
 	public static void main(String[] argv){
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		
-		String serverPath = null;
+		serverPath = null;
 		if(argv.length != 0) 
 			serverPath = argv[0];
 		else 
@@ -81,6 +76,6 @@ public class Driver {
 		MainFrame mf = new MainFrame();
 		Task task = new Task(Task.PRE_AUTH);
 		Client.getInstance().setMf(mf);
-		t.schedule(task, now, 2000);
+		t.schedule(task, now, Task.PERIOD);
 	}
 }

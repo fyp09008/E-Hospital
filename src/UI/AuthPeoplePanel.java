@@ -136,7 +136,7 @@ public class AuthPeoplePanel extends Panels  {
 			nameFd.setFont(new Font("Dialog", Font.BOLD, 14));
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
-			nameFd.setText("test");
+			//nameFd.setText("");
 			//nameFd.setText("test");
 			nameFd.addFocusListener(new FocusListener(){
 				public void focusGained(FocusEvent arg0) {
@@ -178,7 +178,7 @@ public class AuthPeoplePanel extends Panels  {
 			pwFd = new JPasswordField();
 			pwFd.setPreferredSize(new Dimension(100, 20));
 			pwFd.setEnabled(false);
-			pwFd.setText("test");
+			//pwFd.setText("test");
 			pwFd.addFocusListener(new Focus(this));
 		}
 		return pwFd;

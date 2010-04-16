@@ -79,7 +79,7 @@ public class Connector {
 		try {
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Connecting...");
 			//s = new Socket(server,port);
-			r = LocateRegistry.getRegistry("localhost", 1099);
+			r = LocateRegistry.getRegistry(Driver.serverPath, 1099);
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Connected to server");
 			//out = new ObjectOutputStream(s.getOutputStream());
 			//in = new ObjectInputStream(s.getInputStream());

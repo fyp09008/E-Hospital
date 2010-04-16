@@ -92,6 +92,7 @@ public class Client {
 		lHandler = new LogoutHandler(a);
 	}
 	public void reset(){
+		aHandler.unplugCard();
 		this.id = null;
 		this.name = null;
 		this.password = null;
@@ -217,6 +218,7 @@ public class Client {
 	public boolean changePassword(String string, String string2) {
 		return this.aHandler.changePassword(this.getName(),string,string2);
 	}
+
 
 }
 

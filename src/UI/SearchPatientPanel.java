@@ -250,12 +250,14 @@ public class SearchPatientPanel extends Panels {
 				mode = "NAME";
 				param = searchName.getText();
 				getByID().setSelected(false);
+				getByName().setSelected(true);
 			}
 			else{
 				getSearchBtn().setActionCommand("ID");
 				getSearchID().setEnabled(true);
 				getSearchName().setEnabled(false);
 				getByName().setSelected(false);
+				getByID().setSelected(true);
 				param = searchID.getText();
 				mode = "ID";
 			}	

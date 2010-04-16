@@ -16,6 +16,7 @@ import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
@@ -57,6 +58,11 @@ public class SessionKeyboardPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (new String(relogin.getPwFd().getPassword()).equals("")){
+					JOptionPane m = new JOptionPane();
+					Client.getInstance().getMf().addPopUP(m);
+					m.showMessageDialog(null, "Password cannot be empty");
+				}
 				Client.getInstance().setPassword(new String(relogin.getPwFd().getPassword()));
 				
 				if (Client.getInstance().authenticate()){

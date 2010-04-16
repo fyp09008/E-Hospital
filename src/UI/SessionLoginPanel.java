@@ -120,7 +120,7 @@ public class SessionLoginPanel extends LoginPanel  {
 			nameFd.setFont(new Font("Dialog", Font.BOLD, 14));
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
-			nameFd.setText("test");
+			//nameFd.setText("test");
 			//nameFd.setText("test");
 			nameFd.addFocusListener(new FocusListener(){
 				public void focusGained(FocusEvent arg0) {
@@ -162,7 +162,7 @@ public class SessionLoginPanel extends LoginPanel  {
 			pwFd = new JPasswordField();
 			pwFd.setPreferredSize(new Dimension(100, 20));
 			pwFd.setEnabled(false);
-			pwFd.setText("test");
+			//pwFd.setText("test");
 			pwFd.addFocusListener(new Focus(this));
 		}
 		return pwFd;
