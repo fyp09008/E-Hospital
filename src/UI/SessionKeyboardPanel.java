@@ -62,6 +62,7 @@ public class SessionKeyboardPanel extends JPanel {
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(m);
 					m.showMessageDialog(null, "Password cannot be empty");
+					return;
 				}
 				Client.getInstance().setPassword(new String(relogin.getPwFd().getPassword()));
 				
