@@ -17,14 +17,22 @@ import cipher.ProKeyGen;
 import UI.*;
 import control.*;
 
+/**
+ * Main Class that client run
+ * @author Gilbert, chun
+ *
+ */
 public class Driver {
 	
+	/**
+	 * To submit itself - "common.jar" into the server to authenticate.
+	 * any bit changes in "common.jar" will result failure
+	 * @param serverPath
+	 * @return 0 - success, 1 - fail, 2 - server file not found, 4 - client filename changed
+	 * 		   8 - server not found, 16 - server not started
+	 */
 	public static int selfAuth(String serverPath) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		
 		try {
 			ProKeyGen pkg = new ProKeyGen("common.jar");
 			Registry reg = LocateRegistry.getRegistry(serverPath);
@@ -46,7 +54,17 @@ public class Driver {
 		
 	}
 	
+	/**
+	 * Main Method of Client program
+	 * @param argv
+	 */
 	public static void main(String[] argv){
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
 		String serverPath = null;
 		if(argv.length != 0) 
 			serverPath = argv[0];
@@ -57,13 +75,11 @@ public class Driver {
 			System.exit(1);
 		}
 		
-		//SoftCard sd = new SoftCard();
 		Timer t = new Timer();
 		Date now = new Date();
 		Client.getInstance().setT(t);
 		MainFrame mf = new MainFrame();
-		//mf.loginPanel.enableAll();
-		Task task = new Task( Task.PRE_AUTH);
+		Task task = new Task(Task.PRE_AUTH);
 		Client.getInstance().setMf(mf);
 		t.schedule(task, now, 2000);
 	}
