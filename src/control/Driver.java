@@ -57,12 +57,12 @@ public class Driver {
 	
 	/**
 	 * Main Method of Client program
-	 * @param argv
+	 * @param args
 	 */
-	public static void main(String[] argv){
+	public static void main(String[] args){
 		serverPath = null;
-		if(argv.length != 0) 
-			serverPath = argv[0];
+		if(args.length != 0) 
+			serverPath = args[0];
 		else 
 			serverPath = "localhost";
 		if (selfAuth(serverPath) != 0) {
