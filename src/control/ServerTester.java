@@ -44,19 +44,19 @@ public class ServerTester {
 			return (ResultSet) Utility.BytesToObj(c.doFinal(dh.query(username, q, p)));
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTester", e.getMessage());
 		} catch (NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTester", e.getMessage());
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTester", e.getMessage());
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTest", e.getMessage());
 		} catch (BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTest", e.getMessage());
 		}
 		return null;
 	}
@@ -71,24 +71,22 @@ public class ServerTester {
 			byte[] q = c.doFinal(query.getBytes());
 			byte[] p = c.doFinal(Utility.objToBytes(param));
 			dh.update(username, q, p);
-//			c = Cipher.getInstance("aes");
-//			c.init(Cipher.DECRYPT_MODE, sessionKey);
-//			return (ResultSet) Utility.BytesToObj(c.doFinal(dh.query(username, q, p)));
+
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTest", e.getMessage());
 		} catch (NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTest", e.getMessage());
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTest", e.getMessage());
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTest", e.getMessage());
 		} catch (BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTest", e.getMessage());
 		}
 	}
 	
@@ -102,21 +100,7 @@ public class ServerTester {
 			JOptionPane.showMessageDialog(null, "Java Card cannot be initialized");
 		}
 		a = rsaHard.sign(a, a.length);
-//		byte[] b = ah.authenticate(username, a);
-//		if (b != null) {
-//			System.out.println("auth succeed");
-//			if (rsaHard.initJavaCard("285921800006") == -1) {
-//				JOptionPane.showMessageDialog(null, "Java Card cannot be initialized");
-//				return 2;
-//			}
-//			b = rsaHard.decrypt(b, b.length);
-//			sessionKey = new SecretKeySpec(b, "aes");
-//			lomsg = ah.getLoMsg(username);
-//			return 0;
-//		} else {
-//			System.out.print("shit");
-//			return 4;
-//		}
+
 		return 0;
 		
 	}
@@ -136,25 +120,22 @@ public class ServerTester {
 				return 2;
 			}
 			lomsg = rsaHard.sign(lomsg, lomsg.length);
-//			if (ah.logout(username, lomsg)) {
-//				System.out.println("DIU OK!");
-//				return 0;
-//			}
+
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTester", e.getMessage());
 		} catch (NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTester", e.getMessage());
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTester", e.getMessage());
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTester", e.getMessage());
 		} catch (BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("ServerTester", e.getMessage());
 		}
 		
 		return 4;
@@ -166,21 +147,8 @@ public class ServerTester {
 		ClientCallback ccb = new ClientCallbackImpl();
 		reg.bind("ClientCallback", ccb);
 		login(username, pwd);
-//		String SQL = "INSERT INTO allergy (name, description) VALUES (?, ?);";
-//		String[] p = {"Fuck!!! -- ", "Pet Allergy"};
-//		update(SQL, p);
-//		System.out.println(Thread.currentThread().getName()+"Waiting for logout");
-//		Thread.sleep(10000);
-//		System.out.println(Thread.currentThread().getName()+"Waiting for logout");
-		if (logout(username, lomsg) != 0) {
-			System.out.println("logout failed");
-		} else {
-			System.out.println("logout successful");
-		}
-		if (UnicastRemoteObject.unexportObject(reg, true)) {
-			System.out.println();
-		}
-		System.out.println(Thread.activeCount());
+
+
 		System.exit(0);
 	}
 	

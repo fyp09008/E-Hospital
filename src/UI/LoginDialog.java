@@ -24,11 +24,8 @@ import control.Client;
 import control.Task;
 
 public class LoginDialog extends JDialog {
-	//private JTextField nameFld = null;
 	private JPasswordField pwFld = null;
-	//private Client client = null;
 	private JButton loginBtn = null;
-	//private MainFrame parent = null;
 	private JPanel btnPanel = null;
 	private JPanel fldPanel = null;
 
@@ -43,10 +40,7 @@ public class LoginDialog extends JDialog {
 		return fldPanel;
 	}
 	public LoginDialog(){
-		//super();
 		super(Client.getInstance().getMf(),true);
-		//this.parent = parent;
-		//this.client = c;
 		initialize();
 	}
 	public JButton getLoginBtn() {
@@ -65,17 +59,10 @@ public class LoginDialog extends JDialog {
 		return btnPanel;
 	}
 	public void initialize(){
-		//this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		this.setLocationRelativeTo(Client.getInstance().getMf());
 		this.setTitle("CLOSE it AFTER unplugging card");
 		this.setSize(new Dimension(600,180));
 		this.setLayout(new BorderLayout());
-		//this.add(new JLabel("Name"));
-		//this.add(getNameFld());
-		//this.add(new JLabel("Password"));
-		//this.add(getPwFld());
-		
-		//this.add(warning,BorderLayout.NORTH);
 		
 		this.add(new KeyboardPanel(this),BorderLayout.SOUTH);
 		this.add(getFldPanel(),BorderLayout.CENTER);
@@ -96,26 +83,7 @@ public class LoginDialog extends JDialog {
 			this.ld = ld;
 		}
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			/*Client.getInstance().setPassword(new String(ld.getPwFd().getPassword()));
-			System.out.println("going to reauth");
-			if (Client.getInstance().authenticate()){
-				System.out.println("correct");
-				Client.getInstance().getT().cancel();
-				Client.getInstance().reload();
-				ld.dispose();
-				Client.getInstance().getMf().resumePopUp();
-			}
-			else{
-				System.out.println("wrong");
-				ld.dispose();
-				Client.getInstance().reset();
-				Client.getInstance().resetTimer(Task.PRE_AUTH);
-				
-			}*/
 
-			
-			
 		}
 		
 	}

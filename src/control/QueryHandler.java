@@ -80,7 +80,7 @@ public class QueryHandler extends Handler {
 				}
 			
 				query = query + " where " + whereClause;
-				System.out.println(query);
+				Client.getInstance().getLogger().debug(this.getClass().getName(),query);
 				break;
 			}
 			case TYPE_INSERT:{
@@ -146,7 +146,7 @@ public class QueryHandler extends Handler {
 					return RSparse(rs);
 				} catch (SQLException e) {
 				// TODO Auto-generated catch block
-					e.printStackTrace();
+					Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 				}
 			}
 			else if (reqmsg instanceof UpdateResponseMessage)
@@ -169,10 +169,10 @@ public class QueryHandler extends Handler {
 				ByteArrayInputStream(rawResultSet)).readObject();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		return rs;
 	}

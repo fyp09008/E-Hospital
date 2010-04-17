@@ -32,7 +32,6 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 
 public class LoginPanel extends Panels  {
-	//public Keyboard keyboard;
 	private static final long serialVersionUID = 1L;
 	private JPanel namePanel = null;
 	private JPanel pwPanel = null;
@@ -42,15 +41,11 @@ public class LoginPanel extends Panels  {
 	private JTextField nameFd = null;
 	private JPasswordField pwFd = null;
 	public JButton loginBtn = null;
-	//private Client client = null;
-	//private MainFrame mf = null;
 	public boolean openKeyboard = true;
 	public LoginPanel(int i){super();}
 	public LoginPanel() {
 		// TODO Auto-generated constructor stub
 		super();
-		//this.mf = mf;
-		//client = c;
 		initialize();
 	}
 
@@ -121,7 +116,6 @@ public class LoginPanel extends Panels  {
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
 			nameFd.setText("----- Insert your card -----");
-			//nameFd.setText("test");
 			nameFd.addFocusListener(new FocusListener(){
 				public void focusGained(FocusEvent arg0) {
 					nameFd.setText("");
@@ -162,7 +156,6 @@ public class LoginPanel extends Panels  {
 			pwFd = new JPasswordField();
 			pwFd.setPreferredSize(new Dimension(100, 20));
 			pwFd.setEnabled(false);
-			//pwFd.setText("test");
 			pwFd.addFocusListener(new Focus(this));
 		}
 		return pwFd;
@@ -179,7 +172,6 @@ public class LoginPanel extends Panels  {
 			loginBtn.setText("Login");
 			loginBtn.setEnabled(true);
 			loginBtn.addActionListener(new LoginAction(this));
-			//loginBtn.addKeyListener(new KeyAction(this));
 		}
 		return loginBtn;
 	}
@@ -191,14 +183,11 @@ public class LoginPanel extends Panels  {
 	}
 	public void enableAll(){
 		pwFd.setEnabled(true);
-		//nameFd.setText("");
 		nameFd.setEnabled(true);
 		loginBtn.setEnabled(true);
 	}
 	public void disableAll(){
-		//System.out.println("disable all");
 		pwFd.setEnabled(false);
-		//nameFd.setText("---------- Insert your card ----------");
 		nameFd.setEnabled(false);
 		loginBtn.setEnabled(false);
 	}
@@ -228,7 +217,6 @@ public class LoginPanel extends Panels  {
 		// TODO Auto-generated method stub
 			if ( openKeyboard){
 				Keyboard keyboard = new Keyboard(lp);
-				//keyboard.setLocation(100,500);
 			}
 			else
 				openKeyboard = true;

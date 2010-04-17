@@ -24,13 +24,11 @@ public class BottomPanel extends JPanel{
 		this.setBorder(blackline);
 		this.setLayout(new GridLayout(1,4));
 		this.setBackground(Color.WHITE);
-		//this.setSize(20,20);
 		this.setPreferredSize(new Dimension(20,25));
 		this.setVisible(true);
 		personal = new JLabel("           User: ");
 		privilege = new JLabel("Privileges: ");
 		status = new JLabel("Status:   Logout");
-		//this.add(new JLabel());
 		this.add(personal);
 		this.add(privilege);
 		this.add(status);

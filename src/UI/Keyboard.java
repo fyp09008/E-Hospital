@@ -24,18 +24,14 @@ import control.Client;
 import control.Task;
 
 public class Keyboard extends JDialog {
-	//private static final int AUTH = 0;
-	//private static final int RE_AUTH = 1;
 	private int mode;
 	LoginPanel login ;
 	
-	//LoginDialog relogin;
 	
 	JButton loginButton;
 	
 	public Keyboard(LoginPanel lp){
 		super(Client.getInstance().getMf(),true);
-		//mode = mode;
 		this.setTitle("Virtual Keyboard");
 		this.addWindowListener(new CloseAction());
 		login = lp;

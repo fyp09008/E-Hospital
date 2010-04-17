@@ -41,12 +41,9 @@ public class AddNoteDialog extends Dialogs {
 	private JButton cancel = null;
 	private Actions actions;
 	private BufferedReader fr = null;
-	//private File f = null;
 	private PrintStream ps;
-	//private RSAHardware rsaHard;
 	public AddNoteDialog(String pid){
 		super();
-		//System.out.println(pid);
 		this.setID(pid);
 		initialize();
 	}
@@ -55,7 +52,6 @@ public class AddNoteDialog extends Dialogs {
 			done = new JButton("Done");
 			done.setActionCommand("DONE");
 			done.addActionListener(actions);
-			
 		}
 		return done;
 	}
@@ -81,7 +77,6 @@ public class AddNoteDialog extends Dialogs {
 
 		actions = new Actions(this);
 
-		// TODO Auto-generated method stub
 		
 		this.setTitle("Your private note");
 		this.setSize(400,300);
@@ -106,7 +101,6 @@ public class AddNoteDialog extends Dialogs {
 				file = new File("notes/"+getID()+".dat");
 				if ( !file.exists() || !file.isFile())
 					file.createNewFile();
-				//fr = new BufferedReader(new InputStreamReader(new FileInputStream("notes/"+getID()+".dat")));
 				FileInputStream fs = new FileInputStream("notes/"+getID()+".dat");
 				File ff = new File("notes/"+getID()+".dat");
 				if ( ff.length() != 0){
@@ -115,18 +109,12 @@ public class AddNoteDialog extends Dialogs {
 					Client.getInstance().getT().cancel();
 					Thread.sleep(Task.PERIOD);
 					if(Client.getInstance().getRSAHard().initJavaCard("285921800006") != -1){
-					
-							byte[] a = Client.getInstance().getRSAHard().decrypt(b, b.length);
-					
-						//Client.getInstance().resetTimer(Task.AFTER_AUTH);
-							String pp = new String(a);
-							text.setText(pp);
-			
-						
-						//Client.getInstance().resetTimer(Task.AFTER_AUTH);
+						byte[] a = Client.getInstance().getRSAHard().decrypt(b, b.length);
+				
+						String pp = new String(a);
+						text.setText(pp);
 					}
 					else{
-						//Client.getInstance().resetTimer(Task.AFTER_AUTH);
 						JOptionPane o = new JOptionPane();
 						Client.getInstance().getMf().addPopUP(o);
 						o.showMessageDialog(null,"Card is dead");

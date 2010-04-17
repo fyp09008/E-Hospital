@@ -34,7 +34,6 @@ import java.awt.BorderLayout;
 import java.util.Vector;
 
 public class AuthPeoplePanel extends Panels  {
-	//public Keyboard keyboard;
 	private static final long serialVersionUID = 1L;
 	private JPanel namePanel = null;
 	private JPanel pwPanel = null;
@@ -45,15 +44,11 @@ public class AuthPeoplePanel extends Panels  {
 	private JPasswordField pwFd = null;
 	public JButton loginBtn = null;
 	public JComboBox combo = null;
-	//private Client client = null;
-	//private MainFrame mf = null;
 	public boolean openKeyboard = true;
 	public AuthPeoplePanel(int i){super();}
 	public AuthPeoplePanel() {
 		// TODO Auto-generated constructor stub
 		super();
-		//this.mf = mf;
-		//client = c;
 		initialize();
 	}
 
@@ -86,7 +81,6 @@ public class AuthPeoplePanel extends Panels  {
 		this.add(getPwPanel(), gridBagConstraints9);
 		this.add(welcomeLab, gridBagConstraints);
 		this.add(new AuthOtherKeyboardPanel(this), gridBagConstraints10);
-		//this.disableAll();
 	}
 
 	/**
@@ -136,8 +130,6 @@ public class AuthPeoplePanel extends Panels  {
 			nameFd.setFont(new Font("Dialog", Font.BOLD, 14));
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
-			//nameFd.setText("");
-			//nameFd.setText("test");
 			nameFd.addFocusListener(new FocusListener(){
 				public void focusGained(FocusEvent arg0) {
 					nameFd.setText("");
@@ -178,7 +170,6 @@ public class AuthPeoplePanel extends Panels  {
 			pwFd = new JPasswordField();
 			pwFd.setPreferredSize(new Dimension(100, 20));
 			pwFd.setEnabled(false);
-			//pwFd.setText("test");
 			pwFd.addFocusListener(new Focus(this));
 		}
 		return pwFd;
@@ -194,8 +185,6 @@ public class AuthPeoplePanel extends Panels  {
 			loginBtn = new JButton();
 			loginBtn.setText("Login");
 			loginBtn.setEnabled(true);
-			//loginBtn.addActionListener(new LoginAction(this));
-			//loginBtn.addKeyListener(new KeyAction(this));
 		}
 		return loginBtn;
 	}
@@ -207,14 +196,11 @@ public class AuthPeoplePanel extends Panels  {
 	}
 	public void enableAll(){
 		pwFd.setEnabled(true);
-		//nameFd.setText("");
 		nameFd.setEnabled(true);
 		loginBtn.setEnabled(true);
 	}
 	public void disableAll(){
-		//System.out.println("disable all");
 		pwFd.setEnabled(false);
-		//nameFd.setText("---------- Insert your card ----------");
 		nameFd.setEnabled(false);
 		loginBtn.setEnabled(false);
 	}
@@ -232,7 +218,6 @@ public class AuthPeoplePanel extends Panels  {
 					Client.getInstance().getMf().changePanel(-1);
 				}
 				else {}
-			//}
 		}
 	}
 	class Focus implements FocusListener{

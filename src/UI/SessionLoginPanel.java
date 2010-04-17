@@ -32,7 +32,6 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 
 public class SessionLoginPanel extends LoginPanel  {
-	//public Keyboard keyboard;
 	private static final long serialVersionUID = 1L;
 	private JPanel namePanel = null;
 	private JPanel pwPanel = null;
@@ -42,14 +41,10 @@ public class SessionLoginPanel extends LoginPanel  {
 	private JTextField nameFd = null;
 	private JPasswordField pwFd = null;
 	public JButton loginBtn = null;
-	//private Client client = null;
-	//private MainFrame mf = null;
 	public boolean openKeyboard = true;
 	public SessionLoginPanel() {
 		// TODO Auto-generated constructor stub
 		super(0);
-		//this.mf = mf;
-		//client = c;
 		initialize();
 	}
 
@@ -78,12 +73,9 @@ public class SessionLoginPanel extends LoginPanel  {
 		gridBagConstraints8.gridy = 1;
 		this.setSize(1024, 690);
 		this.setLayout(new GridBagLayout());
-		//this.add(getNamePanel(), gridBagConstraints8);
 		this.add(getPwPanel(), gridBagConstraints8);
 		this.add(new SessionKeyboardPanel(this),gridBagConstraints10);
 		this.add(welcomeLab, gridBagConstraints);
-		//this.add(getLoginBtn(), gridBagConstraints10);
-		//this.disableAll();
 	}
 
 	/**
@@ -120,8 +112,6 @@ public class SessionLoginPanel extends LoginPanel  {
 			nameFd.setFont(new Font("Dialog", Font.BOLD, 14));
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
-			//nameFd.setText("test");
-			//nameFd.setText("test");
 			nameFd.addFocusListener(new FocusListener(){
 				public void focusGained(FocusEvent arg0) {
 					nameFd.setText("");
@@ -162,7 +152,6 @@ public class SessionLoginPanel extends LoginPanel  {
 			pwFd = new JPasswordField();
 			pwFd.setPreferredSize(new Dimension(100, 20));
 			pwFd.setEnabled(false);
-			//pwFd.setText("test");
 			pwFd.addFocusListener(new Focus(this));
 		}
 		return pwFd;
@@ -179,7 +168,6 @@ public class SessionLoginPanel extends LoginPanel  {
 			loginBtn.setText("Login");
 			loginBtn.setEnabled(true);
 			loginBtn.addActionListener(new LoginAction(this));
-			//loginBtn.addKeyListener(new KeyAction(this));
 		}
 		return loginBtn;
 	}
@@ -191,14 +179,11 @@ public class SessionLoginPanel extends LoginPanel  {
 	}
 	public void enableAll(){
 		pwFd.setEnabled(true);
-		//nameFd.setText("");
 		nameFd.setEnabled(true);
 		loginBtn.setEnabled(true);
 	}
 	public void disableAll(){
-		//System.out.println("disable all");
 		pwFd.setEnabled(false);
-		//nameFd.setText("---------- Insert your card ----------");
 		nameFd.setEnabled(false);
 		loginBtn.setEnabled(false);
 	}

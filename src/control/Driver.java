@@ -41,15 +41,15 @@ public class Driver {
 			return pah.authProgram(pkg.getNo(), pkg.getProgramKey().getEncoded());
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(new JFrame(), "The common.jar is not found. Please don't rename the program.");
-			e.printStackTrace();
+			//Client.getInstance().getLogger().debug("Driver", e.getMessage());
 			return 4;
 		} catch (RemoteException e) {
 			JOptionPane.showMessageDialog(new JFrame(), "The server is unreachable. Please check your network connection.");
-			e.printStackTrace();
+			//Client.getInstance().getLogger().debug("Driver", e.getMessage());
 			return 8;
 		} catch (NotBoundException e) {
 			JOptionPane.showMessageDialog(new JFrame(), "The server is unreachable or is not started yet. Please check your network connection.");
-			e.printStackTrace();
+			//Client.getInstance().getLogger().debug("Driver", e.getMessage());
 			return 16;
 		}
 		

@@ -21,7 +21,6 @@ import control.Client;
 //Add treatment requires Add privilege
 public class AddTreatmentDialog extends Dialogs {
 	
-	//private MainFrame mf = null;
 	private JPanel btnPanel = null;
 	private JButton done = null;
 	private JButton cancel = null;
@@ -104,17 +103,15 @@ public class AddTreatmentDialog extends Dialogs {
 					String[] table = {"treatment"};
 					String[] field = {"id","pid","pic","description","date_of_issue"};
 					String[] values = {atd.getID(),Client.getInstance().getID(),getTextArea().getText()};
-//					String[][] result = Client.getInstance().sendQuery("INSERT", table, field, null, values);
 					boolean result = false;
 					try {
-						//System.out.println(values);
 						result = Client.getInstance().sendUpdate("INSERT INTO treatment (pid, pic, description, date_of_issue) VALUES (?,?,?,CURDATE());", values);
 					} catch (RemoteException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 					} catch (NotBoundException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 					}
 					if(result){
 						Client.getInstance().getMf().popup = new ArrayList<Component>();

@@ -23,7 +23,6 @@ public class Task extends TimerTask{
 	public static final int WAIT_REAUTH = 2;
 	public static final int WAIT_SESSION = 3;
 	private Timer t;
-	//private MainFrame mf;
 	private int mode;
 	public static final int PERIOD = 1000;
 	
@@ -78,20 +77,15 @@ public class Task extends TimerTask{
 	            {
 	            	case PRE_AUTH:{
 	            		Client.getInstance().getMf().loginPanel.enableAll();
-	            		//Client.getInstance().getMf().resumePopUp();
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
 	    	            if ( Client.getInstance().getMf().keyboard != null){
-	    	            	//if ( ! (Client.getInstance().getMf().keyboard instanceof SessionKeyboard))
 	    	            	Client.getInstance().getMf().keyboard.dispose();
 	    	            }
-	    	            //System.out.println("haha");
 	            		break;}
 	            	case WAIT_REAUTH:{
-	            		System.out.println("yau card in wait reauth");
 	            		ld = new LoginDialog();
-	            		//Client.getInstance().re_login();
 	            		break;
 	            	}
 	
@@ -107,7 +101,6 @@ public class Task extends TimerTask{
 	            		break;
 	            	}
 	            	case AFTER_AUTH:{
-	            		System.out.println("no card in after auth");
 	            		Client.getInstance().getMf().changePanel(-2);
 	            		break;
 	            	}
@@ -121,8 +114,6 @@ public class Task extends TimerTask{
 	
 	            }
 	       }
-	       
-      	   
      }
 
 	}

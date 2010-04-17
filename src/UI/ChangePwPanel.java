@@ -34,36 +34,24 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 
 public class ChangePwPanel extends Panels  {
-	//public Keyboard keyboard;
 	public int selected = 0;
 	private static final long serialVersionUID = 1L;
 	private JPanel namePanel = null;
-	//private JPanel pwPanel = null;
 	private JLabel nameLab = null;
-	//private JLabel pwLab = null;
 	private JLabel welcomeLab = null;
 	private JTextField nameFd = null;
-	//private JPasswordField pwFd = null;
 	public JButton loginBtn = null;
 	private JPasswordField pwFd[] = null;
 	private JPanel pwPanel[] = null;
 	private JLabel pwLab[] = null;
 	private JRadioButton radio[] = null;
 	private RadioActions ra =  null;
-	//private JLabel newPwLab = null;
-	//private JLabel newPwLab1 = null;
-	//private JPasswordField newPwFd = null;
-	//private JPasswordField newPwFd1 = null;
-	//private JPanel newPwPanel = null;
-	//private JPanel newPwPanel1 = null;
 	
 	public boolean openKeyboard = true;
 	public ChangePwPanel(int i){super();}
 	public ChangePwPanel() {
 		// TODO Auto-generated constructor stub
 		super();
-		//this.mf = mf;
-		//client = c;
 		initialize();
 	}
 
@@ -99,13 +87,11 @@ public class ChangePwPanel extends Panels  {
 		gridBagConstraints8.gridy = 1;
 		this.setSize(1024, 690);
 		this.setLayout(new GridBagLayout());
-		//this.add(getNamePanel(), gridBagConstraints8);
 		this.add(getPwPanel(0), gridBagConstraints8);
 		this.add(getPwPanel(1),gridBagConstraints9);
 		this.add(welcomeLab, gridBagConstraints);
 		this.add(getPwPanel(2), gridBagConstraints10);
 		this.add(new ChangePwKeyboard(this),gridBagConstraints11);
-		//this.disableAll();
 	}
 
 	/**
@@ -155,7 +141,6 @@ public class ChangePwPanel extends Panels  {
 			nameFd.setEditable(true);
 			nameFd.setHorizontalAlignment(SwingConstants.CENTER);
 			nameFd.setText("test");
-			//nameFd.setText("test");
 			nameFd.addFocusListener(new FocusListener(){
 				public void focusGained(FocusEvent arg0) {
 					nameFd.setText("");
@@ -202,11 +187,7 @@ public class ChangePwPanel extends Panels  {
 		if (pwFd[i] == null) {
 			pwFd[i] = new JPasswordField();
 			pwFd[i].setPreferredSize(new Dimension(100, 20));
-			//if ( i != 0)
-				pwFd[i].setEnabled(false);
-			//pwFd[i].setEditable(false);
-			//pwFd[i].setText("");
-			//pwFd.addFocusListener(new Focus(this));
+			pwFd[i].setEnabled(false);
 		}
 		return pwFd[i];
 	}
@@ -221,8 +202,6 @@ public class ChangePwPanel extends Panels  {
 			loginBtn = new JButton();
 			loginBtn.setText("Login");
 			loginBtn.setEnabled(true);
-			//loginBtn.addActionListener(new LoginAction(this));
-			//loginBtn.addKeyListener(new KeyAction(this));
 		}
 		return loginBtn;
 	}
@@ -235,15 +214,12 @@ public class ChangePwPanel extends Panels  {
 	public void enableAll(){
 		for(int i =0;i < 3; i ++)
 			pwFd[i].setEnabled(true);
-		//nameFd.setText("");
 		nameFd.setEnabled(true);
 		loginBtn.setEnabled(true);
 	}
 	public void disableAll(){
-		//System.out.println("disable all");
 		for(int i =0;i < 3; i ++)
 			pwFd[i].setEnabled(false);
-		//nameFd.setText("---------- Insert your card ----------");
 		nameFd.setEnabled(false);
 		loginBtn.setEnabled(false);
 	}
@@ -278,16 +254,10 @@ public class ChangePwPanel extends Panels  {
 			switch(i){
 			case 0:	{ radio[0].setSelected(true); radio[1].setSelected(false); 
 						radio[2].setSelected(false); selected = 0; break;}
-						//pwFd[0].setEnabled(true); pwFd[1].setEnabled(false);
-						//pwFd[2].setEnabled(false); break;}
 			case 1:	{ radio[1].setSelected(true); radio[0].setSelected(false); 
 					radio[2].setSelected(false); selected = 1; break;}
-					//pwFd[1].setEnabled(true); pwFd[0].setEnabled(false);
-					//pwFd[2].setEnabled(false); break;}
 			case 2:	{ radio[2].setSelected(true); radio[1].setSelected(false); 
 					radio[0].setSelected(false); selected = 2; break;}
-					//pwFd[2].setEnabled(true); pwFd[1].setEnabled(false);
-					//pwFd[0].setEnabled(false); break;}
 			default: break;
 			}
 		}

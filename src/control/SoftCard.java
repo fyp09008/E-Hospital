@@ -44,7 +44,6 @@ public class SoftCard extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			if (arg0.getActionCommand().equals("in")){
-				//System.out.println("FUCK");
 				isPlug = true;
 			}
 			else{

@@ -25,10 +25,7 @@ import control.Client;
 import control.Task;
 
 public class AuthOtherKeyboardPanel extends JPanel {
-	//private static final int AUTH = 0;
-	//private static final int RE_AUTH = 1;
 	private int mode;
-	//LoginPanel login ;
 	
 	AuthPeoplePanel relogin;
 	
@@ -36,9 +33,6 @@ public class AuthOtherKeyboardPanel extends JPanel {
 	
 	public AuthOtherKeyboardPanel(AuthPeoplePanel lp){
 		super();
-		//super(Client.getInstance().getMf(),true);
-		//mode = mode;
-		//this.addWindowListener(new CloseAction());
 		relogin = lp;
 		initialize();	
 	}

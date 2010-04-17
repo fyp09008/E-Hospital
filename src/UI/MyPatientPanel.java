@@ -32,21 +32,16 @@ public class MyPatientPanel extends Panels {
 	
 	private JScrollPane[] jScrollPane = null;
 	private JTabbedPane tabPanel = null;
-	//private JPanel goPanel = null;
 	private JPanel upPanel = null;
 	private JPanel showPanel = null;
-	//private JButton editBtn = null;
-	//private JPanel jPanel = null;
 	private JTable[] tables = null;
 	private static int TABLENUM = 7;
 	private JLabel tempLab = null;
 	public ShowInfoPanel showInfo = null; 
 	ListSelectionModel[] listSelectionModel;  //  @jve:decl-index=0:
-	//private MainFrame mf = null;
 	
 	public MyPatientPanel(){
 		super();
-		//this.mf = mf;
 		initTables();
 		initialize();	
 	}
@@ -62,8 +57,6 @@ public class MyPatientPanel extends Panels {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setSize(1024, 680);		
         this.add(getUpPanel(), null);
-        //System.out.println("Finsh");
-        //this.add(getGoPanel(),null);
 	}
 
 	/**
@@ -76,7 +69,6 @@ public class MyPatientPanel extends Panels {
 			tabPanel = new JTabbedPane();
 			tabPanel.setPreferredSize(new Dimension(3, 400));
 			tabPanel.setFont(new Font("Dialog", Font.BOLD, 22));
-			//initTables();
 			jScrollPane = getJScrollPane();
 			tabPanel.addTab("A-D", jScrollPane[0]);
 			tabPanel.addTab("E-H", jScrollPane[1]);
@@ -85,34 +77,27 @@ public class MyPatientPanel extends Panels {
 			tabPanel.addTab("Q-T", jScrollPane[4]);
 			tabPanel.addTab("U-X", jScrollPane[5]);
 			tabPanel.addTab("Y-etc", jScrollPane[6]);
-
-			
 		}
 		return tabPanel;
 	}
 	
 	private JScrollPane[] getJScrollPane() {
-		//System.out.println("In jscrollpane");
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane[TABLENUM];
 			
 			for ( int i = 0 ;i < TABLENUM; i++){
 				jScrollPane[i] = new JScrollPane();
 				jScrollPane[i].setViewportView(tables[i]);
-				//System.out.println(i + "is done");
 			}
 		}
 		return jScrollPane;
 	}
 	private JPanel getUpPanel() {
-		//showInfo = new ShowInfo();
 		if (upPanel == null) {
 			upPanel = new JPanel();
 			upPanel.setLayout(new BorderLayout());
 			upPanel.add(getShowPanel(),BorderLayout.EAST);
 			upPanel.add(getTabPanel(),BorderLayout.CENTER);
-			
-			//upPanel.setPreferredSize(new Dimension(5, 400));
 		}
 		return upPanel;
 	}
@@ -135,12 +120,10 @@ public class MyPatientPanel extends Panels {
 			showInfo = new ShowInfoPanel(MainFrame.MY_PATIENT_LIST);
 			showPanel.add(showInfo,BorderLayout.CENTER);
 		}
-		//System.out.println("OK");
 		return showPanel;
 	}
 
 	private void initTables(){
-		//System.out.println("firstline of initTable()");
 		/*
 		 * 0 = A-D
 		 * 1 = E-H
@@ -151,22 +134,7 @@ public class MyPatientPanel extends Panels {
 		 * 6 = Y-etc
 		 */
 		tables = new JTable[TABLENUM];
-		/*
-		String[] field = {"pid","name"};
-		String[] table = {"Patient_personal"};
-		String[] where = new String[TABLENUM];
-		//System.out.println("before where");
-		//where clauses
-		String allWhere = "(pid in ( SELECT pid FROM treatment where pic = " + Client.getInstance().getID()
-					+ ") or pid in ( SELECT pid from patient_personal where pic = " + Client.getInstance().getID() + " )) ";
-		where[0] = allWhere + " AND " + "name rlike '^[abcd]' ORDER BY name";
-		where[1] = allWhere + " AND " + "name rlike '^[efgh]' ORDER BY name";
-		where[2] = allWhere + " AND " + "name rlike '^[ijkl]' ORDER BY name";
-		where[3] = allWhere + " AND " + "name rlike '^[mnop]' ORDER BY name";
-		where[4] = allWhere + " AND " + "name rlike '^[qrst]' ORDER BY name";
-		where[5] = allWhere + " AND " + "name rlike '^[uvwx]' ORDER BY name";
-		where[6] = allWhere + " AND " + "name rlike '^[^abcdefghijklmnopqrstuvwx]' ORDER BY name";
-		*/
+
 		//end of making where clauses
 		String[][] param = new String[TABLENUM][2];
 		param[0][1] = "^[abcd]";
@@ -179,8 +147,6 @@ public class MyPatientPanel extends Panels {
 	
 		String[] column = {"ID","Name"};
 		listSelectionModel = new ListSelectionModel[TABLENUM];
-		//System.out.println("before send query");
-		//String p[] = {"1","^[abcd]"};
 		for ( int i = 0; i < TABLENUM; i++){
 			param[i][0] = Client.getInstance().getID();
 			String temp[][] = null;
@@ -189,29 +155,22 @@ public class MyPatientPanel extends Panels {
 						" where patient_personal.pic = ?  AND name RLIKE ? GROUP BY name",param[i]);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			} catch (NotBoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			}
-			//if ( temp != null)
 			if ( temp != null){
 				tables[i] = new JTable(temp,column);
-			//else{
-				//String[][] temp2 = {{"temp","temp"}};
-				//tables[i] = new JTable(temp2,column);
-			//}
-			//System.out.println("after sql");
 				tables[i].setRowSelectionAllowed(true);
 				listSelectionModel[i] = tables[i].getSelectionModel();
 				listSelectionModel[i].addListSelectionListener(new SharedListSelectionHandler(tables[i]));
 				tables[i].setSelectionModel(listSelectionModel[i]);
 			}
-			else
-				System.out.println("all null");
+			else{}
 		}
 
 		
@@ -228,7 +187,6 @@ public class MyPatientPanel extends Panels {
 		   }
 	        public void valueChanged(ListSelectionEvent e) { 
 	            ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-	           // tempLab.setText(lsm.)         
                 int minIndex = lsm.getMinSelectionIndex();
                 int maxIndex = lsm.getMaxSelectionIndex();
                 for (int i = minIndex; i <= maxIndex; i++) {

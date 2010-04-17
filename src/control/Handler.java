@@ -50,10 +50,10 @@ public class Handler {
 			byte [] data = bos.toByteArray();
 			return data;
 		} catch (NotSerializableException e){
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			return null;
 		}catch (IOException e) {
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} return null;
 	}
 	
@@ -67,9 +67,9 @@ public class Handler {
 			bis.close();
 			return obj;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} 
 	    return null;
 	}
@@ -93,21 +93,21 @@ public class Handler {
 			byte[] ciphertext = cipher.doFinal(plaintext);
 			return ciphertext;
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			
 		} catch (NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		return null;
 		
@@ -122,21 +122,21 @@ public class Handler {
 			return plaintext;
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			
 		} catch (NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		return null;
 		
@@ -151,21 +151,21 @@ public class Handler {
 			return ciphertext;
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			
 		} catch (NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		return null;
 		
@@ -180,21 +180,21 @@ public class Handler {
 			return plaintext;
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			
 		} catch (NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (BadPaddingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		return null;
 		

@@ -20,7 +20,6 @@ public class Panels extends JPanel implements Cloneable{
 	}
 	public void share(){
 		this.setLayout(new BorderLayout());
-		//this.add(new JLabel("fuck"),BorderLayout.SOUTH);
 	}
 	public Object clone(){
 		return this;

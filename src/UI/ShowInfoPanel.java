@@ -62,14 +62,12 @@ public class ShowInfoPanel extends Panels {
 	private String[][] result = null; 
 	private ButtonAction bc;
 	private int panelToRefresh;
-	//private MainFrame mf = null;
 	/**
 	 * This method initializes 
 	 * 
 	 */
 	public ShowInfoPanel(int panel) {
 		super();
-		//this.mf = mf;
 		bc = new ButtonAction(this);
 		initialize();
 		panelToRefresh = panel;
@@ -80,7 +78,7 @@ public class ShowInfoPanel extends Panels {
 			info.getDocument().insertString(
 			info.getDocument().getLength(), text, set);
 		} catch (BadLocationException e) {
-		    e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 	}
 	public void fetchInfo(){
@@ -92,22 +90,19 @@ public class ShowInfoPanel extends Panels {
 		String[] tables = {"Patient_personal"};
 		String[] fields = {"name","gender","address","contact_no",
 				"birthday","pic","description"};
-		//this.getInfo().append(this.pid);
-//		result = Client.getInstance().sendQuery("SELECT", tables, 
-//				fields, "pid = '" + pid + "'", null);
 		String[] param = {pid};
 		try {
 			result = Client.getInstance().sendQuery("SELECT name, gender, address, contact_no, birthday, pic, " +
 					"description FROM Patient_personal WHERE pid=?;", param);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		if ( result != null){
 			insertText(star+" Personal "+star+br+br,BOLD_BLACK);
@@ -130,9 +125,6 @@ public class ShowInfoPanel extends Panels {
 		//deal with allergy
 		String[] allergyTable = {"allergy","`dia-allergy_rec`"};
 		String[] allergyFields = {"name,description"};
-//		String[][] allergyResult = Client.getInstance().sendQuery("SELECT", allergyTable, 
-//				allergyFields, "`dia-allergy_rec`.allergy_id = allergy.id and `dia-allergy_rec`.valid = 1"
-//				+ " AND `dia-allergy_rec`.`pat_id` = "+pid, null);
 		String[] p = {pid};
 		String[][] allergyResult = null;
 		try {
@@ -140,15 +132,14 @@ public class ShowInfoPanel extends Panels {
 					"allergy_id=`allergy`.id AND valid=1 AND pat_id=?;", param);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
-		//System.out.println(allergyResult.length);
 		if ( ! (allergyResult.length == 0)){
 			insertText(br+star+" Allergies "+star+br+br,BOLD_BLACK);
 			for ( int i = 0; i < allergyResult.length; i++){
@@ -162,21 +153,19 @@ public class ShowInfoPanel extends Panels {
 		
 		String[] treatmentTable = {"treatment"};
 		String[] treatmentFields = {"pic","date_of_issue","description"};
-//		String[][] treatmentResult = Client.getInstance().sendQuery("SELECT", treatmentTable,
-//		treatmentFields, "pid = "+pid, null);
 		String[] p2 = {pid};
 		String[][] treatmentResult = null;
 		try {
 			treatmentResult = Client.getInstance().sendQuery("SELECT pic, date_of_issue, description FROM treatment WHERE pid=?;", p2);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		if ( ! (treatmentResult.length == 0)){
 			insertText(br+star+" Treatments "+star+br+br,BOLD_BLACK);
@@ -213,7 +202,6 @@ public class ShowInfoPanel extends Panels {
 		
 		this.setLayout(new BorderLayout());
         this.setSize(new Dimension(1024, 590));
-        //this.add(getInfo(), BorderLayout.CENTER);
         this.add(getJScrollPane(), BorderLayout.CENTER);
         getInfo().setText("");
         this.add(getBtnPanel(),BorderLayout.SOUTH);
@@ -295,7 +283,6 @@ public class ShowInfoPanel extends Panels {
 
 	public void setPID(String s){
 		this.pid = s;
-		//System.out.println("IN GETID: "+s);
 	}
 
 	/**

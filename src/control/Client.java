@@ -142,7 +142,7 @@ public class Client {
 		log.debug(this.getClass().getName(),"Relogin finished and reloading");
 		mf.restorePanel();
 		resetTimer(Task.AFTER_AUTH);
-		System.out.println("in reload");
+		Client.getInstance().log.debug(this.getClass().getName(),"in reload");
 	}
 
 	public String[][] sendQuery(String type, String[] table, String[] field,

@@ -12,6 +12,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import control.Client;
+
 public class LockPanel extends Panels {
 	JTextPane textpane;
 	static SimpleAttributeSet ITALIC_GRAY = new SimpleAttributeSet();
@@ -58,7 +60,7 @@ public class LockPanel extends Panels {
 			textpane.getDocument().insertString(
 			textpane.getDocument().getLength(), text, set);
 		} catch (BadLocationException e) {
-		    e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 	}
 }

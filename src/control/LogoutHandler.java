@@ -17,8 +17,7 @@ public class LogoutHandler extends Handler{
 			msg.setSignature(signedLogoutMsg);
 			try {
 				AuthHandler ah = Client.getInstance().getClientAHanlder().getRemoteAuthHandler();
-				//Connector.getInstance().write(((Object) encryptPAES(objToBytes(msg))));
-				//DisconnResponseMessage  msg2 = (DisconnResponseMessage)bytesToObj(decryptPAES((byte[])Connector.getInstance().read()));
+			
 				byte[] encryptedName = encryptPAES(Client.getInstance().getName().getBytes());
 				byte[] encryptedFlag = ah.logout(encryptedName, encryptPAES(encryptAES((signedLogoutMsg))));
 				Boolean b = (Boolean)this.bytesToObj((decryptPAES(encryptedFlag)));
@@ -29,7 +28,7 @@ public class LogoutHandler extends Handler{
 				}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			}
 			
 		}

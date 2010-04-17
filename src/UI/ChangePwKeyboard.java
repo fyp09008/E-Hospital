@@ -25,10 +25,7 @@ import control.Client;
 import control.Task;
 
 public class ChangePwKeyboard extends JPanel {
-	//private static final int AUTH = 0;
-	//private static final int RE_AUTH = 1;
 	private int mode;
-	//LoginPanel login ;
 	
 	ChangePwPanel relogin;
 	
@@ -36,9 +33,6 @@ public class ChangePwKeyboard extends JPanel {
 	
 	public ChangePwKeyboard(ChangePwPanel lp){
 		super();
-		//super(Client.getInstance().getMf(),true);
-		//mode = mode;
-		//this.addWindowListener(new CloseAction());
 		relogin = lp;
 		initialize();	
 	}
@@ -70,7 +64,6 @@ public class ChangePwKeyboard extends JPanel {
 						new String(relogin.getPwFd(2).getPassword())))){
 					JOptionPane m = new JOptionPane();
 					Client.getInstance().getMf().addPopUP(m);
-					//Client.getInstance().getMf().popup = new ArrayList<Component>();
 					m.showMessageDialog(null, "New Passwords Not Match!");
 					return;
 				}else{

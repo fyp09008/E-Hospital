@@ -37,25 +37,6 @@ public class RemoveAllergyPanel extends Panels {
 		initialize();
 	}
 	public boolean submit(){
-	/*	String ids = null;
-		for(int i = 0; i < boxes.size(); i++){
-			if (  boxes.get(i).isSelected()){
-				if ( ids == null){
-					ids = new String(allergyID.get(i));
-				}
-				else{
-					ids = ids + ", " + allergyID.get(i);
-				}
-			}
-		}
-		if ( ids == null){
-			return true;
-		}*/
-//		String[] table = {"`dia-allergy_rec`"};
-//		String[] field = {"valid"};
-//		String where = "`dia-allergy_rec`.allergy_id IN (" + ids + " )";
-//		String[] value = {"0"};
-//		String result2[][] = Client.getInstance().sendQuery("UPDATE", table, field, where, value );
 		boolean result2 = false;
 		try {
 			ArrayList<String> param = new ArrayList<String>();
@@ -82,10 +63,10 @@ public class RemoveAllergyPanel extends Panels {
 				return true;
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		
 		if (result2)
@@ -100,20 +81,19 @@ public class RemoveAllergyPanel extends Panels {
 		String where = "allergy.id = `dia-allergy_rec`.allergy_id and `dia-allergy_rec`.valid = 1 and" +
 				"`dia-allergy_rec`.pat_id = " + getID();
 		String[] param = {getID()};
-//		String[][] result = Client.getInstance().sendQuery("SELECT", tables, fields, where , null);
 		String[][] result = null;
 		try {
 			result = Client.getInstance().sendQuery("SELECT allergy_id, name, description" +
 					" FROM allergy, `dia-allergy_rec` WHERE allergy.id=`dia-allergy_rec`.allergy_id AND valid=1 AND pat_id=?;", param);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		GridLayout gl = new GridLayout(1,1);
 		this.setLayout(gl);

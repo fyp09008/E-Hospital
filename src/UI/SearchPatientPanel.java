@@ -48,7 +48,6 @@ public class SearchPatientPanel extends Panels {
 	private String mode;
 	private String param;
 	private ListSelectionModel listSelectionModel = null;  //  @jve:decl-index=0:
-	//private MainFrame mf = null;
 	
 	public SearchPatientPanel(){
 		super();
@@ -137,18 +136,14 @@ public class SearchPatientPanel extends Panels {
 	
 	
 	public void setScrollPane() {
-		//System.out.println("set sroll pane");
 		scrollPane = new JScrollPane(table);
 		scrollPane.setViewportView(table);
-		//System.out.println("last set scroll pane");
 	}
 	public void setTable(String[][] result) {
-		//System.out.println("In set table");
 		table = new JTable(result,column);
 		listSelectionModel = table.getSelectionModel();
 		listSelectionModel.addListSelectionListener(new SharedListSelectionHandler(table));
 	    table.setSelectionModel(listSelectionModel);
-	   // System.out.println("last set table");
 	}
 	
 	private JPanel getShowPanel() {
@@ -162,7 +157,6 @@ public class SearchPatientPanel extends Panels {
 		return showPanel;
 	}
 	private JPanel getUpPanel() {
-		//showInfo = new ShowInfo();
 		if (upPanel == null) {
 			upPanel = new JPanel();
 			upPanel.setLayout(new BorderLayout());
@@ -178,7 +172,6 @@ public class SearchPatientPanel extends Panels {
 			leftPanel = new JPanel();
 			leftPanel.setLayout(new BorderLayout());
 			leftPanel.add(getInputPanel(),BorderLayout.NORTH);
-			//leftPanel.add(getJScrollPane(),BorderLayout.CENTER);
 		}
 		return leftPanel;
 	}
@@ -201,31 +194,23 @@ public class SearchPatientPanel extends Panels {
 		else
 		{
 			String[] p2 = {"%"+param+"%"};
-//			return Client.getInstance().sendQuery("SELECT", tables, 
-//					fields, "name LIKE '%" + param + "%'", null);
 			return Client.getInstance().sendQuery("SELECT pid, name FROM Patient_personal" +
 					" WHERE name LIKE ?", p2);
 		}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (NotBoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		return null;
 	}
-	/*public String[][] doSearchName(String name){
-		String[] tables = {"Patient_personal"};
-		String[] fields = {"pid","name"};
-		return Client.getInstance().sendQuery("SELECT", tables, 
-				fields, "name LIKE '%" + name + "%'", null);
-	}*/
+
 	public void showTable(){
-		//System.out.println("in show table");
 		leftPanel.remove(0);
 		leftPanel.add(scrollPane,BorderLayout.CENTER);
 		leftPanel.invalidate();
@@ -266,34 +251,21 @@ public class SearchPatientPanel extends Panels {
 	}
 
 	class ButtonAction implements ActionListener{
-		//SearchPatientPanel spp = null;
-		//public ButtonAction(SearchPatientPanel spp){
-			//this.spp = spp;
-		//}
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
-			//String[] tables = {"Patient_personal"};
-			//String[] fields = {"pid","name"};
-			
 			String [][]result;
 			if ( arg0.getActionCommand().equals("ID")){
-				//result = Client.getInstance().sendQuery("SELECT", tables, 
-						//fields, "pid = '" + getSearchID().getText() + "'", null);
 				result = doSearch("ID",getSearchID().getText());
 			}
 			else{
 				result = doSearch("NAME",getSearchName().getText());
-				//result = Client.getInstance().sendQuery("SELECT", tables, 
-						//fields, "name LIKE '%" + getSearchName().getText() + "%'", null);
 			}
 	
 			if ( result.length != 0 && result!= null){
-				//System.out.println("not null: ");
 				setTable(result);
 				setScrollPane();
 				showTable();
 			}else{
-				//System.out.println("null");
 				showFail();
 			}
 		}
@@ -306,13 +278,11 @@ public class SearchPatientPanel extends Panels {
 		}
 	    public void valueChanged(ListSelectionEvent e) { 
 	        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-	           // tempLab.setText(lsm.)      
             int minIndex = lsm.getMinSelectionIndex();
             int maxIndex = lsm.getMaxSelectionIndex();
             for (int i = minIndex; i <= maxIndex; i++) {
                	//patient selected
                if (lsm.isSelectedIndex(i)) {
-            	   //System.out.println((String)table.getValueAt(i,0));
                 	   //for doing once  only , if not,might be doing twice
                    lsm.clearSelection();               	  
                     	showInfo.setPID((String)table.getValueAt(i, 0));

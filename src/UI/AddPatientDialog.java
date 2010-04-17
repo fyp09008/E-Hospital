@@ -61,7 +61,6 @@ public class AddPatientDialog extends Dialogs {
 	private JLabel contactLab = null;
 	private JTextField contactFld = null;
 	private JLabel dobLab = null;
-	//private JTextField dobFld = null;
 	private JPanel dobFld = null;
 	private JLabel picLab = null;
 	private JComboBox picFld = null;
@@ -307,13 +306,13 @@ public class AddPatientDialog extends Dialogs {
 				result = Client.getInstance().sendQuery("SELECT uid FROM user;", null);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			} catch (NotBoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			}
 			Vector<String> ids = new Vector<String>();
 			int index = 0;
@@ -353,7 +352,6 @@ public class AddPatientDialog extends Dialogs {
 		String day = (String)dayCombo.getSelectedItem();
 		if ( day.length() == 1)
 			day = "0"+day;
-		//System.out.println((String)yearCombo.getSelectedItem()+ "-" + month + "-" + day);
 		return (String)yearCombo.getSelectedItem()+ "-" + month + "-" + day;
 	};
 	/**
@@ -407,7 +405,6 @@ public class AddPatientDialog extends Dialogs {
 		int year = calendar.get(java.util.Calendar.YEAR);
 		int month = calendar.get(java.util.Calendar.MONTH)+1;
 		int day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
-		//System.out.println(year + " " + month + " " + day);
 		if ( yearCombo.getSelectedItem().equals(Integer.toString(year))){
 			if ( Integer.parseInt((String)monthCombo.getSelectedItem()) > month){
 				JOptionPane o = new JOptionPane();
@@ -491,16 +488,15 @@ public class AddPatientDialog extends Dialogs {
 				String[] fields = {"pid","name","gender","address","contact_no","birthday",
 					"pic","description"};
 				
-				//String[][] result2 = Client.getInstance().getMf().sendQuery("INSERT", tables, fields, null, result[0]);
 				boolean result2 = false;
 				try {
 					result2 = Client.getInstance().sendUpdate("INSERT INTO Patient_personal (name, gender, address, contact_no, birthday, pic, description) VALUES (?, ?, ?, ?, ?, ?, ?);", param);
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Client.getInstance().getLogger().debug(this.getClass().getName(), e1.getMessage());
 				} catch (NotBoundException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Client.getInstance().getLogger().debug(this.getClass().getName(), e1.getMessage());
 				}
 				if ( result2){
 					JOptionPane m = new JOptionPane();

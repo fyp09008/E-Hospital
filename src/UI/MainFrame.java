@@ -75,15 +75,11 @@ public class MainFrame extends JFrame {
 	private JMenuBar menuBar = null;
 	public JMenu funcMenu = null;
 	private Panels mainPanel = null;
-	//private Module control = null;
 	private Vector<JButton> buttons = null;  //  @jve:decl-index=0:
-	//store previuos panel
 	private Panels prePanel;
 	public LoginPanel loginPanel = null;
 	public static int MY_PATIENT_LIST = 0;
 	public static int SEARCH_PATIENTS = 1;
-	//store current panel
-	//private JPanel currentPanel = null;
 	
 	/**
 	 * This is the constructor
@@ -93,7 +89,7 @@ public class MainFrame extends JFrame {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e){
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}	
 		initialize();		
 	}
@@ -108,7 +104,6 @@ public class MainFrame extends JFrame {
 	 */
 	
 	public void restorePanel(){
-			//this.enableAllBtns();
 			this.checkPrivilege();
 			Calendar calendar = Calendar.getInstance();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -158,7 +153,6 @@ public class MainFrame extends JFrame {
 				} //welcome page
 				//lock screen
 				case -2: {
-					//funcMenu.setSelected(false);
 					funcMenu.setEnabled(false);
 					funcMenu.setPopupMenuVisible(false);
 					quitMenu.setPopupMenuVisible(false);
@@ -231,14 +225,12 @@ public class MainFrame extends JFrame {
 	}
 	public String[][] sendQuery(String type, String[] table, String[] field, 
 			String whereClause, String[] values) {
-		//System.out.println("on99");
 		return Client.getInstance().sendQuery(type, table, field, whereClause,values);
 	}
 	public void setPassword(String pw){
 		Client.getInstance().setPassword(pw);
 	}
 	public void checkPrivilege(){
-		//String[] pri = Client.getInstance().getPrivilegeHandler().getPrivileges();
 		funcMenu.setEnabled(true);
 		logout.setEnabled(true);
 		note.setEnabled(true);
@@ -434,11 +426,7 @@ public class MainFrame extends JFrame {
 	public void enableButton(int i){
 		buttons.get(i).setEnabled(true);
 	}
-	/*public void enableAllBtns(){
-		for ( int i = 0 ; i < buttons.size(); i++)
-			buttons.get(i).setEnabled(false);
-		//funcMenu.setEnabled(true);
-	}*/
+
 	public void disableAllBtns(){
 		for ( int i = 0 ; i < buttons.size(); i++)
 			buttons.get(i).setEnabled(false);
@@ -511,15 +499,9 @@ public class MainFrame extends JFrame {
 	public void resumePopUp(){
 		for ( int i = 0 ; i < popup.size(); i++){
 			if( popup.get(i) != null){
-				System.out.println(popup.get(i));
 				popup.get(i).setVisible(true);
-				
-				//if ( popup.get(i).getClass().getName().equals("javax.swing.JOptionPane")){
-				//	((JOptionPane)popup.get(i)).getRootFrame().setVisible(true);
-				//}
 			}
 		}
-		//popup = new ArrayList<Component>();
 	}
 
 	
@@ -536,9 +518,6 @@ public class MainFrame extends JFrame {
 			jContentPane.add(getUpperPanel(), BorderLayout.NORTH,0);
 			jContentPane.add(getBottomPanel(),BorderLayout.SOUTH,1);
 			jContentPane.add(getMainPanel(), BorderLayout.CENTER,2);
-			//bottom = new BottomPanel();
-			
-			//jContentPane.add(new LoginPanel(), BorderLayout.CENTER);
 		}
 		return jContentPane;
 	}
@@ -562,12 +541,7 @@ public class MainFrame extends JFrame {
 	 */
 	private BottomPanel getBottomPanel() {
 		if (bottom == null) {
-			//GridLayout gridLayout = new GridLayout();
-			//gridLayout.setRows(1);
 			bottom = new BottomPanel();
-			//upperPanel.setLayout(gridLayout);
-			
-
 		}
 		return bottom;
 	}
@@ -660,7 +634,6 @@ public class MainFrame extends JFrame {
 			mainPanel = new Panels();
 			mainPanel.setLayout(gridLayout1);
 			mainPanel.setPreferredSize(new Dimension(1024, 590));
-			//mainPanel.add(getJButton5(), null);
 		}
 		return mainPanel;
 	}

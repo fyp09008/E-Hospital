@@ -115,8 +115,6 @@ public class EditInfoDialog extends Dialogs {
 		this.getAddrFld().setText(result[0][2]);
 		this.getContactFld().setText(result[0][3]);
 		this.getDobFld(result[0][4]);
-		//PIC combox fit in getPicFld
-		//this.getPicFld().setText(result[0][5]);
 		this.getRemark().setText(result[0][6]);
 	}
 
@@ -225,13 +223,9 @@ public class EditInfoDialog extends Dialogs {
 	private JPanel getUpPanel(){
 		if (upPanel == null){
 			upPanel = new JPanel();
-			//upPanel.setLayout(new BorderLayout());
 			GridLayout gl = new GridLayout(2,1);
 
 			upPanel.setLayout(gl);
-			//upPanel.setLayout(new BorderLayout());
-			///upPanel.add(getFieldPanel(),BorderLayout.CENTER);
-	        //upPanel.add(getRePanel(),BorderLayout.SOUTH);	
 			
 			upPanel.add(getFieldPanel());
 			upPanel.add(getRePanel());
@@ -342,7 +336,6 @@ public class EditInfoDialog extends Dialogs {
 	        fieldPanel.add(getDobFld(),getDobFld().getName());
 	        fieldPanel.add(picLab,picLab.getName());
 	        fieldPanel.add(getPicFld(),getPicFld().getName());
-	       // fieldPanel.setPreferredSize(new Dimension(50,50));
 		}
 		return fieldPanel;
 	}
@@ -369,23 +362,21 @@ public class EditInfoDialog extends Dialogs {
 		if (picFld == null) {
 			String table[] = {"user"};
 			String field[] = {"uid"};
-//			String allIDs[][] = Client.getInstance().sendQuery("SELECT", table, field, null, null);
 			String[][] allIDs = null;
 			try {
 				allIDs = Client.getInstance().sendQuery("SELECT uid FROM user;", null);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			} catch (NotBoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			}
 			Vector<String> ids = new Vector<String>();
 			int index = 0;
-			//System.out.println("***"+result[0][5]);
 			for(int i =0;i< allIDs.length; i++){
 				ids.add(allIDs[i][0]);
 				if(allIDs[i][0].equals(result[0][5]))
@@ -471,7 +462,6 @@ public class EditInfoDialog extends Dialogs {
 		int year = calendar.get(java.util.Calendar.YEAR);
 		int month = calendar.get(java.util.Calendar.MONTH)+1;
 		int day = calendar.get(java.util.Calendar.DAY_OF_MONTH);
-		//System.out.println(year + " " + month + " " + day);
 		if ( yearCombo.getSelectedItem().equals(Integer.toString(year))){
 			if ( Integer.parseInt((String)monthCombo.getSelectedItem()) > month){
 				JOptionPane o = new JOptionPane();
@@ -553,17 +543,16 @@ public class EditInfoDialog extends Dialogs {
 				String[] param = {result[0][0], result[0][1], result[0][2], 
 						result[0][3], result[0][4], result[0][5], 
 						result[0][6], frame.getID()};
-//				String[][] result2 = Client.getInstance().getMf().sendQuery("UPDATE", tables, fields, "pid = " + frame.getID(), result[0]);
 				boolean edit = false;
 				try {
 					edit = Client.getInstance().sendUpdate("UPDATE Patient_personal SET name=?, gender=?, address=?, contact_no=?, birthday=?, pic=?" +
 							", description=? WHERE pid=?;", param);
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Client.getInstance().getLogger().debug(this.getClass().getName(), e1.getMessage());
 				} catch (NotBoundException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Client.getInstance().getLogger().debug(this.getClass().getName(), e1.getMessage());
 				}
 				if (edit){
 					Client.getInstance().getMf().popup = new ArrayList<Component>();
@@ -599,7 +588,6 @@ public class EditInfoDialog extends Dialogs {
 		String day = (String)dayCombo.getSelectedItem();
 		if ( day.length() == 1)
 			day = "0"+day;
-		System.out.println((String)yearCombo.getSelectedItem()+ "-" + month + "-" + day);
 		return (String)yearCombo.getSelectedItem()+ "-" + month + "-" + day;
 	};
 	

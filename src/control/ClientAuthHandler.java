@@ -51,7 +51,7 @@ public class ClientAuthHandler extends Handler{
 			ah.unplugCard(encryptedPKeyName);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 	}
 	public boolean authenicate() {
@@ -73,17 +73,17 @@ public class ClientAuthHandler extends Handler{
 				JOptionPane.showMessageDialog(null, "Server Unavailable");
 				Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Access Exception");
 				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 			} catch (RemoteException e2) {
 				JOptionPane.showMessageDialog(null, "Server Unavailable");
 				Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Exception");
 				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 			} catch (NotBoundException e2) {
 				JOptionPane.showMessageDialog(null, "Server Unavailable");
 				Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Not Bound Exception");
 				// TODO Auto-generated catch block
-				e2.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 			}
 			
 			//do authentication
@@ -105,7 +105,7 @@ public class ClientAuthHandler extends Handler{
 					Thread.sleep(Task.PERIOD);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 				}
 				logger.debug(this.getClass().getName(),"Before initializing jc");
 				RSAHardware rsaHard = client.getRSAHard();
@@ -124,31 +124,18 @@ public class ClientAuthHandler extends Handler{
 				String hashedPwString = new String(hashedPw);
 				Client.getInstance().getLogger().printCipher(this.getClass().getName(), 
 						"signed password",hashedPw,hashedPwString);
-				//reqMsg.setPassword(hashedPw);
-				
-				//case: password cannot be set to the request message
-				//no longer valid
-				/*if ( reqMsg.getPassword() == null){
-					JOptionPane.showMessageDialog(null, "Internal program failure\n " +
-							"Please restart the program");
-					Connector.getInstance().disconnect();
-			    	Client.getInstance().resetTimer(Task.PRE_AUTH);
-					return false;
-				}*/
+
 			} catch (NoSuchAlgorithmException e1) {
-				e1.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e1.getMessage());
 			}
 
 		    try {
-		    	//Connector connector = Connector.getInstance();
-				//connector.write((Object) encryptPAES(objToBytes(reqMsg)));
+
 		    	byte[] encryptedPKeyName = encryptPAES(name.getBytes());
 		    	byte[] encryptedSKey = ah.authenticate(encryptedPKeyName, encryptPAES(hashedPw));
 				
 			    logger.debug(this.getClass().getName(),"Authentication message sent");
-			   
-			    //AuthResponseMessage reMsg = (AuthResponseMessage)bytesToObj(decryptPAES((byte[])connector.read()));
-			    
+
 			    //case: successful authentication
 			    if (encryptedSKey != null) {
 			    	logger.debug(this.getClass().getName(),"Authentication succeed");
@@ -178,7 +165,7 @@ public class ClientAuthHandler extends Handler{
 					try {
 						rs2 = RSparse(rs1);
 					} catch (SQLException e) {
-						e.printStackTrace();
+						Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 					}
 					PrivilegeHandler pl = client.getPrivilegeHandler();
 					//the first row is the ID and privileges
@@ -242,7 +229,7 @@ public class ClientAuthHandler extends Handler{
 			    }
 		    } catch (Exception e){
 		    	//Connector connector = Connector.getInstance();
-				e.printStackTrace();
+		    	Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 				connector.disconnect();
 				this.password=null;
 				connector.setConnected(false);
@@ -260,17 +247,17 @@ public class ClientAuthHandler extends Handler{
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Access Exception");
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 		} catch (RemoteException e2) {
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Exception");
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 		} catch (NotBoundException e2) {
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Not Bound Exception");
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 		}
 		MessageDigest md = null;
 		byte[] hashedOldPw = null;
@@ -281,7 +268,7 @@ public class ClientAuthHandler extends Handler{
 			try {
 				Thread.sleep(Task.PERIOD);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			}
 			RSAHardware rsaHard = Client.getInstance().getRSAHard();
 			if (rsaHard.initJavaCard("285921800099") == -1){
@@ -290,9 +277,7 @@ public class ClientAuthHandler extends Handler{
 				Client.getInstance().resetTimer(Task.AFTER_AUTH);
 				return false;
 			}
-			//logger.debug(this.getClass().getName(),"After initializing jc");
-			//logger.printPlain(this.getClass().getName(), 
-					//"Unsigned password",this.password.getBytes(),this.password);		
+	
 			hashedOldPw = rsaHard.sign(md.digest(oldPW.getBytes()), 
 					md.digest(oldPW.getBytes()).length);
 			hashedNewPw = rsaHard.sign(md.digest(newPW.getBytes()), 
@@ -300,21 +285,20 @@ public class ClientAuthHandler extends Handler{
 			Client.getInstance().resetTimer(Task.AFTER_AUTH);
 		}catch (NoSuchAlgorithmException e1) {
 			Client.getInstance().resetTimer(Task.AFTER_AUTH);
-			e1.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e1.getMessage());
 		}
 	    try {
 
 	    	byte[] encryptedPKeyName = encryptPAES(name.getBytes());
 	    	byte[] result = ah.changePassword(encryptedPKeyName, encryptPAES(hashedOldPw),encryptPAES(hashedNewPw));
 	    	Boolean b = (Boolean)this.bytesToObj((decryptPAES(result)));
-	    	//Client.getInstance().resetTimer(Task.AFTER_AUTH);
 	    	if (b)
 	    		return true;
 	    	else 
 	    		return false;
 		 
 	    } catch (Exception e){
-	    	//Client.getInstance().resetTimer(Task.AFTER_AUTH);
+	    	Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			return false;
 		}
 		    	
@@ -327,17 +311,17 @@ public class ClientAuthHandler extends Handler{
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Access Exception");
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 		} catch (RemoteException e2) {
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Exception");
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 		} catch (NotBoundException e2) {
 			JOptionPane.showMessageDialog(null, "Server Unavailable");
 			Client.getInstance().getLogger().debug(this.getClass().getName(),"Remote Not Bound Exception");
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e2.getMessage());
 		}
 		byte[] encryptedMyName = encryptPAES(myName.getBytes());
 		byte[] encryptedHisName = encryptPAES(encryptAES(hisName.getBytes()));
@@ -346,22 +330,21 @@ public class ClientAuthHandler extends Handler{
 			md = MessageDigest.getInstance("md5");
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 
 		byte[] hashedPw = encryptPAES(encryptAES(md.digest(pw.getBytes())));
 		
-		//System.out.println(myName + " " + hisName + " " + pw + " " + cardNo);	
-		//return true;
+
 		int result = 1;
 		try {
 			result = eah.emergencyAccess(encryptedMyName, encryptedHisName, hashedPw, cardNo);
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 		return (result == 0)?true:false;
-		//return true;
+
 	}
 	
 }

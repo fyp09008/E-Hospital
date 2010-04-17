@@ -38,10 +38,8 @@ public class WelcomePanel extends Panels {
 	}
 	private JPanel contentPane = null;
 	private JTextPane msg = null;
-	//private MainFrame mf = null;
 	public WelcomePanel(MainFrame mf){
 		super();
-		//this.mf=mf;
 		this.initialize();
 	}
 	protected void insertText(String text, AttributeSet set) {
@@ -49,7 +47,7 @@ public class WelcomePanel extends Panels {
 			getMsg().getDocument().insertString(
 			getMsg().getDocument().getLength(), text, set);
 		} catch (BadLocationException e) {
-		    e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 	}
 	private void initialize(){

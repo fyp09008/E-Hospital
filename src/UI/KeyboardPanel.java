@@ -25,10 +25,7 @@ import control.Client;
 import control.Task;
 
 public class KeyboardPanel extends JPanel {
-	//private static final int AUTH = 0;
-	//private static final int RE_AUTH = 1;
 	private int mode;
-	//LoginPanel login ;
 	
 	LoginDialog relogin;
 	
@@ -36,9 +33,6 @@ public class KeyboardPanel extends JPanel {
 	
 	public KeyboardPanel(LoginDialog lp){
 		super();
-		//super(Client.getInstance().getMf(),true);
-		//mode = mode;
-		//this.addWindowListener(new CloseAction());
 		relogin = lp;
 		initialize();	
 	}
@@ -77,7 +71,6 @@ public class KeyboardPanel extends JPanel {
 					Client.getInstance().reset();
 					Client.getInstance().resetTimer(Task.PRE_AUTH);
 					relogin.dispose();
-					//Client.getInstance().getMf().resumePopUp();
 				}
 
 				

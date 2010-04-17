@@ -39,7 +39,7 @@ public class Logger {
 				ps.println("cipher 1");
 				ps.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 			}
 
 		checkMode();
@@ -77,7 +77,7 @@ public class Logger {
 				cipherPS = new PrintStream(new FileOutputStream(cipherMsg));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug(this.getClass().getName(), e.getMessage());
 		}
 	}
 	
@@ -89,22 +89,7 @@ public class Logger {
 			debugPS.println();
 		}
 	}
-	/*public void printCipher(String className, String what, String msg){
-		if (cipher){
-			String time = dateFormat.format(calendar.getTime());
-			cipherPS.println(time +": " +className+": " + what +": \r\n" );
-			cipherPS.println(msg);
-			cipherPS.println();
-		}
-	}
-	public void printPlain(String className, String what, String msg ){
-		if (cipher){
-			String time = dateFormat.format(calendar.getTime());
-			cipherPS.println(time +": " +className+": " + what +": \r\n" );
-			cipherPS.println(msg);
-			cipherPS.println();
-		}
-	}*/
+
 	public void printCipher(String className, String what, byte[] msgB, String msg){
 		if (cipher){
 			String time = dateFormat.format(calendar.getTime());

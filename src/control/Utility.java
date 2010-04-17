@@ -64,11 +64,11 @@ public class Utility {
 			byte [] data = bos.toByteArray();
 			return data;
 		} catch (NotSerializableException e){
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("Utility", e.getMessage());
 			return null;
 		}catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("Utility", e.getMessage());
 		} return null;
 	}
 	
@@ -83,10 +83,10 @@ public class Utility {
 			return obj;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("Utility", e.getMessage());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Client.getInstance().getLogger().debug("Utility", e.getMessage());
 		} 
 	    return null;
 	}
@@ -99,7 +99,7 @@ public class Utility {
 			dos.flush();
 			return bos.toByteArray();
 		} catch(IOException ex) {
-			ex.printStackTrace();
+			Client.getInstance().getLogger().debug("Utility", ex.getMessage());
 			return null;
 		}
 	}
