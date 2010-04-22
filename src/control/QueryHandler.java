@@ -180,7 +180,7 @@ public class QueryHandler extends Handler {
 	// Note that the server side DataHandler does not implement the decrypt and encryption of program key yet
 	public String[][] query(String username, String query, String[] param) throws RemoteException, NotBoundException, SQLException
 	{
-		Registry r = LocateRegistry.getRegistry("localhost", 1099);
+		Registry r = LocateRegistry.getRegistry(Driver.serverPath, 1099);
 		DataHandler dh = (DataHandler) r.lookup("DataHandler");
 		byte[] q = encryptPAES(encryptAES(query.getBytes()));
 		byte[] p = encryptPAES(encryptAES(Utility.objToBytes(param)));
@@ -189,7 +189,7 @@ public class QueryHandler extends Handler {
 
 	public boolean update(String username, String query, String[] param) throws RemoteException, NotBoundException
 	{
-		Registry r = LocateRegistry.getRegistry("localhost", 1099);
+		Registry r = LocateRegistry.getRegistry(Driver.serverPath, 1099);
 		DataHandler dh = (DataHandler) r.lookup("DataHandler");
 		byte[] q = encryptPAES(encryptAES(query.getBytes()));
 		byte[] p = encryptPAES(encryptAES(Utility.objToBytes(param)));
