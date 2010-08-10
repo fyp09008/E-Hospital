@@ -195,7 +195,6 @@ public class MyPatientPanel extends Panels {
 				listSelectionModel[i].addListSelectionListener(new SharedListSelectionHandler(tables[i]));
 				tables[i].setSelectionModel(listSelectionModel[i]);
 			}
-			else{}
 		}
 
 		

@@ -342,7 +342,7 @@ public class SearchPatientPanel extends Panels {
 				result = doSearch("NAME",getSearchName().getText());
 			}
 	
-			if ( result.length != 0 && result!= null){
+			if ( result!= null && result.length != 0 ){
 				setTable(result);
 				setScrollPane();
 				showTable();
